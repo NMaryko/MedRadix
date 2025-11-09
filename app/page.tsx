@@ -1,98 +1,95 @@
-export default function HomePage() {
-  const news = [
-    {
-      id: 1,
-      title:
-        'Новые рекомендации ESC по ведению пациентов с фибрилляцией предсердий',
-    },
-    {
-      id: 2,
-      title:
-        'FDA одобрило новый препарат для лечения сердечной недостаточности',
-    },
-    {
-      id: 3,
-      title:
-        'Исследование The Lancet: связь между сном и риском деменции',
-    },
-    {
-      id: 4,
-      title:
-        'JAMA: Влияние витамина D на иммунный ответ при COVID-19',
-    },
-    {
-      id: 5,
-      title:
-        'Обновлены гайдлайны ADA по лечению сахарного диабета 2 типа',
-    },
-  ];
+// app/page.tsx
 
+type NewsItem = {
+  id: number;
+  title: string;
+};
+
+const newsItems: NewsItem[] = [
+  {
+    id: 1,
+    title:
+      'Новые рекомендации ESC по ведению пациентов с фибрилляцией предсердий',
+  },
+  {
+    id: 2,
+    title:
+      'FDA одобрило новый препарат для лечения сердечной недостаточности',
+  },
+  {
+    id: 3,
+    title:
+      'Исследование The Lancet: связь между сном и риском деменции',
+  },
+  {
+    id: 4,
+    title:
+      'JAMA: Влияние витамина D на иммунный ответ при COVID-19',
+  },
+  {
+    id: 5,
+    title:
+      'Обновлены гайдлайны ADA по лечению сахарного диабета 2 типа',
+  },
+];
+
+export default function HomePage() {
   return (
-    <main className="min-h-screen bg-[#fcfcee]">
-      {/* Блок афоризма и специальности под шапкой */}
-      <section className="border-b border-gray-200 bg-[#fcfcee]">
-        <div className="max-w-[1360px] mx-auto px-4 py-6 flex items-start justify-between gap-8">
-          {/* Левая часть — чип + афоризм */}
-          <div className="flex flex-col gap-3">
-            <button className="inline-flex items-center rounded-full border border-[#015d52]/30 bg-white px-4 py-1 text-xs font-medium text-[#015d52] shadow-sm">
+    <div className="bg-[#fcfcee] min-h-screen">
+      <div className="max-w-[1360px] mx-auto px-4 pt-10 pb-16">
+        {/* Верхний блок: Афоризм месяца + Специальность */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-10">
+          {/* Левая часть — афоризм */}
+          <div>
+            <button className="inline-flex items-center rounded-full border border-[#015d52] bg-white/90 px-4 py-1 text-xs font-semibold uppercase tracking-wide text-[#015d52]">
               Афоризм месяца
             </button>
 
-            <div>
-              <p className="text-2xl font-semibold text-[#2b2115] italic">
+            <div className="mt-4">
+              <p className="text-2xl md:text-3xl font-serif text-gray-900">
                 Mens sana in corpore sano
               </p>
-              <p className="mt-1 text-sm text-[#6b5b47]">
-                В здоровом теле — здоровый дух (Ювенал)
+              <p className="mt-1 text-sm text-gray-600">
+                В здоровом теле — здоровый дух (Ювенал).
               </p>
             </div>
           </div>
 
-          {/* Правая часть — Специальность: Все */}
-          <div className="flex flex-col items-end gap-2">
-            <span className="text-sm text-[#8c7c67]">Специальность:</span>
-            <button className="inline-flex items-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-1.5 text-sm text-[#2b2115] hover:border-[#015d52] hover:text-[#015d52] transition-colors">
+          {/* Правая часть — специальность */}
+          <div className="flex flex-col items-start md:items-end gap-2">
+            <span className="text-xs uppercase tracking-wide text-gray-500">
+              Специальность
+            </span>
+            <button className="inline-flex items-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-2 text-sm text-gray-800 shadow-sm transition-colors hover:border-[#015d52] hover:text-[#015d52]">
               Все
-              <span className="text-xs">▼</span>
+              <span className="text-xs">▾</span>
             </button>
           </div>
         </div>
-      </section>
 
-      {/* Список новостей с иконками и "молнией" */}
-      <section className="bg-[#fcfcee]">
-        <div className="max-w-[1360px] mx-auto px-4 py-8 space-y-4">
-          {news.map((item, index) => (
-            <div
+        {/* Список новостей */}
+        <div className="space-y-4">
+          {newsItems.map((item) => (
+            <a
               key={item.id}
-              className="flex items-start gap-3 border-b border-gray-200 pb-3 last:border-b-0"
+              href="#"
+              className="group flex items-start gap-4 rounded-lg px-3 py-3 transition-colors hover:bg-white/70"
             >
-              {/* Жёлтая "молния" слева */}
-              <span className="news-lightning mt-1" />
-
-              {/* Иконка + текст новости */}
-              <div className="flex items-start gap-3">
-                {/* Пока простая круглая иконка-заглушка, потом можно заменить логотипами сайтов */}
-                <div className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 bg-white text-xs font-semibold text-[#8c7c67]">
-                  {index + 1}
-                </div>
-                <a
-                  href="#"
-                  className="text-sm leading-snug text-[#2b2115] hover:text-[#015d52] hover:underline underline-offset-2"
-                >
-                  {item.title}
-                </a>
+              {/* Молния слева */}
+              <div className="mt-1">
+                <div className="lightning-bar" />
               </div>
-            </div>
+
+              {/* Текст новости */}
+              <div>
+                <p className="text-sm text-gray-900 group-hover:text-[#015d52]">
+                  {item.title}
+                </p>
+              </div>
+            </a>
           ))}
         </div>
-      </section>
-    </main>
-  );
-}
-
-
-      </section>
-    </main>
+      </div>
+    </div>
   );
 }
