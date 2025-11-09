@@ -62,3 +62,22 @@ body {
     opacity: 0.4;
   }
 }
+.lightning-bar {
+  transform-origin: bottom;
+  animation: lightning 2.2s ease-in-out infinite;
+}
+
+@keyframes lightning {
+  0% {
+    transform: scaleY(0);
+    opacity: 0.3;
+  }
+  40% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleY(0);
+    opacity: 0.3;
+  }
+}
