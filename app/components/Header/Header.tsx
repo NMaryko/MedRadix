@@ -36,7 +36,7 @@ export default function Header() {
             {MENU_ITEMS.map((item) => (
               <li key={item} className="relative group">
                 <button
-                  className={`inline-flex flex-col items-center text-[15px] font-medium transition-colors duration-200 ${
+                  className={`inline-flex flex-col items-center text-[15px] md:text-base font-medium transition-colors duration-200 ${
                     item === 'Новое'
                       ? 'text-[#e6a800]'
                       : 'text-[#4b3b2f] hover:text-[#015d52]'
