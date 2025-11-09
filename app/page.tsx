@@ -33,25 +33,45 @@ export default function HomePage() {
 
   return (
     <main className="bg-[#fcfcee] min-h-screen">
-      {/* Блок афоризма и специальности */}
+     {/* Блок афоризма и специальности */}
       <section className="border-b border-gray-200">
-        <div className="max-w-[1360px] mx-auto px-4 py-8 flex items-start justify-between gap-8">
-          {/* Левая часть — чип Афоризм месяца */}
-          <div className="pt-1">
-            <button className="px-4 py-1 text-xs font-medium rounded-full border border-[#015d52] text-[#015d52] bg-white">
-              Афоризм месяца
-            </button>
-          </div>
+        <div className="max-w-[1360px] mx-auto px-4 pt-6 pb-10">
+          <div className="flex items-start justify-between gap-6">
+            {/* Афоризм по центру */}
+            <div className="flex-1 flex flex-col items-center text-center">
+              <button className="mb-3 inline-flex items-center rounded-full border border-[#6b635a] px-5 py-1 text-xs font-medium tracking-wide uppercase text-[#6b635a] bg-white/70">
+                Афоризм месяца
+              </button>
 
-          {/* Центр — афоризм, по центру */}
-          <div className="flex-1 text-center">
-            <h1 className="text-3xl md:text-4xl font-semibold italic text-[#3b342d]">
-              Mens sana in corpore sano
-            </h1>
-            <p className="mt-2 text-sm text-[#6b635a]">
-              В здоровом теле — здоровый дух (Ювенал)
-            </p>
+              <h1 className="text-3xl md:text-4xl font-semibold italic text-[#3b342d]">
+                Mens sana in corpore sano
+              </h1>
+
+              <p className="mt-2 text-sm text-[#6b635a]">
+                В здоровом теле — здоровый дух (Ювенал)
+              </p>
+            </div>
+
+            {/* Справа — фильтр специальности */}
+            <div className="w-56 pt-8">
+              <span className="block text-[11px] uppercase tracking-[0.16em] text-[#b0a89e] mb-1 text-right">
+                Специальность
+              </span>
+              <select
+                value={selectedSpecialty}
+                onChange={(e) => setSelectedSpecialty(e.target.value)}
+                className="mt-1 block w-full rounded-full border border-gray-300 bg-white px-4 py-2 text-sm text-[#3b342d] shadow-sm focus:outline-none focus:ring-2 focus:ring-[#015d52]"
+              >
+                {specialties.map((name) => (
+                  <option key={name} value={name}>
+                    {name}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
+        </div>
+      </section>
 
           {/* Правая часть — специальность */}
           <div className="text-right">
