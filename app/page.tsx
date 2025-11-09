@@ -25,6 +25,7 @@ const SPECIALTIES: string[] = [
   'Офтальмология',
   'Педиатрия',
   'Пульмонология',
+  'Психиатрия',
   'Ревматология',
   'Терапия',
   'Травматология и ортопедия',
@@ -72,83 +73,78 @@ const NEWS_ITEMS: NewsItem[] = [
 ];
 
 export default function HomePage() {
-  const [selectedSpecialty, setSelectedSpecialty] = useState<string>('Все');
+  const [selectedSpecialty, setSelectedSpecialty] =
+    useState<string>('Все');
 
   const filteredNews =
     selectedSpecialty === 'Все'
       ? NEWS_ITEMS
       : NEWS_ITEMS.filter(
-          (item) => item.specialty === selectedSpecialty
+          (item) => item.specialty === selectedSpecialty,
         );
 
   return (
-    <main className="bg-[#fcfcee] min-h-screen">
-      {/* Блок афоризма + специальность */}
+    <main className="bg-[#fcfcee] min-h-screen pb-16">
+      {/* Афоризм + чип + фильтр специальности */}
       <section className="border-b border-gray-200">
-        <div className="max-w-[1360px] mx-auto px-4 pt-4 pb-10 flex items-start justify-between">
-          {/* Пустое место слева — помогает центровать блок афоризма */}
-          <div className="flex-1" />
+        <div className="max-w-[1360px] mx-auto px-6 pt-8 pb-10">
+          {/* Верхняя линия: чип слева, фильтр справа */}
+          <div className="flex items-center justify-between">
+            <button className="px-5 py-1.5 text-xs font-medium rounded-full border border-[#b6b5aa] text-[#3b342d] bg-white shadow-sm">
+              Афоризм месяца
+            </button>
 
-          {/* Центр: афоризм */}
-          <div className="flex flex-col items-center gap-3">
-            <h1 className="text-3xl md:text-4xl font-semibold italic text-[#3b342d]">
-              Mens sana in corpore sano
-            </h1>
-
-            {/* Чип + перевод в одной строке */}
-            <div className="flex flex-wrap items-center justify-center gap-3">
-              <button className="px-5 py-1.5 text-xs font-medium rounded-full border border-[#d3c7aa] bg-white text-[#7a6a55] shadow-sm">
-                Афоризм месяца
-              </button>
-
-              <p className="text-sm text-[#6b654f]">
-                В здоровом теле — здоровый дух (Ювенал)
-              </p>
-            </div>
-          </div>
-
-          {/* Справа: специальность */}
-          <div className="flex-1 flex justify-end">
-            <div className="flex flex-col items-end gap-1">
-              <span className="text-[11px] tracking-[0.14em] uppercase text-[#b1a68b]">
+            <div className="flex items-center gap-3">
+              <span className="text-[11px] uppercase tracking-[0.16em] text-[#b0a38a]">
                 СПЕЦИАЛЬНОСТЬ
               </span>
-
               <select
                 value={selectedSpecialty}
-                onChange={(event) => setSelectedSpecialty(event.target.value)}
-                className="min-w-[180px] rounded-full border border-[#d3c7aa] bg-white px-4 py-1.5 text-sm text-[#3b342d] shadow-sm outline-none focus:border-[#015d52] focus:ring-1 focus:ring-[#015d52]"
+                onChange={(e) =>
+                  setSelectedSpecialty(e.target.value)
+                }
+                className="min-w-[220px] rounded-full border border-[#d1cbb5] bg-white px-4 py-1.5 text-sm text-[#3b342d] shadow-sm focus:outline-none focus:ring-2 focus:ring-[#015d52]/40 focus:border-[#015d52]"
               >
-                {SPECIALTIES.map((spec) => (
-                  <option key={spec} value={spec}>
-                    {spec}
+                {SPECIALTIES.map((s) => (
+                  <option key={s} value={s}>
+                    {s}
                   </option>
                 ))}
               </select>
             </div>
           </div>
+
+          {/* Афоризм по центру */}
+          <div className="mt-6 text-center">
+            <h1 className="text-3xl md:text-4xl font-semibold italic text-[#3b342d]">
+              Mens sana in corpore sano
+            </h1>
+            <p className="mt-2 text-sm md:text-base text-[#6b635a]">
+              В здоровом теле — здоровый дух (Ювенал)
+            </p>
+          </div>
         </div>
       </section>
 
-      {/* Список новостей с одной «молнией» слева */}
-      <section className="relative max-w-[1360px] mx-auto px-4 pt-10 pb-16">
-        {/* Одна большая жёлтая линия слева, с анимацией */}
-        <div className="absolute left-0 top-6 bottom-6 flex justify-center">
+      {/* Список новостей с одной общей «молнией» слева */}
+      <section className="relative max-w-[1360px] mx-auto px-6 pt-10 pb-8">
+        {/* Одна длинная линия слева */}
+        <div className="absolute left-[32px] top-2 bottom-2 flex justify-center pointer-events-none">
           <div className="w-[2px] bg-[#facc15] lightning-bar" />
         </div>
 
-        <ul className="space-y-5 pl-6">
+        <ul className="space-y-4 pl-14">
           {filteredNews.map((item) => (
             <li key={item.id} className="flex items-start gap-4">
-              {/* Кружок перед ссылкой */}
-              <div className="relative mt-1 flex h-7 w-7 items-center justify-center rounded-full border border-[#b3b3b3] bg-white">
-                <span className="h-3 w-px bg-[#facc15]" />
+              {/* Иконка-кружок перед ссылкой */}
+              <div className="relative mt-1 flex h-7 w-7 items-center justify-center rounded-full border border-[#3b6040] bg-white">
+                <span className="h-3 w-3 rounded-full bg-[#3b6040]" />
               </div>
 
               {/* Новость как активная ссылка */}
               <a
                 href={item.href}
-                className="text-[15px] leading-snug text-[#3b342d] hover:text-[#015d52] transition-colors"
+                className="text-[15px] leading-relaxed text-[#3b342d] hover:text-[#015d52] transition-colors"
               >
                 {item.title}
               </a>
@@ -159,5 +155,3 @@ export default function HomePage() {
     </main>
   );
 }
-
-
