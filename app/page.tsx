@@ -1,4 +1,12 @@
 export default function HomePage() {
+  const newsItems = [
+    'Новые рекомендации ESC по ведению пациентов с фибрилляцией предсердий',
+    'FDA одобрило новый препарат для лечения сердечной недостаточности',
+    'Исследование The Lancet: связь между сном и риском деменции',
+    'JAMA: Влияние витамина D на иммунный ответ при COVID-19',
+    'Обновлены гайдлайны ADA по лечению сахарного диабета 2 типа',
+  ];
+
   return (
     <main className="bg-[#fcfcee] min-h-screen">
       {/* Блок афоризма и фильтра специальности */}
@@ -15,18 +23,18 @@ export default function HomePage() {
             </h1>
 
             <p className="mt-2 text-sm text-[#6b635a]">
-              В здоровом теле — здоровый дух (Ювенал).
+              В здоровом теле — здоровый дух (Ювенал)
             </p>
           </div>
 
           {/* Правая часть — специальность */}
-          <div className="flex flex-col items-end gap-2">
-            <span className="text-xs uppercase tracking-wide text-[#6b635a]">
-              Специальность:
+          <div className="hidden md:flex flex-col items-end gap-2">
+            <span className="text-xs text-[#6b635a] uppercase tracking-wide">
+              Специальность
             </span>
-            <button className="inline-flex items-center gap-2 px-4 py-1 text-sm rounded-full border border-gray-300 bg-white text-[#3b342d]">
+            <button className="inline-flex items-center gap-2 border border-gray-300 rounded-full px-4 py-2 text-sm text-[#3b342d] bg-white hover:border-[#015d52] hover:text-[#015d52] transition-colors">
               Все
-              <span className="text-xs">▾</span>
+              <span className="text-xs">▼</span>
             </button>
           </div>
         </div>
@@ -35,17 +43,11 @@ export default function HomePage() {
       {/* Список новостей, как на старом сайте */}
       <section className="max-w-[1360px] mx-auto px-4 py-8">
         <ul className="space-y-4">
-          {[
-            'Новые рекомендации ESC по ведению пациентов с фибрилляцией предсердий',
-            'FDA одобрило новый препарат для лечения сердечной недостаточности',
-            'Исследование The Lancet: связь между сном и риском деменции',
-            'JAMA: Влияние витамина D на иммунный ответ при COVID-19',
-            'Обновлены гайдлайны ADA по лечению сахарного диабета 2 типа',
-          ].map((title, index) => (
-            <li key={index} className="flex items-start gap-4">
-              {/* Иконка-кружок с мягкой «молнией» */}
-              <div className="mt-1 h-6 w-6 flex items-center justify-center rounded-full border border-[#f9c94a] bg-[#fff9e6] relative overflow-hidden">
-                <span className="absolute inset-0 bg-gradient-to-b from-[#f9c94a] to-transparent animate-pulse" />
+          {newsItems.map((title, index) => (
+            <li key={index} className="flex items-start gap-3">
+              {/* Иконка-кружок с «молнией» */}
+              <div className="mt-1 h-6 w-6 flex items-center justify-center rounded-full border border-[#f5c154] relative overflow-hidden">
+                <span className="absolute inset-y-0 w-[2px] bg-gradient-to-b from-[#f5c154] to-[#f0a800]" />
               </div>
 
               <p className="text-sm text-[#3b342d]">{title}</p>
@@ -56,3 +58,4 @@ export default function HomePage() {
     </main>
   );
 }
+
