@@ -67,27 +67,27 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Список новостей */}
-      <section className="max-w-[1360px] mx-auto px-4 py-8">
-        <ul className="space-y-4">
-          {newsItems.map((title, index) => (
-            <li key={index}>
+     {/* Список новостей, как на старом сайте */}
+      <section className="relative max-w-[1360px] mx-auto px-4 pt-6 pb-16">
+        {/* Одна большая «молния» слева */}
+        <div className="absolute left-0 top-4 bottom-4 flex justify-center">
+          <div className="w-[2px] bg-[#facc15] lightning-bar" />
+        </div>
+
+        <ul className="space-y-4 pl-6">
+          {filteredNews.map((item) => (
+            <li key={item.id} className="flex items-start gap-4">
+              {/* Иконка-кружок перед ссылкой */}
+              <div className="relative mt-1 flex h-7 w-7 items-center justify-center rounded-full border border-[#f3b640] bg-white">
+                <span className="h-3 w-[2px] rounded-full bg-[#f3b640]" />
+              </div>
+
+              {/* Новость как активная ссылка */}
               <a
-                href="#"
-                className="flex items-start gap-4 group"
+                href={item.href}
+                className="text-sm text-[#3b342d] hover:text-[#015d52] transition-colors"
               >
-                {/* Жёлтая «молния» — вертикальная полоса слева */}
-                <span className="h-10 w-1 rounded-full bg-gradient-to-b from-yellow-400 to-yellow-500 group-hover:from-yellow-300 group-hover:to-yellow-500 transition-colors" />
-
-                {/* Иконка (пока заглушка) */}
-                <div className="mt-1 h-6 w-6 flex items-center justify-center rounded-full border border-[#015d52] text-[#015d52] text-xs flex-shrink-0">
-                  i
-                </div>
-
-                {/* Текст новости как ссылка */}
-                <p className="text-sm text-[#3b342d] group-hover:text-[#015d52]">
-                  {title}
-                </p>
+                {item.title}
               </a>
             </li>
           ))}
