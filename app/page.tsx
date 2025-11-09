@@ -71,14 +71,17 @@ export default function HomePage() {
       {/* Компактный блок афоризма сверху */}
       <section className="border-b border-gray-200">
         <div className="max-w-[1360px] mx-auto px-4 pt-4 pb-4">
-          <div className="relative max-w-[900px] mx-auto py-2">
-            {/* Чип слева, на уровне середины афоризма */}
-            <button className="absolute left-0 top-1/2 -translate-y-1/2 px-5 py-1.5 text-xs font-medium rounded-full border border-[#b6b6c0] bg-white shadow-sm">
-              Афоризм месяца
-            </button>
+          {/* ТРИ КОЛОНКИ: чип слева, афоризм по центру, фильтр справа */}
+          <div className="flex items-center">
+            {/* Левая колонка: чип, выравнен к афоризму на одной линии */}
+            <div className="flex-1 flex justify-start">
+              <button className="px-5 py-1.5 text-xs font-medium rounded-full border border-[#b6b6c0] bg-white shadow-sm">
+                Афоризм месяца
+              </button>
+            </div>
 
-            {/* Афоризм по центру */}
-            <div className="text-center">
+            {/* Центральная колонка: афоризм строго по центру всей области */}
+            <div className="flex-shrink-0 text-center">
               <h2 className="text-2xl md:text-3xl font-semibold italic tracking-wide">
                 Mens sana in corpore sano
               </h2>
@@ -87,22 +90,24 @@ export default function HomePage() {
               </p>
             </div>
 
-            {/* Специальность справа, на том же уровне, что и чип */}
-            <div className="absolute right-0 top-1/2 -translate-y-1/2 flex flex-col items-end gap-1">
-              <span className="text-[11px] uppercase tracking-[0.18em] text-[#9c978f]">
-                Специальность
-              </span>
-              <select
-                value={selectedSpecialty}
-                onChange={(e) => setSelectedSpecialty(e.target.value)}
-                className="min-w-[190px] rounded-full border border-[#d3cec4] bg-white px-4 py-1.5 text-sm text-[#3b342d] shadow-sm focus:outline-none focus:border-[#015d52]"
-              >
-                {SPECIALTIES.map((spec) => (
-                  <option key={spec} value={spec}>
-                    {spec}
-                  </option>
-                ))}
-              </select>
+            {/* Правая колонка: фильтр специальности, симметрично чипу */}
+            <div className="flex-1 flex justify-end">
+              <div className="flex flex-col items-end gap-1">
+                <span className="text-[11px] uppercase tracking-[0.18em] text-[#9c978f]">
+                  Специальность
+                </span>
+                <select
+                  value={selectedSpecialty}
+                  onChange={(e) => setSelectedSpecialty(e.target.value)}
+                  className="min-w-[190px] rounded-full border border-[#d3cec4] bg-white px-4 py-1.5 text-sm text-[#3b342d] shadow-sm focus:outline-none focus:border-[#015d52]"
+                >
+                  {SPECIALTIES.map((spec) => (
+                    <option key={spec} value={spec}>
+                      {spec}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
           </div>
         </div>
@@ -137,4 +142,3 @@ export default function HomePage() {
     </main>
   );
 }
-
