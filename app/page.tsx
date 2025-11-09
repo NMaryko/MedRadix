@@ -1,12 +1,15 @@
-export default function HomePage() {
-  const newsItems = [
-    'Новые рекомендации ESC по ведению пациентов с фибрилляцией предсердий',
-    'FDA одобрило новый препарат для лечения сердечной недостаточности',
-    'Исследование The Lancet: связь между сном и риском деменции',
-    'JAMA: Влияние витамина D на иммунный ответ при COVID-19',
-    'Обновлены гайдлайны ADA по лечению сахарного диабета 2 типа',
-  ];
+'use client';
 
+import { useState, useMemo } from 'react';
+
+type NewsItem = {
+  id: number;
+  title: string;
+  href: string;
+  specialties: string[];
+};
+
+// список специальностей (по алфавиту, плюс "Все")
   const specialties = [
   'Все',
   'Аллергология и иммунология',
@@ -31,74 +34,108 @@ export default function HomePage() {
   'Эндокринология',
 ];
 
+// новости (пока заглушки, но уже как реальные ссылки)
+const NEWS_ITEMS: NewsItem[] = [
+  {
+    id: 1,
+    title:
+      'Новые рекомендации ESC по ведению пациентов с фибрилляцией предсердий',
+    href: '#esc-af',
+    specialties: ['Кардиология', 'Терапия'],
+  },
+  {
+    id: 2,
+    title:
+      'FDA одобрило новый препарат для лечения сердечной недостаточности',
+    href: '#fda-hf',
+    specialties: ['Кардиология'],
+  },
+  {
+    id: 3,
+    title: 'Исследование The Lancet: связь между сном и риском деменции',
+    href: '#sleep-dementia',
+    specialties: ['Неврология', 'Терапия'],
+  },
+  {
+    id: 4,
+    title: 'JAMA: влияние витамина D на иммунный ответ при COVID-19',
+    href: '#jama-vitd',
+    specialties: ['Пульмонология', 'Терапия'],
+  },
+  {
+    id: 5,
+    title:
+      'Обновлены гайдлайны ADA по лечению сахарного диабета 2 типа',
+    href: '#ada-diabetes',
+    specialties: ['Эндокринология', 'Терапия'],
+  },
+];
+
+export default function HomePage() {
+  const [selectedSpecialty, setSelectedSpecialty] = useState<string>('Все');
+
+  const filteredNews = useMemo(() => {
+    if (selectedSpecialty === 'Все') return NEWS_ITEMS;
+    return NEWS_ITEMS.filter((item) =>
+      item.specialties.includes(selectedSpecialty),
+    );
+  }, [selectedSpecialty]);
+
   return (
     <main className="bg-[#fcfcee] min-h-screen">
-     {/* Блок афоризма и специальности */}
-      <section className="border-b border-gray-200">
-        <div className="max-w-[1360px] mx-auto px-4 pt-6 pb-10">
-          <div className="flex items-start justify-between gap-6">
-            {/* Афоризм по центру */}
-            <div className="flex-1 flex flex-col items-center text-center">
-              <button className="mb-3 inline-flex items-center rounded-full border border-[#6b635a] px-5 py-1 text-xs font-medium tracking-wide uppercase text-[#6b635a] bg-white/70">
-                Афоризм месяца
-              </button>
+      {/* Блок афоризма + специальность */}
+      <section className="max-w-[1360px] mx-auto px-4 pt-10 pb-8">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+          {/* Центровка афоризма */}
+          <div className="flex-1 flex flex-col items-center text-center">
+            {/* Чип чуть ниже и ближе к центру */}
+            <button className="mb-4 inline-flex items-center rounded-full border border-[#e0e0d0] bg-white px-5 py-1 text-xs font-medium tracking-wide text-[#7a6a55] shadow-sm">
+              Афоризм месяца
+            </button>
 
-              <h1 className="text-3xl md:text-4xl font-semibold italic text-[#3b342d]">
-                Mens sana in corpore sano
-              </h1>
-
-              <p className="mt-2 text-sm text-[#6b635a]">
-                В здоровом теле — здоровый дух (Ювенал)
-              </p>
-            </div>
-
-            {/* Справа — фильтр специальности */}
-            <div className="w-56 pt-8">
-              <span className="block text-[11px] uppercase tracking-[0.16em] text-[#b0a89e] mb-1 text-right">
-                Специальность
-              </span>
-              <select
-                value={selectedSpecialty}
-                onChange={(e) => setSelectedSpecialty(e.target.value)}
-                className="mt-1 block w-full rounded-full border border-gray-300 bg-white px-4 py-2 text-sm text-[#3b342d] shadow-sm focus:outline-none focus:ring-2 focus:ring-[#015d52]"
-              >
-                {specialties.map((name) => (
-                  <option key={name} value={name}>
-                    {name}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <h1 className="text-3xl md:text-4xl font-semibold italic text-[#3b342d]">
+              Mens sana in corpore sano
+            </h1>
+            <p className="mt-2 text-sm text-[#6b655a]">
+              В здоровом теле — здоровый дух (Ювенал)
+            </p>
           </div>
-        </div>
-      </section>
 
-          {/* Правая часть — специальность */}
-          <div className="text-right">
-            <span className="block text-[10px] tracking-[0.16em] uppercase text-[#6b635a] mb-1">
+          {/* Специальность справа */}
+          <div className="w-full md:w-64 flex flex-col items-end gap-1">
+            <span className="text-[11px] tracking-[0.16em] uppercase text-[#b0a896]">
               Специальность
             </span>
-            <select className="px-3 py-1 text-sm border border-gray-300 rounded-full bg-white text-[#3b342d]">
-              {specialties.map((sp) => (
-                <option key={sp}>{sp}</option>
+            <select
+              value={selectedSpecialty}
+              onChange={(e) => setSelectedSpecialty(e.target.value)}
+              className="w-full rounded-full border border-[#d0c8b8] bg-white px-4 py-2 text-sm text-[#3b342d] shadow-sm outline-none focus:border-[#015d52] focus:ring-2 focus:ring-[#015d52]/20"
+            >
+              {SPECIALTIES.map((spec) => (
+                <option key={spec} value={spec}>
+                  {spec}
+                </option>
               ))}
             </select>
           </div>
         </div>
       </section>
 
-     {/* Список новостей, как на старом сайте */}
+      {/* Список новостей */}
       <section className="relative max-w-[1360px] mx-auto px-4 pt-6 pb-16">
-        {/* Одна большая «молния» слева */}
-        <div className="absolute left-0 top-4 bottom-4 flex justify-center">
-          <div className="w-[2px] bg-[#facc15] lightning-bar" />
+        {/* Одна большая «молния» слева от списка */}
+        <div className="pointer-events-none absolute left-0 top-4 bottom-4 flex justify-center">
+          <div className="w-[2px] rounded-full bg-[#facc15] shadow-[0_0_14px_rgba(250,204,21,0.9)] animate-pulse" />
         </div>
 
         <ul className="space-y-4 pl-6">
           {filteredNews.map((item) => (
-            <li key={item.id} className="flex items-start gap-4">
+            <li
+              key={item.id}
+              className="flex items-start gap-4"
+            >
               {/* Иконка-кружок перед ссылкой */}
-              <div className="relative mt-1 flex h-7 w-7 items-center justify-center rounded-full border border-[#f3b640] bg-white">
+              <div className="relative mt-1 flex h-7 w-7 flex-none items-center justify-center rounded-full border border-[#f3b640] bg-white">
                 <span className="h-3 w-[2px] rounded-full bg-[#f3b640]" />
               </div>
 
@@ -117,4 +154,5 @@ export default function HomePage() {
   );
 }
 
+  
 
