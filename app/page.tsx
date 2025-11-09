@@ -188,6 +188,7 @@ const SPECIALTIES: string[] = [
   'Эндокринология',
 ];
 
+
 const NEWS_ITEMS: NewsItem[] = [
   {
     id: 1,
