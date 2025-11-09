@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Search, User } from 'lucide-react';
 
-const menuItems = [
+const MENU_ITEMS = [
   'Новое',
   'Гайды',
   'Статьи',
@@ -14,129 +14,103 @@ const menuItems = [
   'Медсестрам',
 ];
 
-// пока везде нет новостей — все полоски зелёные,
-// когда в конкретном разделе появится новость, поменяем false -> true
-const hasNews: Record<string, boolean> = {
-  'Новое': false,
-  'Гайды': false,
-  'Статьи': false,
-  'Голос эксперта': false,
-  'Курсы': false,
-  'Калькуляторы': false,
-  'Лекарства': false,
-  'Медсестрам': false,
-};
-
 export default function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [activeLang, setActiveLang] = useState<'RU' | 'EN'>('RU');
 
   return (
-    <header className="bg-white border-b border-gray-100">
+    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-gray-200">
       {/* Основная шапка */}
-      <div className="max-w-[1360px] mx-auto px-4 py-3">
-        <div className="flex items-center justify-between">
-          {/* Логотип */}
-          <div className="flex-shrink-0">
-            <div className="flex flex-col">
-              <span className="text-2xl font-bold text-gray-900 font-serif">
-                MedRadix
-              </span>
-              <span className="text-xs text-gray-600 italic -mt-1">
-                Scientia pro vita
-              </span>
-            </div>
-          </div>
+      <div className="max-w-[1360px] mx-auto px-4 py-3 flex items-center justify-between">
+        {/* Логотип */}
+        <div className="flex flex-col">
+          <span className="text-2xl font-semibold text-[#2b2115]">MedRadix</span>
+          <span className="text-xs text-[#7a6a55] italic mt-[-2px]">
+            Scientia pro vita
+          </span>
+        </div>
 
-          {/* Центральное меню */}
-          <nav className="flex-1 flex justify-center">
-            <ul className="flex items-center space-x-8">
-              {menuItems.map((item) => {
-                const underlineColor =
-                  item === 'Новое'
-                    ? 'bg-yellow-500'
-                    : hasNews[item]
-                    ? 'bg-yellow-500'
-                    : 'bg-[#015d52]';
+        {/* Меню */}
+        <nav className="flex-1 flex justify-center">
+          <ul className="flex items-center space-x-7">
+            {MENU_ITEMS.map((item) => (
+              <li key={item} className="relative group">
+                <button
+                  className={`inline-flex flex-col items-center text-[15px] font-medium transition-colors duration-200 ${
+                    item === 'Новое'
+                      ? 'text-[#e6a800]'
+                      : 'text-[#4b3b2f] hover:text-[#015d52]'
+                  }`}
+                >
+                  <span>{item}</span>
 
-                return (
-                  <li key={item} className="relative">
-                    <button
-                      className={`text-[15px] font-medium transition-colors duration-200 group ${
-                        item === 'Новое'
-                          ? 'text-yellow-600'
-                          : 'text-gray-800'
-                      } hover:text-[#015d52]`}
-                    >
-                      {item}
-                      {/* Полоса под пунктом */}
-                      <span
-                        className={`pointer-events-none absolute -bottom-1 left-0 w-full h-0.5 ${underlineColor} opacity-0 group-hover:opacity-100 transition-opacity duration-200`}
-                      />
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
-          </nav>
+                  {/* Полоска под разделом */}
+                  {item === 'Новое' ? (
+                    // "Новое" всегда с жёлтой линией
+                    <span className="mt-1 h-0.5 w-full bg-[#facc15]" />
+                  ) : (
+                    // Остальные — зелёная линия, появляется плавно слева-направо при ховере
+                    <span className="mt-1 h-0.5 w-full bg-[#015d52] origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
+                  )}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </nav>
 
-          {/* Правая часть */}
-          <div className="flex items-center space-x-6">
-            {/* Лупа */}
+        {/* Правая часть: поиск, Войти, язык */}
+        <div className="flex items-center space-x-5">
+          {/* Лупа */}
+          <button
+            onClick={() => setIsSearchOpen((v) => !v)}
+            className="text-[#4b3b2f] hover:text-[#015d52] transition-colors duration-200"
+            aria-label="Поиск"
+          >
+            <Search size={18} />
+          </button>
+
+          {/* Кнопка Войти (зелёная, текст и иконка белые) */}
+          <button className="inline-flex items-center gap-2 rounded-full bg-[#015d52] px-4 py-1.5 text-sm font-medium text-white hover:bg-[#01463d] transition-colors duration-200">
+            <User size={14} />
+            <span>Войти</span>
+          </button>
+
+          {/* Языки RU / EN после кнопки Войти */}
+          <div className="flex items-center gap-1 text-sm">
             <button
-              onClick={() => setIsSearchOpen(!isSearchOpen)}
-              className="text-gray-800 hover:text-[#015d52] transition-colors duration-200"
-              aria-label="Поиск"
+              onClick={() => setActiveLang('RU')}
+              className={
+                activeLang === 'RU'
+                  ? 'font-semibold text-[#015d52]'
+                  : 'text-[#4b3b2f] hover:text-[#015d52]'
+              }
             >
-              <Search size={20} />
+              RU
             </button>
-
-            {/* Кнопка Войти — зелёная, текст и иконка белые */}
-            <button className="flex items-center space-x-2 bg-[#015d52] text-white px-4 py-1.5 rounded-full text-sm font-medium hover:bg-[#01463d] transition-colors duration-200">
-              <User size={16} />
-              <span>Войти</span>
+            <span className="text-[#c4b9aa]">/</span>
+            <button
+              onClick={() => setActiveLang('EN')}
+              className={
+                activeLang === 'EN'
+                  ? 'font-semibold text-[#015d52]'
+                  : 'text-[#4b3b2f] hover:text-[#015d52]'
+              }
+            >
+              EN
             </button>
-
-            {/* Переключатель языков: RU / EN */}
-            <div className="flex items-center space-x-1">
-              <button
-                onClick={() => setActiveLang('RU')}
-                className={`text-sm font-medium transition-colors duration-200 ${
-                  activeLang === 'RU'
-                    ? 'text-[#015d52]'
-                    : 'text-gray-800 hover:text-[#015d52]'
-                }`}
-              >
-                RU
-              </button>
-
-              <span className="text-gray-400">/</span>
-
-              <button
-                onClick={() => setActiveLang('EN')}
-                className={`text-sm font-medium transition-colors duration-200 ${
-                  activeLang === 'EN'
-                    ? 'text-[#015d52]'
-                    : 'text-gray-800 hover:text-[#015d52]'
-                }`}
-              >
-                EN
-              </button>
-            </div>
           </div>
         </div>
       </div>
 
-      {/* Панель поиска — узкая, по центру, с пустыми зонами по бокам */}
+      {/* Панель поиска под шапкой — появляется только по клику на лупу */}
       {isSearchOpen && (
-        <div className="border-t border-[#015d52] bg-white shadow-lg">
+        <div className="border-t border-[#015d52] bg-white/95 shadow-md">
           <div className="max-w-[1360px] mx-auto px-4 py-4 flex justify-center">
-            <div className="w-full max-w-[460px] border-2 border-[#015d52] rounded-lg shadow-[0_0_10px_rgba(1,93,82,0.2)]">
+            <div className="w-full max-w-xl border border-[#015d52] rounded-lg shadow-[0_0_10px_rgba(1,93,82,0.25)]">
               <input
                 type="text"
                 placeholder="Поиск по гайдам, статьям, лекарствам..."
-                className="w-full px-4 py-3 text-gray-900 placeholder-gray-500 border-none outline-none bg-transparent"
-                autoFocus
+                className="w-full px-4 py-2.5 text-sm text-[#2b2115] placeholder-gray-500 bg-white border-none outline-none"
               />
             </div>
           </div>
@@ -145,6 +119,7 @@ export default function Header() {
     </header>
   );
 }
+
 
 
 
