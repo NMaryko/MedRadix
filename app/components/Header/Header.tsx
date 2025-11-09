@@ -1,4 +1,3 @@
-// app/components/Header.tsx
 'use client';
 
 import { useState } from 'react';
@@ -15,8 +14,8 @@ const menuItems = [
   'Медсестрам',
 ];
 
-// пока везде НЕТ новостей – всё зелёное
-// когда появятся новости в разделе, просто поменяем false → true
+// пока везде нет новостей — все полоски зелёные,
+// когда в конкретном разделе появится новость, поменяем false -> true
 const hasNews: Record<string, boolean> = {
   'Новое': false,
   'Гайды': false,
@@ -53,21 +52,24 @@ export default function Header() {
           <nav className="flex-1 flex justify-center">
             <ul className="flex items-center space-x-8">
               {menuItems.map((item) => {
-                const underlineColor = hasNews[item]
-                  ? 'bg-yellow-500'
-                  : 'bg-[#015d52]';
+                const underlineColor =
+                  item === 'Новое'
+                    ? 'bg-yellow-500'
+                    : hasNews[item]
+                    ? 'bg-yellow-500'
+                    : 'bg-[#015d52]';
 
                 return (
                   <li key={item} className="relative">
                     <button
-                      className={`text-sm font-medium transition-colors duration-200 group ${
+                      className={`text-[15px] font-medium transition-colors duration-200 group ${
                         item === 'Новое'
                           ? 'text-yellow-600'
                           : 'text-gray-800'
                       } hover:text-[#015d52]`}
                     >
                       {item}
-                      {/* Полоса под пунктом меню (появляется при ховере) */}
+                      {/* Полоса под пунктом */}
                       <span
                         className={`pointer-events-none absolute -bottom-1 left-0 w-full h-0.5 ${underlineColor} opacity-0 group-hover:opacity-100 transition-opacity duration-200`}
                       />
@@ -95,7 +97,7 @@ export default function Header() {
               <span>Войти</span>
             </button>
 
-            {/* Переключатель языков: RU / EN после кнопки */}
+            {/* Переключатель языков: RU / EN */}
             <div className="flex items-center space-x-1">
               <button
                 onClick={() => setActiveLang('RU')}
@@ -125,11 +127,11 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Панель поиска — узкая, по центру, с полями слева/справа */}
+      {/* Панель поиска — узкая, по центру, с пустыми зонами по бокам */}
       {isSearchOpen && (
         <div className="border-t border-[#015d52] bg-white shadow-lg">
           <div className="max-w-[1360px] mx-auto px-4 py-4 flex justify-center">
-            <div className="w-full max-w-xl border-2 border-[#015d52] rounded-lg shadow-[0_0_10px_rgba(1,93,82,0.2)]">
+            <div className="w-full max-w-[460px] border-2 border-[#015d52] rounded-lg shadow-[0_0_10px_rgba(1,93,82,0.2)]">
               <input
                 type="text"
                 placeholder="Поиск по гайдам, статьям, лекарствам..."
@@ -143,5 +145,6 @@ export default function Header() {
     </header>
   );
 }
+
 
 
