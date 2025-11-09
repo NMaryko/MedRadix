@@ -29,3 +29,36 @@ body {
     opacity: 0.6;
   }
 }
+/* Жёлтая "молния" слева от новостей */
+.lightning-bar {
+  position: relative;
+  width: 2px;
+  height: 32px;
+  border-radius: 999px;
+  overflow: hidden;
+  background-color: #fef3c7; /* светло-жёлтый */
+}
+
+.lightning-bar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, #fde047, #eab308);
+  transform-origin: top;
+  animation: lightningFlow 1.6s ease-in-out infinite;
+}
+
+@keyframes lightningFlow {
+  0% {
+    transform: scaleY(0);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleY(0);
+    opacity: 0.4;
+  }
+}
