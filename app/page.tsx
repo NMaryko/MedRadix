@@ -2,13 +2,6 @@
 
 import { useState } from 'react';
 
-type NewsItem = {
-  id: number;
-  title: string;
-  href: string;
-  specialty: string;
-};
-
 const SPECIALTIES: string[] = [
   'Все',
   'Акушерство и гинекология',
@@ -35,83 +28,74 @@ const SPECIALTIES: string[] = [
   'Эндокринология',
 ];
 
-const NEWS_ITEMS: NewsItem[] = [
+const NEWS = [
   {
     id: 1,
     title:
       'Новые рекомендации ESC по ведению пациентов с фибрилляцией предсердий',
     href: '#',
-    specialty: 'Кардиология',
   },
   {
     id: 2,
     title:
       'FDA одобрило новый препарат для лечения сердечной недостаточности',
     href: '#',
-    specialty: 'Кардиология',
   },
   {
     id: 3,
     title:
       'Исследование The Lancet: связь между сном и риском деменции',
     href: '#',
-    specialty: 'Неврология',
   },
   {
     id: 4,
     title:
-      'JAMA: влияние витамина D на иммунный ответ при COVID-19',
+      'JAMA: Влияние витамина D на иммунный ответ при COVID-19',
     href: '#',
-    specialty: 'Аллергология и иммунология',
   },
   {
     id: 5,
     title:
       'Обновлены гайдлайны ADA по лечению сахарного диабета 2 типа',
     href: '#',
-    specialty: 'Эндокринология',
   },
 ];
 
 export default function HomePage() {
-  const [activeSpecialty, setActiveSpecialty] = useState<string>('Все');
+  const [selectedSpecialty, setSelectedSpecialty] = useState('Все');
 
-  const filteredNews =
-    activeSpecialty === 'Все'
-      ? NEWS_ITEMS
-      : NEWS_ITEMS.filter((item) => item.specialty === activeSpecialty);
+  const filteredNews = NEWS; // пока без реальной фильтрации
 
   return (
-    <main className="bg-[#fcfcee] min-h-screen pt-4 pb-12">
-      {/* Блок афоризма + специальность */}
-      <section className="border-b border-[#e5ddc8] pb-6">
-        <div className="max-w-[1200px] mx-auto px-6">
-          {/* Сам афоризм */}
-          <h1 className="text-center text-3xl md:text-[32px] font-semibold text-[#3b342d]">
-            Mens sana in corpore sano
-          </h1>
-
-          {/* Перевод + чип + специальность на одной линии */}
-          <div className="mt-3 flex items-center gap-4">
-            {/* Чип слева */}
-            <button className="flex-none px-5 py-1.5 text-[13px] font-medium rounded-full border border-[#c8c0ad] bg-white/80 text-[#3b342d] shadow-sm">
+    <main className="bg-[#fcfcee] min-h-screen">
+      {/* Компактный блок афоризма сверху */}
+      <section className="border-b border-gray-200">
+        <div className="max-w-[1360px] mx-auto px-4 pt-4 pb-4">
+          <div className="relative max-w-[900px] mx-auto py-2">
+            {/* Чип слева, на уровне середины афоризма */}
+            <button className="absolute left-0 top-1/2 -translate-y-1/2 px-5 py-1.5 text-xs font-medium rounded-full border border-[#b6b6c0] bg-white shadow-sm">
               Афоризм месяца
             </button>
 
-            {/* Перевод по центру */}
-            <p className="flex-1 text-center text-sm text-[#6a6255]">
-              В здоровом теле — здоровый дух (Ювенал)
-            </p>
+            {/* Афоризм по центру */}
+            <div className="text-center">
+              <h2 className="text-2xl md:text-3xl font-semibold italic tracking-wide">
+                Mens sana in corpore sano
+              </h2>
+              <p className="mt-1.5 text-sm text-[#3b342d]">
+                В здоровом теле — здоровый дух (Ювенал)
+              </p>
+            </div>
 
-            {/* Специальность справа */}
-            <div className="flex-none text-right">
-              <span className="block text-[11px] tracking-[0.16em] uppercase text-[#b3a58d] mb-1">
-                специальность
+            {/* Специальность справа, на том же уровне, что и чип */}
+            <div className="absolute right-0 top-1/2 -translate-y-1/2 flex flex-col items-end gap-1">
+              <span className="text-[11px] uppercase tracking-[0.18em] text-[#9c978f]">
+                Специальность
               </span>
               <select
-                value={activeSpecialty}
-                onChange={(e) => setActiveSpecialty(e.target.value)}
-                className="h-9 min-w-[190px] rounded-full border border-[#d3cbb7] bg-white px-4 text-sm text-[#3b342d] shadow-sm focus:outline-none focus:ring-2 focus:ring-[#015d52]/40 focus:border-[#015d52]"
+                value={selectedSpecialty}
+                onChange={(e) => setSelectedSpecialty(e.target.value)}
+                className="min-w-[190px] rounded-full border border-[#d3cec4] bg-white px-4 py-1.5 text-sm text-[#3b342d] shadow-sm focus:outline-none focus:border-[#015d52]"
               >
                 {SPECIALTIES.map((spec) => (
                   <option key={spec} value={spec}>
@@ -124,37 +108,33 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Список новостей с молнией слева */}
-      <section className="mt-4">
-        <div className="relative max-w-[1200px] mx-auto px-6 pt-2">
-          {/* Одна большая жёлтая линия от 5-й до 1-й новости */}
-          <div className="absolute left-[52px] top-3 bottom-3 flex justify-center">
-            <div className="w-[2px] bg-[#facc15] lightning-bar" />
-          </div>
-
-          <ul className="space-y-4 pl-16">
-            {filteredNews.map((item) => (
-              <li
-                key={item.id}
-                className="flex items-start gap-4 group cursor-pointer"
-              >
-                {/* Иконка-кружок рядом с линией */}
-                <div className="relative mt-[2px] flex h-6 w-6 items-center justify-center rounded-full border border-[#b3a58d] bg-white">
-                  <span className="h-2 w-2 rounded-full bg-[#b3a58d] group-hover:bg-[#015d52] transition-colors" />
-                </div>
-
-                {/* Текст новости — крупнее, кликабельный */}
-                <a
-                  href={item.href}
-                  className="text-[15px] leading-relaxed text-[#3b342d] group-hover:text-[#015d52] transition-colors"
-                >
-                  {item.title}
-                </a>
-              </li>
-            ))}
-          </ul>
+      {/* Список новостей с одной общей «молнией» слева */}
+      <section className="relative max-w-[1360px] mx-auto px-4 pt-8 pb-16">
+        {/* Жёлтая линия от нижней до верхней новости */}
+        <div className="absolute left-10 top-2 bottom-2 flex items-stretch pointer-events-none">
+          <div className="w-[2px] bg-gradient-to-b from-[#facc15]/0 via-[#facc15] to-[#facc15]/0 animate-pulse" />
         </div>
+
+        <ul className="space-y-4 pl-16">
+          {filteredNews.map((item) => (
+            <li key={item.id} className="flex items-start gap-4">
+              {/* Иконка-кружок */}
+              <div className="flex h-7 w-7 flex-none items-center justify-center rounded-full border border-[#3b3640] bg-white shadow-[0_0_0_1px_rgba(0,0,0,0.03)]">
+                <span className="h-4 w-[2px] bg-[#facc15] rounded-full" />
+              </div>
+
+              {/* Кликабельная новость, шрифт чуть крупнее */}
+              <a
+                href={item.href}
+                className="text-[16px] md:text-[17px] leading-relaxed text-[#3b342d] hover:text-[#015d52] transition-colors"
+              >
+                {item.title}
+              </a>
+            </li>
+          ))}
+        </ul>
       </section>
     </main>
   );
 }
+
