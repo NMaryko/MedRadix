@@ -1,138 +1,154 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 
 type NewsItem = {
   id: number;
   title: string;
+  specialty: string;
   href: string;
-  specialties: string[];
 };
 
-// список специальностей (по алфавиту, плюс "Все")
 const SPECIALTIES: string[] = [
   'Все',
   'Аллергология',
   'Анестезиология',
+  'Гастроэнтерология',
+  'Гематология',
+  'Гериатрия',
+  'Дерматология',
+  'Инфекционные болезни',
   'Кардиология',
   'Неврология',
+  'Нефрология',
   'Онкология',
+  'Офтальмология',
   'Педиатрия',
   'Пульмонология',
   'Ревматология',
   'Терапия',
+  'Травматология и ортопедия',
+  'Урология',
+  'Хирургия',
   'Эндокринология',
 ];
 
-// новости (пока заглушки, но уже как реальные ссылки)
 const NEWS_ITEMS: NewsItem[] = [
   {
     id: 1,
     title:
       'Новые рекомендации ESC по ведению пациентов с фибрилляцией предсердий',
-    href: '#esc-af',
-    specialties: ['Кардиология', 'Терапия'],
+    specialty: 'Кардиология',
+    href: '#',
   },
   {
     id: 2,
     title:
       'FDA одобрило новый препарат для лечения сердечной недостаточности',
-    href: '#fda-hf',
-    specialties: ['Кардиология'],
+    specialty: 'Кардиология',
+    href: '#',
   },
   {
     id: 3,
-    title: 'Исследование The Lancet: связь между сном и риском деменции',
-    href: '#sleep-dementia',
-    specialties: ['Неврология', 'Терапия'],
+    title:
+      'Исследование The Lancet: связь между сном и риском деменции',
+    specialty: 'Неврология',
+    href: '#',
   },
   {
     id: 4,
-    title: 'JAMA: влияние витамина D на иммунный ответ при COVID-19',
-    href: '#jama-vitd',
-    specialties: ['Пульмонология', 'Терапия'],
+    title:
+      'JAMA: влияние витамина D на иммунный ответ при COVID-19',
+    specialty: 'Инфекционные болезни',
+    href: '#',
   },
   {
     id: 5,
     title:
       'Обновлены гайдлайны ADA по лечению сахарного диабета 2 типа',
-    href: '#ada-diabetes',
-    specialties: ['Эндокринология', 'Терапия'],
+    specialty: 'Эндокринология',
+    href: '#',
   },
 ];
 
 export default function HomePage() {
   const [selectedSpecialty, setSelectedSpecialty] = useState<string>('Все');
 
-  const filteredNews = useMemo(() => {
-    if (selectedSpecialty === 'Все') return NEWS_ITEMS;
-    return NEWS_ITEMS.filter((item) =>
-      item.specialties.includes(selectedSpecialty),
-    );
-  }, [selectedSpecialty]);
+  const filteredNews =
+    selectedSpecialty === 'Все'
+      ? NEWS_ITEMS
+      : NEWS_ITEMS.filter(
+          (item) => item.specialty === selectedSpecialty
+        );
 
   return (
     <main className="bg-[#fcfcee] min-h-screen">
       {/* Блок афоризма + специальность */}
-      <section className="max-w-[1360px] mx-auto px-4 pt-10 pb-8">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-          {/* Центровка афоризма */}
-          <div className="flex-1 flex flex-col items-center text-center">
-            {/* Чип чуть ниже и ближе к центру */}
-            <button className="mb-4 inline-flex items-center rounded-full border border-[#e0e0d0] bg-white px-5 py-1 text-xs font-medium tracking-wide text-[#7a6a55] shadow-sm">
-              Афоризм месяца
-            </button>
+      <section className="border-b border-gray-200">
+        <div className="max-w-[1360px] mx-auto px-4 pt-4 pb-10 flex items-start justify-between">
+          {/* Пустое место слева — помогает центровать блок афоризма */}
+          <div className="flex-1" />
 
+          {/* Центр: афоризм */}
+          <div className="flex flex-col items-center gap-3">
             <h1 className="text-3xl md:text-4xl font-semibold italic text-[#3b342d]">
               Mens sana in corpore sano
             </h1>
-            <p className="mt-2 text-sm text-[#6b655a]">
-              В здоровом теле — здоровый дух (Ювенал)
-            </p>
+
+            {/* Чип + перевод в одной строке */}
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              <button className="px-5 py-1.5 text-xs font-medium rounded-full border border-[#d3c7aa] bg-white text-[#7a6a55] shadow-sm">
+                Афоризм месяца
+              </button>
+
+              <p className="text-sm text-[#6b654f]">
+                В здоровом теле — здоровый дух (Ювенал)
+              </p>
+            </div>
           </div>
 
-          {/* Специальность справа */}
-          <div className="w-full md:w-64 flex flex-col items-end gap-1">
-            <span className="text-[11px] tracking-[0.16em] uppercase text-[#b0a896]">
-              Специальность
-            </span>
-            <select
-              value={selectedSpecialty}
-              onChange={(e) => setSelectedSpecialty(e.target.value)}
-              className="w-full rounded-full border border-[#d0c8b8] bg-white px-4 py-2 text-sm text-[#3b342d] shadow-sm outline-none focus:border-[#015d52] focus:ring-2 focus:ring-[#015d52]/20"
-            >
-              {SPECIALTIES.map((spec) => (
-                <option key={spec} value={spec}>
-                  {spec}
-                </option>
-              ))}
-            </select>
+          {/* Справа: специальность */}
+          <div className="flex-1 flex justify-end">
+            <div className="flex flex-col items-end gap-1">
+              <span className="text-[11px] tracking-[0.14em] uppercase text-[#b1a68b]">
+                СПЕЦИАЛЬНОСТЬ
+              </span>
+
+              <select
+                value={selectedSpecialty}
+                onChange={(event) => setSelectedSpecialty(event.target.value)}
+                className="min-w-[180px] rounded-full border border-[#d3c7aa] bg-white px-4 py-1.5 text-sm text-[#3b342d] shadow-sm outline-none focus:border-[#015d52] focus:ring-1 focus:ring-[#015d52]"
+              >
+                {SPECIALTIES.map((spec) => (
+                  <option key={spec} value={spec}>
+                    {spec}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Список новостей */}
-      <section className="relative max-w-[1360px] mx-auto px-4 pt-6 pb-16">
-        {/* Одна большая «молния» слева от списка */}
-        <div className="pointer-events-none absolute left-0 top-4 bottom-4 flex justify-center">
-          <div className="w-[2px] rounded-full bg-[#facc15] shadow-[0_0_14px_rgba(250,204,21,0.9)] animate-pulse" />
+      {/* Список новостей с одной «молнией» слева */}
+      <section className="relative max-w-[1360px] mx-auto px-4 pt-10 pb-16">
+        {/* Одна большая жёлтая линия слева, с анимацией */}
+        <div className="absolute left-0 top-6 bottom-6 flex justify-center">
+          <div className="w-[2px] bg-[#facc15] lightning-bar" />
         </div>
 
-        <ul className="space-y-4 pl-6">
+        <ul className="space-y-5 pl-6">
           {filteredNews.map((item) => (
-            <li
-              key={item.id}
-              className="flex items-start gap-4"
-            >
-              {/* Иконка-кружок перед ссылкой */}
-              <div className="relative mt-1 flex h-7 w-7 flex-none items-center justify-center rounded-full border border-[#f3b640] bg-white">
-                <span className="h-3 w-[2px] rounded-full bg-[#f3b640]" />
+            <li key={item.id} className="flex items-start gap-4">
+              {/* Кружок перед ссылкой */}
+              <div className="relative mt-1 flex h-7 w-7 items-center justify-center rounded-full border border-[#b3b3b3] bg-white">
+                <span className="h-3 w-px bg-[#facc15]" />
               </div>
 
               {/* Новость как активная ссылка */}
               <a
                 href={item.href}
-                className="text-sm text-[#3b342d] hover:text-[#015d52] transition-colors"
+                className="text-[15px] leading-snug text-[#3b342d] hover:text-[#015d52] transition-colors"
               >
                 {item.title}
               </a>
@@ -141,6 +157,8 @@ export default function HomePage() {
         </ul>
       </section>
     </main>
+  );
+}
   );
 }
 
