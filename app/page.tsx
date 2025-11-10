@@ -5,7 +5,7 @@ import {
   FileText,
   BookOpen,
   PenSquare,
-  Mic2,
+  Mic,            // ← новый микрофон
   GraduationCap,
   Calculator,
   Pill,
@@ -160,11 +160,11 @@ function getSectionIcon(id: SectionId) {
     case 'news':
       return FileText;
     case 'guides':
-      return PenSquare;      // Гайды
+      return BookOpen;      // ← Гайды: книга
     case 'articles':
-      return BookOpen;       // Статьи
+      return PenSquare;     // ← Статьи: перо
     case 'experts':
-      return Mic2;           // Голос эксперта
+      return Mic;           // ← Голос эксперта: новый микрофон
     case 'courses':
       return GraduationCap;
     case 'calculators':
