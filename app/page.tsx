@@ -1,4 +1,4 @@
-// app/page.tsx - ВОССТАНОВЛЕН ТОЧНЫЙ ОРИГИНАЛ
+// app/page.tsx - АДАПТИВНАЯ версия для всех устройств
 'use client';
 
 import { useState } from 'react';
@@ -164,21 +164,21 @@ export default function HomePage() {
 
   return (
     <main className="bg-[#fcfcee] min-h-screen">
-      {/* Афоризм и фильтр */}
+      {/* Афоризм и фильтр - АДАПТИВНЫЙ */}
       <section className="border-b border-gray-200">
         <div className="max-w-[1360px] mx-auto px-4 pt-4 pb-4">
-          <div className="flex items-center">
+          <div className="flex flex-col lg:flex-row items-center gap-4 lg:gap-0">
             
-            {/* Чип */}
-            <div className="flex-1 flex justify-start">
-              <button className="px-5 py-1.5 text-xs font-medium rounded-full border border-[#b6b6c0] bg-white shadow-sm">
+            {/* Чип - сверху на мобильных, слева на десктопе */}
+            <div className="flex-1 flex justify-start order-2 lg:order-1 w-full lg:w-auto">
+              <button className="px-5 py-1.5 text-xs font-medium rounded-full border border-[#b6b6c0] bg-white shadow-sm w-full lg:w-auto text-center">
                 Афоризм месяца
               </button>
             </div>
 
-            {/* Афоризм */}
-            <div className="flex-shrink-0 text-center">
-              <h2 className="text-3xl font-semibold italic tracking-wide">
+            {/* Афоризм - центр */}
+            <div className="flex-shrink-0 text-center order-1 lg:order-2">
+              <h2 className="text-xl md:text-2xl lg:text-3xl font-semibold italic tracking-wide">
                 Mens sana in corpore sano
               </h2>
               <p className="mt-1.5 text-sm text-[#3b342d]">
@@ -186,16 +186,16 @@ export default function HomePage() {
               </p>
             </div>
 
-            {/* Фильтр */}
-            <div className="flex-1 flex justify-end">
-              <div className="flex flex-col items-end gap-1">
-                <span className="text-[11px] uppercase tracking-[0.18em] text-[#9c978f]">
+            {/* Фильтр - снизу на мобильных, справа на десктопе */}
+            <div className="flex-1 flex justify-end order-3 w-full lg:w-auto">
+              <div className="flex flex-col items-end gap-1 w-full lg:w-auto">
+                <span className="text-[11px] uppercase tracking-[0.18em] text-[#9c978f] hidden lg:block">
                   Специальность
                 </span>
                 <select
                   value={selectedSpecialty}
                   onChange={(e) => setSelectedSpecialty(e.target.value)}
-                  className="min-w-[190px] rounded-full border border-[#d3cec4] bg-white px-4 py-1.5 text-sm text-[#3b342d] shadow-sm focus:outline-none focus:border-[#015d52]"
+                  className="rounded-full border border-[#d3cec4] bg-white px-4 py-1.5 text-sm text-[#3b342d] shadow-sm focus:outline-none focus:border-[#015d52] w-full lg:w-[190px]"
                 >
                   {SPECIALTIES.map((spec) => (
                     <option key={spec} value={spec}>{spec}</option>
@@ -207,21 +207,21 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Новости */}
-      <section className="relative max-w-[1360px] mx-auto px-4 pt-8 pb-16">
-        <div className="absolute left-10 top-2 bottom-2 flex items-stretch pointer-events-none">
+      {/* Новости - АДАПТИВНЫЕ */}
+      <section className="relative max-w-[1360px] mx-auto px-4 pt-6 lg:pt-8 pb-12 lg:pb-16">
+        <div className="absolute left-4 lg:left-10 top-2 bottom-2 flex items-stretch pointer-events-none">
           <div className="w-[2px] bg-gradient-to-b from-[#facc15]/0 via-[#facc15] to-[#facc15]/0 animate-pulse" />
         </div>
 
-        <ul className="space-y-4 pl-16">
+        <ul className="space-y-4 pl-12 lg:pl-16">
           {filteredNews.map((item) => (
             <li key={item.id} className="flex items-start gap-4">
-              <div className="flex h-7 w-7 flex-none items-center justify-center rounded-full border border-[#3b3640] bg-white shadow-[0_0_0_1px_rgba(0,0,0,0.03)]">
-                <span className="h-4 w-[2px] bg-[#facc15] rounded-full" />
+              <div className="flex h-6 w-6 lg:h-7 lg:w-7 flex-none items-center justify-center rounded-full border border-[#3b3640] bg-white shadow-[0_0_0_1px_rgba(0,0,0,0.03)]">
+                <span className="h-3 lg:h-4 w-[2px] bg-[#facc15] rounded-full" />
               </div>
               <a
                 href={item.href}
-                className="text-[17px] leading-relaxed text-[#3b342d] hover:text-[#015d52] transition-colors"
+                className="text-sm lg:text-[17px] leading-relaxed text-[#3b342d] hover:text-[#015d52] transition-colors"
               >
                 {item.title}
               </a>
@@ -230,9 +230,9 @@ export default function HomePage() {
         </ul>
       </section>
 
-      {/* Шахматка разделов - ТОЧНАЯ КОПИЯ ОРИГИНАЛА */}
+      {/* Шахматка разделов - АДАПТИВНАЯ */}
       <section className="border-t border-gray-200 bg-[#f8f4ee]/80">
-        <div className="max-w-[1360px] mx-auto px-4 py-16 space-y-10">
+        <div className="max-w-[1360px] mx-auto px-4 py-12 lg:py-16 space-y-8 lg:space-y-10">
           {SECTIONS.map((section, index) => {
             const Icon = getSectionIcon(section.id);
             const isOdd = (index + 1) % 2 === 1;
@@ -243,24 +243,42 @@ export default function HomePage() {
 
             return (
               <a key={section.id} href={section.href} className="block group">
-                <div className={`flex items-center gap-10 rounded-3xl bg-white/80 px-10 py-8 shadow-[0_10px_25px_rgba(0,0,0,0.04)] transition-all duration-300 group-hover:shadow-[0_16px_40px_rgba(0,0,0,0.12)] group-hover:-translate-y-0.5 ${
-                  isOdd ? '' : 'flex-row-reverse'
+                <div className={`flex flex-col lg:flex-row items-center gap-6 lg:gap-10 rounded-3xl bg-white/80 px-6 lg:px-10 py-6 lg:py-8 shadow-[0_10px_25px_rgba(0,0,0,0.04)] transition-all duration-300 group-hover:shadow-[0_16px_40px_rgba(0,0,0,0.12)] group-hover:-translate-y-0.5 ${
+                  isOdd ? 'lg:flex-row' : 'lg:flex-row-reverse'
                 }`}>
                   
+                  {/* Мобильная версия: всегда иконка сверху, текст снизу */}
+                  <div className="lg:hidden w-full text-center">
+                    <div className={`relative rounded-full p-3 ${haloBase} transition-all duration-300 group-hover:scale-110 group-hover:bg-opacity-70 mx-auto w-fit`}>
+                      <div className={`flex h-14 w-14 items-center justify-center rounded-full ${circleBase} text-white`}>
+                        <Icon className="h-7 w-7" />
+                      </div>
+                    </div>
+                    <h3 className={`${textColorTitle} text-xl font-semibold mt-4 mb-3`}>
+                      {section.title}
+                    </h3>
+                    <p className="text-sm leading-relaxed text-[#4b3b2f]">
+                      {section.description}
+                    </p>
+                  </div>
+
+                  {/* Десктоп версия: шахматка с иконками по краям */}
                   {isOdd ? (
                     <>
                       {/* Текст справа */}
-                      <div className="flex-1 text-right">
-                        <h3 className={`${textColorTitle} text-3xl font-semibold mb-3`}>
-                          {section.title}
-                        </h3>
-                        <p className="text-lg leading-relaxed text-[#4b3b2f] max-w-xl ml-auto">
-                          {section.description}
-                        </p>
+                      <div className="hidden lg:flex flex-1 text-right">
+                        <div className="w-full">
+                          <h3 className={`${textColorTitle} text-3xl font-semibold mb-3`}>
+                            {section.title}
+                          </h3>
+                          <p className="text-lg leading-relaxed text-[#4b3b2f] max-w-xl ml-auto">
+                            {section.description}
+                          </p>
+                        </div>
                       </div>
 
                       {/* Иконка справа */}
-                      <div className="flex-none flex justify-end">
+                      <div className="hidden lg:flex flex-none justify-end">
                         <div className={`relative rounded-full p-3 ${haloBase} transition-all duration-300 group-hover:scale-110 group-hover:bg-opacity-70`}>
                           <div className={`flex h-16 w-16 items-center justify-center rounded-full ${circleBase} text-white`}>
                             <Icon className="h-8 w-8" />
@@ -271,7 +289,7 @@ export default function HomePage() {
                   ) : (
                     <>
                       {/* Иконка слева */}
-                      <div className="flex-none flex justify-start">
+                      <div className="hidden lg:flex flex-none justify-start">
                         <div className={`relative rounded-full p-3 ${haloBase} transition-all duration-300 group-hover:scale-110 group-hover:bg-opacity-70`}>
                           <div className={`flex h-16 w-16 items-center justify-center rounded-full ${circleBase} text-white`}>
                             <Icon className="h-8 w-8" />
@@ -280,13 +298,15 @@ export default function HomePage() {
                       </div>
 
                       {/* Текст слева */}
-                      <div className="flex-1 text-left">
-                        <h3 className={`${textColorTitle} text-3xl font-semibold mb-3`}>
-                          {section.title}
-                        </h3>
-                        <p className="text-lg leading-relaxed text-[#4b3b2f] max-w-xl mr-auto">
-                          {section.description}
-                        </p>
+                      <div className="hidden lg:flex flex-1 text-left">
+                        <div className="w-full">
+                          <h3 className={`${textColorTitle} text-3xl font-semibold mb-3`}>
+                            {section.title}
+                          </h3>
+                          <p className="text-lg leading-relaxed text-[#4b3b2f] max-w-xl mr-auto">
+                            {section.description}
+                          </p>
+                        </div>
                       </div>
                     </>
                   )}
@@ -297,16 +317,16 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CTA */}
+      {/* CTA - АДАПТИВНЫЙ */}
       <section className="border-t border-gray-200">
-        <div className="max-w-[1360px] mx-auto px-4 py-16 text-center">
-          <button className="inline-flex items-center justify-center rounded-full bg-[#015d52] px-10 py-3 text-lg font-semibold text-white shadow-md hover:bg-[#01463d] hover:shadow-lg transition-colors">
+        <div className="max-w-[1360px] mx-auto px-4 py-12 lg:py-16 text-center">
+          <button className="inline-flex items-center justify-center rounded-full bg-[#015d52] px-8 lg:px-10 py-3 text-base lg:text-lg font-semibold text-white shadow-md hover:bg-[#01463d] hover:shadow-lg transition-colors w-full lg:w-auto">
             Получить полный доступ MedRadix
           </button>
-          <p className="mt-4 text-base text-[#4b3b2f]">
+          <p className="mt-4 text-sm lg:text-base text-[#4b3b2f]">
             для врачей — от $12/мес, для медсестер — от $7/мес
           </p>
-          <p className="mt-10 text-base text-[#4b3b2f]">
+          <p className="mt-6 lg:mt-10 text-sm lg:text-base text-[#4b3b2f]">
             support@medradix.info
           </p>
         </div>
