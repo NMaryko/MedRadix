@@ -155,20 +155,35 @@ const SECTIONS: SectionConfig[] = [
   },
 ];
 
+/** Кастомная иконка для «Голоса эксперта» — три вертикальные полосы */
+function ExpertIcon(props: any) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <line x1="8" y1="5" x2="8" y2="19" />
+      <line x1="12" y1="4" x2="12" y2="20" />
+      <line x1="16" y1="6" x2="16" y2="18" />
+    </svg>
+  );
+}
+
 function getSectionIcon(id: SectionId) {
   switch (id) {
     case 'news':
-      // 6. Новое — узкая молния
-      return Zap;
+      return Zap; // молния для Нового
     case 'guides':
-      // 4. GUIDES ↔ ARTICLES: у Гайдов теперь книга
-      return BookOpen;
+      return BookOpen; // книга для Гайдов
     case 'articles':
-      // Статьи — перо
-      return PenSquare;
+      return PenSquare; // перо для Статей
     case 'experts':
-      // 5. Голос эксперта — не микрофон, а более «экспертный» значок
-      return GraduationCap;
+      return ExpertIcon; // НОВАЯ иконка с полосками
     case 'courses':
       return GraduationCap;
     case 'calculators':
@@ -191,7 +206,7 @@ export default function HomePage() {
 
   return (
     <main className="bg-[#fcfcee] min-h-screen">
-      {/* --- КОМПАКТНЫЙ БЛОК АФОРИЗМА СВЕРХУ (НЕ ТРОГАЮ РАСПОЛОЖЕНИЕ) --- */}
+      {/* --- КОМПАКТНЫЙ БЛОК АФОРИЗМА СВЕРХУ --- */}
       <section className="border-b border-gray-200">
         <div className="max-w-[1360px] mx-auto px-4 pt-4 pb-4">
           {/* три колонки: чип слева, афоризм по центру, фильтр справа */}
@@ -246,12 +261,12 @@ export default function HomePage() {
         <ul className="space-y-4 pl-16">
           {filteredNews.map((item) => (
             <li key={item.id} className="flex items-start gap-4">
-              {/* Иконка-кружок слева (оставляю как было) */}
+              {/* Иконка-кружок */}
               <div className="flex h-7 w-7 flex-none items-center justify-center rounded-full border border-[#3b3640] bg-white shadow-[0_0_0_1px_rgba(0,0,0,0.03)]">
                 <span className="h-4 w-[2px] bg-[#facc15] rounded-full" />
               </div>
 
-              {/* 1. Увеличиваем шрифт новостей до шрифта описаний разделов */}
+              {/* Текст новости */}
               <a
                 href={item.href}
                 className="text-base md:text-lg leading-relaxed text-[#3b342d] hover:text-[#015d52] transition-colors"
@@ -274,7 +289,6 @@ export default function HomePage() {
             const textColorTitle =
               section.id === 'news' ? 'text-[#e68a00]' : 'text-[#3b2b22]';
 
-            // 2. Нимбы только при ховере:
             const haloHover =
               section.id === 'news'
                 ? 'group-hover:bg-[#f59e0b33]'
@@ -288,7 +302,7 @@ export default function HomePage() {
                 className="block group"
               >
                 <div
-                  className={`flex items-center gap-10 rounded-3xl bg-white/80 px-10 py-8 shadow-[0_10px_25px_rgba(0,0,0,0.04)] transition-all duration-300 group-hover:shadow-[0_16px_40px_rgba(0,0,0,0.12)] group-hover:-translate-y-0.5`}
+                  className="flex items-center gap-10 rounded-3xl bg-white/80 px-10 py-8 shadow-[0_10px_25px_rgba(0,0,0,0.04)] transition-all duration-300 group-hover:shadow-[0_16px_40px_rgba(0,0,0,0.12)] group-hover:-translate-y-0.5"
                 >
                   {isOdd ? (
                     <>
@@ -312,7 +326,6 @@ export default function HomePage() {
                           <div
                             className={`flex h-16 w-16 items-center justify-center rounded-full ${circleBase} text-white`}
                           >
-                            {/* 6. Для Нового Zap выглядит как узкая молния за счёт пропорций */}
                             <Icon className="h-8 w-8" />
                           </div>
                         </div>
@@ -362,8 +375,6 @@ export default function HomePage() {
           <p className="mt-4 text-sm md:text-base text-[#4b3b2f]">
             для врачей — от $12/мес, для медсестер — от $7/мес
           </p>
-
-          {/* 3. Большой отступ и более крупный support */}
           <p className="mt-16 text-base md:text-lg text-[#4b3b2f]">
             support@medradix.info
           </p>
