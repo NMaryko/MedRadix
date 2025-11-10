@@ -96,15 +96,6 @@ export default function Header() {
               onClick={() => setActiveLang('RU')}
               className
 
-              />
-            </div>
-          </div>
-        </div>
-      )}
-    </header>
-  );
-}
-
 
 
 
