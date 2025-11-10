@@ -6,8 +6,8 @@ import { Search, User, Menu, X } from 'lucide-react';
 
 const MENU_ITEMS = [
   'Новое',
-  'Гайды', 
-  'Статьи',
+  'Гайды',
+  'Статьи', 
   'Голос эксперта',
   'Курсы',
   'Калькуляторы',
@@ -25,9 +25,10 @@ export default function Header() {
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-gray-200">
       {/* Основная шапка */}
       <div className="max-w-[1360px] mx-auto px-4 py-3 flex items-center justify-between">
+        
         {/* Логотип */}
         <div className="flex flex-col">
-          <span className="text-xl md:text-2xl font-semibold text-[#2b2115]">
+          <span className="text-2xl font-semibold text-[#2b2115]">
             MedRadix
           </span>
           <span className="text-xs text-[#7a6a55] italic mt-[-2px]">
@@ -37,7 +38,7 @@ export default function Header() {
 
         {/* Гамбургер для мобильных */}
         <button
-          className="lg:hidden p-2"
+          className="lg:hidden p-2 text-[#4b3b2f]"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         >
           {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -45,7 +46,7 @@ export default function Header() {
 
         {/* Меню (центр) - скрыто на мобильных */}
         <nav className="hidden lg:flex flex-1 justify-center">
-          <ul className="flex items-center space-x-4 xl:space-x-7">
+          <ul className="flex items-center space-x-7">
             {MENU_ITEMS.map((item) => {
               const isActive = activeMenuItem === item;
               const isNovoje = item === 'Новое';
@@ -78,25 +79,28 @@ export default function Header() {
           </ul>
         </nav>
 
-        {/* Правая часть: поиск, вход, язык - скрыто на мобильных */}
-        <div className="hidden lg:flex items-center space-x-5">
+        {/* Правая часть: поиск, вход, язык - ВСЕГДА видна */}
+        <div className="flex items-center space-x-5">
+          {/* Лупа */}
           <button
             type="button"
             onClick={() => setIsSearchOpen((v) => !v)}
-            className="ml-6 mr-4 text-[#4b3b2f] hover:text-[#015d52] transition-colors duration-200"
+            className="text-[#4b3b2f] hover:text-[#015d52] transition-colors duration-200"
           >
             <Search size={22} />
           </button>
 
+          {/* Кнопка Войти */}
           <button
             type="button"
-            className="inline-flex items-center gap-2 rounded-full bg-[#015d52] px-4 py-1.5 text-sm font-medium text-white hover:bg-[#01463d] transition-colors duration-200"
+            className="hidden lg:inline-flex items-center gap-2 rounded-full bg-[#015d52] px-4 py-1.5 text-sm font-medium text-white hover:bg-[#01463d] transition-colors duration-200"
           >
             <User size={14} />
             <span>Войти</span>
           </button>
 
-          <div className="flex items-center gap-1 text-sm">
+          {/* Языки */}
+          <div className="hidden lg:flex items-center gap-1 text-sm">
             <button
               type="button"
               onClick={() => setActiveLang('RU')}
@@ -128,16 +132,16 @@ export default function Header() {
       {isMobileMenuOpen && (
         <div className="lg:hidden bg-white border-t">
           <div className="max-w-[1360px] mx-auto px-4 py-4">
-            <nav className="space-y-4">
+            <nav className="space-y-3">
               {MENU_ITEMS.map((item) => {
                 const isNovoje = item === 'Новое';
                 return (
                   <button
                     key={item}
                     type="button"
-                    className={`block w-full text-left py-2 px-4 text-lg font-medium ${
+                    className={`block w-full text-left py-3 px-4 text-lg font-medium ${
                       isNovoje ? 'text-[#e6a800]' : 'text-[#4b3b2f]'
-                    } hover:bg-gray-50 rounded-lg`}
+                    } hover:bg-gray-50 rounded-lg border border-gray-100`}
                     onClick={() => {
                       setActiveMenuItem(item);
                       setIsMobileMenuOpen(false);
@@ -148,12 +152,13 @@ export default function Header() {
                 );
               })}
               
+              {/* Мобильные: вход и язык */}
               <div className="pt-4 border-t flex items-center justify-between">
-                <button className="flex items-center gap-2 text-[#015d52] font-medium">
-                  <User size={16} />
+                <button className="flex items-center gap-2 text-[#015d52] font-medium py-2">
+                  <User size={18} />
                   Войти
                 </button>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3 text-base">
                   <button
                     onClick={() => setActiveLang('RU')}
                     className={activeLang === 'RU' ? 'font-semibold text-[#015d52]' : 'text-gray-600'}
@@ -191,5 +196,4 @@ export default function Header() {
     </header>
   );
 }
-
 
