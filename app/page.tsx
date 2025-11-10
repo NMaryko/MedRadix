@@ -5,7 +5,7 @@ import {
   FileText,
   BookOpen,
   PenSquare,
-  Mic,
+  Mic2,
   GraduationCap,
   Calculator,
   Pill,
@@ -59,7 +59,8 @@ const NEWS = [
   },
   {
     id: 4,
-    title: 'JAMA: Влияние витамина D на иммунный ответ при COVID-19',
+    title:
+      'JAMA: Влияние витамина D на иммунный ответ при COVID-19',
     href: '#',
   },
   {
@@ -70,17 +71,31 @@ const NEWS = [
   },
 ];
 
-// Блоки «шахмат» для разделов
-const SECTION_BLOCKS = [
+type SectionId =
+  | 'news'
+  | 'guides'
+  | 'articles'
+  | 'experts'
+  | 'courses'
+  | 'calculators'
+  | 'drugs'
+  | 'nurses'
+  | 'folders';
+
+interface SectionConfig {
+  id: SectionId;
+  title: string;
+  description: string;
+  href: string;
+}
+
+const SECTIONS: SectionConfig[] = [
   {
     id: 'news',
     title: 'Новое',
     description:
       'Обновления по версиям гайдлайнов, свежим исследованиям и материалам, появляющимся на сайте MedRadix. Новые материалы помечены янтарной линией, которая показывает добавления за последние 14 дней. Для раздела «Гайды» новости остаются в Новом до 60 дней.',
     href: '/news',
-    align: 'right' as const, // первый блок справа
-    icon: FileText,
-    accent: 'yellow' as const,
   },
   {
     id: 'guides',
@@ -88,8 +103,6 @@ const SECTION_BLOCKS = [
     description:
       'Европейские клинические рекомендации, сопоставленные с американскими гайдлайнами, с регулярным обновлением версий и ключевых изменений.',
     href: '/guides',
-    align: 'left' as const,
-    icon: BookOpen,
   },
   {
     id: 'articles',
@@ -97,8 +110,6 @@ const SECTION_BLOCKS = [
     description:
       'Самые свежие исследования из ключевых медицинских журналов мира, краткие выводы, цифры и ссылки на оригиналы.',
     href: '/articles',
-    align: 'right' as const,
-    icon: PenSquare,
   },
   {
     id: 'experts',
@@ -106,17 +117,13 @@ const SECTION_BLOCKS = [
     description:
       'Комментарии ведущих специалистов по ключевым исследованиям и рекомендациям, со ссылками на оригиналы.',
     href: '/experts',
-    align: 'left' as const,
-    icon: Mic,
   },
   {
     id: 'courses',
     title: 'Курсы',
     description:
-      'Собраны бесплатные российские и зарубежные программы, дающие международные баллы (CME/NМО).',
+      'Собраны бесплатные российские и зарубежные программы, дающие международные баллы (CME/НМО).',
     href: '/courses',
-    align: 'right' as const,
-    icon: GraduationCap,
   },
   {
     id: 'calculators',
@@ -124,8 +131,6 @@ const SECTION_BLOCKS = [
     description:
       'Достаточно один раз ввести данные, чтобы получить параллельные расчёты по европейским и американским стандартам.',
     href: '/calculators',
-    align: 'left' as const,
-    icon: Calculator,
   },
   {
     id: 'drugs',
@@ -133,8 +138,6 @@ const SECTION_BLOCKS = [
     description:
       'Инструкции лекарств с применениями их в гайдлайнах.',
     href: '/drugs',
-    align: 'right' as const,
-    icon: Pill,
   },
   {
     id: 'nurses',
@@ -142,19 +145,40 @@ const SECTION_BLOCKS = [
     description:
       'Раздел с редкими обучающими материалами, где можно получить бесплатные кредиты за прохождение.',
     href: '/nurses',
-    align: 'left' as const,
-    icon: Syringe, // шприц
   },
   {
     id: 'folders',
     title: 'Папки',
     description:
-      'Сохранение сертификатов и файлов в личном кабинете с автоматическим подсчётом баллов (CME/NМО).',
+      'Сохранение сертификатов и файлов в личном кабинете с автоматическим подсчётом баллов (CME/НМО).',
     href: '/folders',
-    align: 'right' as const,
-    icon: FolderOpen,
   },
 ];
+
+function getSectionIcon(id: SectionId) {
+  switch (id) {
+    case 'news':
+      return FileText;
+    case 'guides':
+      return PenSquare;
+    case 'articles':
+      return BookOpen;
+    case 'experts':
+      return Mic2;
+    case 'courses':
+      return GraduationCap;
+    case 'calculators':
+      return Calculator;
+    case 'drugs':
+      return Pill;
+    case 'nurses':
+      return Syringe;
+    case 'folders':
+      return FolderOpen;
+    default:
+      return FileText;
+  }
+}
 
 export default function HomePage() {
   const [selectedSpecialty, setSelectedSpecialty] = useState('Все');
@@ -163,19 +187,19 @@ export default function HomePage() {
 
   return (
     <main className="bg-[#fcfcee] min-h-screen">
-      {/* Компактный блок афоризма сверху */}
+      {/* --- КОМПАКТНЫЙ БЛОК АФОРИЗМА СВЕРХУ (НЕ ТРОГАЛ) --- */}
       <section className="border-b border-gray-200">
         <div className="max-w-[1360px] mx-auto px-4 pt-4 pb-4">
-          {/* ТРИ КОЛОНКИ: чип слева, афоризм по центру, фильтр справа */}
+          {/* три колонки: чип слева, афоризм по центру, фильтр справа */}
           <div className="flex items-center">
-            {/* Левая колонка: чип, выравнен к афоризму на одной линии */}
+            {/* Левая колонка: чип */}
             <div className="flex-1 flex justify-start">
               <button className="px-5 py-1.5 text-xs font-medium rounded-full border border-[#b6b6c0] bg-white shadow-sm">
                 Афоризм месяца
               </button>
             </div>
 
-            {/* Центральная колонка: афоризм строго по центру всей области */}
+            {/* Центральная колонка: афоризм по центру */}
             <div className="flex-shrink-0 text-center">
               <h2 className="text-2xl md:text-3xl font-semibold italic tracking-wide">
                 Mens sana in corpore sano
@@ -185,7 +209,7 @@ export default function HomePage() {
               </p>
             </div>
 
-            {/* Правая колонка: фильтр специальности, симметрично чипу */}
+            {/* Правая колонка: фильтр специальности */}
             <div className="flex-1 flex justify-end">
               <div className="flex flex-col items-end gap-1">
                 <span className="text-[11px] uppercase tracking-[0.18em] text-[#9c978f]">
@@ -208,7 +232,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Список новостей с одной общей «молнией» слева */}
+      {/* --- СПИСОК НОВОСТЕЙ С МОЛНИЕЙ СЛЕВА (НЕ ТРОГАЛ) --- */}
       <section className="relative max-w-[1360px] mx-auto px-4 pt-8 pb-16">
         {/* Жёлтая линия от нижней до верхней новости */}
         <div className="absolute left-10 top-2 bottom-2 flex items-stretch pointer-events-none">
@@ -235,132 +259,102 @@ export default function HomePage() {
         </ul>
       </section>
 
-      {/* Шахматное описание разделов */}
-      <section className="max-w-[1360px] mx-auto px-4 pt-10 pb-20 space-y-6">
-        {SECTION_BLOCKS.map((block) => {
-          const Icon = block.icon;
-          const isRight = block.align === 'right';
+      {/* --- ШАХМАТКА РАЗДЕЛОВ --- */}
+      <section className="border-t border-gray-200 bg-[#f8f4ee]/80">
+        <div className="max-w-[1360px] mx-auto px-4 py-16 space-y-10">
+          {SECTIONS.map((section, index) => {
+            const Icon = getSectionIcon(section.id);
+            const isOdd = (index + 1) % 2 === 1; // 1,3,5... — нечётные
+            const isNews = section.id === 'news';
 
-          return (
-            <a
-              key={block.id}
-              href={block.href}
-              className="
-                group block rounded-2xl bg-white/60 
-                shadow-sm hover:shadow-[0_18px_40px_rgba(0,0,0,0.09)] 
-                transition-all duration-200 
-                hover:-translate-y-1
-              "
-            >
-              <div
-                className={`
-                  flex items-center justify-between 
-                  px-10 py-7 
-                  gap-10
-                  ${isRight ? 'text-right' : 'text-left'}
-                `}
+            const textColorTitle =
+              section.id === 'news' ? 'text-[#e68a00]' : 'text-[#3b2b22]';
+
+            const haloBase = isNews ? 'bg-[#f59e0b33]' : 'bg-[#015d5230]';
+            const circleBase = isNews ? 'bg-[#f59e0b]' : 'bg-[#015d52]';
+
+            return (
+              <a
+                key={section.id}
+                href={section.href}
+                className="block group"
               >
-                {isRight ? (
-                  <>
-                    {/* Текст слева, иконка справа */}
-                    <div className="flex-1 max-w-[460px] text-left">
-                      <h3
-                        className={`
-                          text-[22px] font-semibold mb-2
-                          ${
-                            block.accent === 'yellow'
-                              ? 'text-[#e6a800]'
-                              : 'text-[#3b2a1f]'
-                          }
-                        `}
-                      >
-                        {block.title}
-                      </h3>
-                      <p className="text-[15px] leading-relaxed text-[#3f362d]">
-                        {block.description}
-                      </p>
-                    </div>
-
-                    <div className="flex-1 flex justify-end">
-                      <div
-                        className={`
-                          flex items-center justify-center
-                          h-16 w-16 rounded-full
-                          ${
-                            block.accent === 'yellow'
-                              ? 'bg-[#f0a83a]'
-                              : 'bg-[#015d52]'
-                          }
-                          text-white
-                          shadow-[0_0_0_8px_rgba(1,93,82,0.08)]
-                          group-hover:shadow-[0_0_0_10px_rgba(1,93,82,0.18)]
-                          group-hover:scale-105
-                          transition-transform duration-200
-                        `}
-                      >
-                        <Icon size={28} strokeWidth={2.1} />
+                <div
+                  className={`flex items-center gap-10 rounded-3xl bg-white/80 px-10 py-8 shadow-[0_10px_25px_rgba(0,0,0,0.04)] transition-all duration-300 group-hover:shadow-[0_16px_40px_rgba(0,0,0,0.12)] group-hover:-translate-y-0.5
+                  `}
+                >
+                  {isOdd ? (
+                    <>
+                      {/* Текст справа */}
+                      <div className="flex-1 text-right">
+                        <h3
+                          className={`${textColorTitle} text-2xl md:text-3xl font-semibold mb-3`}
+                        >
+                          {section.title}
+                        </h3>
+                        <p className="text-base md:text-lg leading-relaxed text-[#4b3b2f] max-w-xl ml-auto">
+                          {section.description}
+                        </p>
                       </div>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    {/* Иконка слева, текст справа */}
-                    <div className="flex-1 flex justify-start">
-                      <div
-                        className={`
-                          flex items-center justify-center
-                          h-16 w-16 rounded-full
-                          ${
-                            block.accent === 'yellow'
-                              ? 'bg-[#f0a83a]'
-                              : 'bg-[#015d52]'
-                          }
-                          text-white
-                          shadow-[0_0_0_8px_rgba(1,93,82,0.08)]
-                          group-hover:shadow-[0_0_0_10px_rgba(1,93,82,0.18)]
-                          group-hover:scale-105
-                          transition-transform duration-200
-                        `}
-                      >
-                        <Icon size={28} strokeWidth={2.1} />
+
+                      {/* Иконка справа */}
+                      <div className="flex-none flex justify-end">
+                        <div
+                          className={`relative rounded-full p-3 ${haloBase} transition-all duration-300 group-hover:scale-110 group-hover:bg-opacity-70`}
+                        >
+                          <div
+                            className={`flex h-16 w-16 items-center justify-center rounded-full ${circleBase} text-white`}
+                          >
+                            <Icon className="h-8 w-8" />
+                          </div>
+                        </div>
                       </div>
-                    </div>
+                    </>
+                  ) : (
+                    <>
+                      {/* Иконка слева */}
+                      <div className="flex-none flex justify-start">
+                        <div
+                          className={`relative rounded-full p-3 ${haloBase} transition-all duration-300 group-hover:scale-110 group-hover:bg-opacity-70`}
+                        >
+                          <div
+                            className={`flex h-16 w-16 items-center justify-center rounded-full ${circleBase} text-white`}
+                          >
+                            <Icon className="h-8 w-8" />
+                          </div>
+                        </div>
+                      </div>
 
-                    <div className="flex-1 max-w-[460px]">
-                      <h3
-                        className={`
-                          text-[22px] font-semibold mb-2
-                          ${
-                            block.accent === 'yellow'
-                              ? 'text-[#e6a800]'
-                              : 'text-[#3b2a1f]'
-                          }
-                        `}
-                      >
-                        {block.title}
-                      </h3>
-                      <p className="text-[15px] leading-relaxed text-[#3f362d]">
-                        {block.description}
-                      </p>
-                    </div>
-                  </>
-                )}
-              </div>
-            </a>
-          );
-        })}
+                      {/* Текст слева */}
+                      <div className="flex-1 text-left">
+                        <h3
+                          className={`${textColorTitle} text-2xl md:text-3xl font-semibold mb-3`}
+                        >
+                          {section.title}
+                        </h3>
+                        <p className="text-base md:text-lg leading-relaxed text-[#4b3b2f] max-w-xl mr-auto">
+                          {section.description}
+                        </p>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </a>
+            );
+          })}
+        </div>
+      </section>
 
-        {/* Блок с кнопкой доступа и ценой */}
-        <div className="pt-10 text-center">
-          <button className="inline-flex items-center justify-center rounded-full bg-[#015d52] px-8 py-3 text-[15px] font-semibold text-white hover:bg-[#01463d] transition-colors duration-200 shadow-md">
+      {/* --- CTA НИЖЕ --- */}
+      <section className="border-t border-gray-200">
+        <div className="max-w-[1360px] mx-auto px-4 py-16 text-center">
+          <button className="inline-flex items-center justify-center rounded-full bg-[#015d52] px-10 py-3 text-base md:text-lg font-semibold text-white shadow-md hover:bg-[#01463d] hover:shadow-lg transition-colors">
             Получить полный доступ MedRadix
           </button>
-
-          <p className="mt-3 text-sm text-[#3b342d]">
-            для врачей — от $12/мес, для медсестёр — от $7/мес
+          <p className="mt-4 text-sm md:text-base text-[#4b3b2f]">
+            для врачей — от $12/мес, для медсестер — от $7/мес
           </p>
-
-          <p className="mt-10 text-sm text-[#6b6256]">
+          <p className="mt-10 text-sm md:text-base text-[#4b3b2f]">
             support@medradix.info
           </p>
         </div>
@@ -368,4 +362,3 @@ export default function HomePage() {
     </main>
   );
 }
-
