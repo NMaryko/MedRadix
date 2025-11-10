@@ -1,11 +1,12 @@
+// app/components/Header.tsx
 'use client';
 
 import { useState } from 'react';
-import { Search, User } from 'lucide-react';
+import { Search, User, Menu, X } from 'lucide-react';
 
 const MENU_ITEMS = [
   'Новое',
-  'Гайды',
+  'Гайды', 
   'Статьи',
   'Голос эксперта',
   'Курсы',
@@ -16,6 +17,7 @@ const MENU_ITEMS = [
 
 export default function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeLang, setActiveLang] = useState<'RU' | 'EN'>('RU');
   const [activeMenuItem, setActiveMenuItem] = useState<string | null>(null);
 
@@ -25,7 +27,7 @@ export default function Header() {
       <div className="max-w-[1360px] mx-auto px-4 py-3 flex items-center justify-between">
         {/* Логотип */}
         <div className="flex flex-col">
-          <span className="text-2xl font-semibold text-[#2b2115]">
+          <span className="text-xl md:text-2xl font-semibold text-[#2b2115]">
             MedRadix
           </span>
           <span className="text-xs text-[#7a6a55] italic mt-[-2px]">
@@ -33,9 +35,17 @@ export default function Header() {
           </span>
         </div>
 
-        {/* Меню (центр) */}
-        <nav className="flex-1 flex justify-center">
-          <ul className="flex items-center space-x-7">
+        {/* Гамбургер для мобильных */}
+        <button
+          className="lg:hidden p-2"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        >
+          {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+
+        {/* Меню (центр) - скрыто на мобильных */}
+        <nav className="hidden lg:flex flex-1 justify-center">
+          <ul className="flex items-center space-x-4 xl:space-x-7">
             {MENU_ITEMS.map((item) => {
               const isActive = activeMenuItem === item;
               const isNovoje = item === 'Новое';
@@ -56,8 +66,6 @@ export default function Header() {
                     }`}
                   >
                     <span>{item}</span>
-
-                    {/* Полоска под разделом — только при ховере, у "Новое" жёлтая */}
                     <span
                       className={`mt-1 h-0.5 w-full origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ${
                         isNovoje ? 'bg-[#facc15]' : 'bg-[#015d52]'
@@ -70,19 +78,16 @@ export default function Header() {
           </ul>
         </nav>
 
-        {/* Лупа строго между меню и блоком "Войти + язык" */}
-        <button
-          type="button"
-          onClick={() => setIsSearchOpen((v) => !v)}
-          className="ml-6 mr-4 text-[#4b3b2f] hover:text-[#015d52] transition-colors duration-200"
-          aria-label="Поиск"
-        >
-          <Search size={22} />
-        </button>
+        {/* Правая часть: поиск, вход, язык - скрыто на мобильных */}
+        <div className="hidden lg:flex items-center space-x-5">
+          <button
+            type="button"
+            onClick={() => setIsSearchOpen((v) => !v)}
+            className="ml-6 mr-4 text-[#4b3b2f] hover:text-[#015d52] transition-colors duration-200"
+          >
+            <Search size={22} />
+          </button>
 
-        {/* Правая часть: Войти, язык */}
-        <div className="flex items-center space-x-5">
-          {/* Кнопка Войти (зелёная, текст и иконка белые) */}
           <button
             type="button"
             className="inline-flex items-center gap-2 rounded-full bg-[#015d52] px-4 py-1.5 text-sm font-medium text-white hover:bg-[#01463d] transition-colors duration-200"
@@ -91,7 +96,6 @@ export default function Header() {
             <span>Войти</span>
           </button>
 
-          {/* Языки RU / EN после кнопки Войти */}
           <div className="flex items-center gap-1 text-sm">
             <button
               type="button"
@@ -120,7 +124,57 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Панель поиска под шапкой — появляется только по клику на лупу */}
+      {/* Мобильное меню */}
+      {isMobileMenuOpen && (
+        <div className="lg:hidden bg-white border-t">
+          <div className="max-w-[1360px] mx-auto px-4 py-4">
+            <nav className="space-y-4">
+              {MENU_ITEMS.map((item) => {
+                const isNovoje = item === 'Новое';
+                return (
+                  <button
+                    key={item}
+                    type="button"
+                    className={`block w-full text-left py-2 px-4 text-lg font-medium ${
+                      isNovoje ? 'text-[#e6a800]' : 'text-[#4b3b2f]'
+                    } hover:bg-gray-50 rounded-lg`}
+                    onClick={() => {
+                      setActiveMenuItem(item);
+                      setIsMobileMenuOpen(false);
+                    }}
+                  >
+                    {item}
+                  </button>
+                );
+              })}
+              
+              <div className="pt-4 border-t flex items-center justify-between">
+                <button className="flex items-center gap-2 text-[#015d52] font-medium">
+                  <User size={16} />
+                  Войти
+                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setActiveLang('RU')}
+                    className={activeLang === 'RU' ? 'font-semibold text-[#015d52]' : 'text-gray-600'}
+                  >
+                    RU
+                  </button>
+                  <span className="text-gray-400">/</span>
+                  <button
+                    onClick={() => setActiveLang('EN')}
+                    className={activeLang === 'EN' ? 'font-semibold text-[#015d52]' : 'text-gray-600'}
+                  >
+                    EN
+                  </button>
+                </div>
+              </div>
+            </nav>
+          </div>
+        </div>
+      )}
+
+      {/* Панель поиска */}
       {isSearchOpen && (
         <div className="border-t border-[#015d52] bg-white/95 shadow-md">
           <div className="max-w-[1360px] mx-auto px-4 py-4 flex justify-center">
