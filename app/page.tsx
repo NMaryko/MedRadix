@@ -70,18 +70,18 @@ export default function HomePage() {
     <main className="bg-[#fcfcee] min-h-screen">
       {/* Компактный блок афоризма сверху */}
       <section className="border-b border-gray-200">
-        <div className="max-w-[1360px] mx-auto px-4 pt-4 pb-4">
+        <div className="max-w-[1360px] mx-auto px-4 pt-2 pb-4">
           {/* ТРИ КОЛОНКИ: чип слева, афоризм по центру, фильтр справа */}
-          <div className="flex items-center">
-            {/* Левая колонка: чип, выравнен к афоризму на одной линии */}
-            <div className="flex-1 flex justify-start">
-              <button className="px-5 py-1.5 text-xs font-medium rounded-full border border-[#b6b6c0] bg-white shadow-sm">
+          <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4">
+            {/* Левая колонка: чип, симметричный фильтру */}
+            <div className="flex justify-end">
+              <button className="min-w-[170px] px-5 py-1.5 text-xs font-medium rounded-full border border-[#b6b6c0] bg-white shadow-sm text-center">
                 Афоризм месяца
               </button>
             </div>
 
             {/* Центральная колонка: афоризм строго по центру всей области */}
-            <div className="flex-shrink-0 text-center">
+            <div className="text-center">
               <h2 className="text-2xl md:text-3xl font-semibold italic tracking-wide">
                 Mens sana in corpore sano
               </h2>
@@ -91,15 +91,15 @@ export default function HomePage() {
             </div>
 
             {/* Правая колонка: фильтр специальности, симметрично чипу */}
-            <div className="flex-1 flex justify-end">
-              <div className="flex flex-col items-end gap-1">
+            <div className="flex justify-start">
+              <div className="flex flex-col items-start gap-1">
                 <span className="text-[11px] uppercase tracking-[0.18em] text-[#9c978f]">
                   Специальность
                 </span>
                 <select
                   value={selectedSpecialty}
                   onChange={(e) => setSelectedSpecialty(e.target.value)}
-                  className="min-w-[190px] rounded-full border border-[#d3cec4] bg-white px-4 py-1.5 text-sm text-[#3b342d] shadow-sm focus:outline-none focus:border-[#015d52]"
+                  className="min-w-[170px] rounded-full border border-[#d3cec4] bg-white px-4 py-1.5 text-sm text-[#3b342d] shadow-sm focus:outline-none focus:border-[#015d52]"
                 >
                   {SPECIALTIES.map((spec) => (
                     <option key={spec} value={spec}>
