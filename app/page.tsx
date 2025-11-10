@@ -68,11 +68,10 @@ export default function HomePage() {
 
   return (
     <main className="bg-[#fcfcee] min-h-screen">
-      {/* Компактный блок афоризма сверху */}
+      {/* Блок афоризма сверху */}
       <section className="border-b border-gray-200">
-        {/* ПОДНЯЛИ БЛОК БЛИЖЕ К ШАПКЕ: pt-2 вместо pt-4 */}
-        <div className="max-w-[1360px] mx-auto px-4 pt-1 pb-4">
-          {/* ТРИ КОЛОНКИ: чип слева, афоризм по центру, фильтр справа */}
+        <div className="max-w-[1360px] mx-auto px-4 pt-4 pb-4">
+          {/* Три колонки: чип — афоризм — фильтр */}
           <div className="flex items-center">
             {/* Левая колонка: чип */}
             <div className="flex-1 flex justify-start">
@@ -81,9 +80,8 @@ export default function HomePage() {
               </button>
             </div>
 
-            {/* Центральная колонка: афоризм строго по центру всей области
-                Увеличили боковые отступы, чтобы чип и фильтр были дальше от центра */}
-            <div className="flex-shrink-0 text-center mx-16 md:mx-24">
+            {/* Центр: афоризм и перевод */}
+            <div className="flex-shrink-0 text-center">
               <h2 className="text-2xl md:text-3xl font-semibold italic tracking-wide">
                 Mens sana in corpore sano
               </h2>
@@ -92,18 +90,16 @@ export default function HomePage() {
               </p>
             </div>
 
-            {/* Правая колонка: фильтр специальности */}
+            {/* Правая колонка: специальность */}
             <div className="flex-1 flex justify-end">
               <div className="flex flex-col items-end gap-1">
-                {/* Подпись выровнена по правому краю и по ширине селекта */}
-                <span className="block w-full text-right text-[11px] uppercase tracking-[0.18em] text-[#9c978f]">
+                <span className="text-[11px] uppercase tracking-[0.18em] text-[#9c978f]">
                   Специальность
                 </span>
                 <select
                   value={selectedSpecialty}
                   onChange={(e) => setSelectedSpecialty(e.target.value)}
-                  // немного сузили фильтр, чтобы он визуально больше походил на чип
-                  className="min-w-[170px] rounded-full border border-[#d3cec4] bg-white px-4 py-1.5 text-sm text-[#3b342d] shadow-sm focus:outline-none focus:border-[#015d52]"
+                  className="min-w-[190px] rounded-full border border-[#d3cec4] bg-white px-4 py-1.5 text-sm text-[#3b342d] shadow-sm focus:outline-none focus:border-[#015d52]"
                 >
                   {SPECIALTIES.map((spec) => (
                     <option key={spec} value={spec}>
@@ -117,7 +113,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Список новостей с одной общей «молнией» слева */}
+      {/* Список новостей + одна общая «молния» слева */}
       <section className="relative max-w-[1360px] mx-auto px-4 pt-8 pb-16">
         {/* Жёлтая линия от нижней до верхней новости */}
         <div className="absolute left-10 top-2 bottom-2 flex items-stretch pointer-events-none">
@@ -132,7 +128,7 @@ export default function HomePage() {
                 <span className="h-4 w-[2px] bg-[#facc15] rounded-full" />
               </div>
 
-              {/* Кликабельная новость, шрифт чуть крупнее */}
+              {/* Кликабельная новость */}
               <a
                 href={item.href}
                 className="text-[16px] md:text-[17px] leading-relaxed text-[#3b342d] hover:text-[#015d52] transition-colors"
