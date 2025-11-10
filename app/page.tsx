@@ -71,7 +71,7 @@ export default function HomePage() {
       {/* Компактный блок афоризма сверху */}
       <section className="border-b border-gray-200">
         {/* ПОДНЯЛИ БЛОК БЛИЖЕ К ШАПКЕ: pt-2 вместо pt-4 */}
-        <div className="max-w-[1360px] mx-auto px-4 pt-2 pb-4">
+        <div className="max-w-[1360px] mx-auto px-4 pt-1 pb-4">
           {/* ТРИ КОЛОНКИ: чип слева, афоризм по центру, фильтр справа */}
           <div className="flex items-center">
             {/* Левая колонка: чип */}
