@@ -7,8 +7,8 @@ import { Search, User, Menu, X } from 'lucide-react';
 const MENU_ITEMS = [
   'Новое',
   'Гайды',
-  'Статьи', 
-  'Голос эксперта',
+  'Статьи',
+  'Голос эксперта', 
   'Курсы',
   'Калькуляторы',
   'Лекарства',
@@ -58,8 +58,8 @@ export default function Header() {
                     onClick={() => setActiveMenuItem(item)}
                     className={`inline-flex flex-col items-center font-medium transition-all duration-200 ${
                       isActive
-                        ? 'text-[18px] md:text-[20px] scale-105'
-                        : 'text-[17px] md:text-lg'
+                        ? 'text-[20px] scale-105'
+                        : 'text-lg'
                     } ${
                       isNovoje
                         ? 'text-[#e6a800]'
@@ -90,17 +90,17 @@ export default function Header() {
             <Search size={22} />
           </button>
 
-          {/* Кнопка Войти */}
+          {/* Кнопка Войти - иконка на мобильных, полная на десктопе */}
           <button
             type="button"
-            className="hidden lg:inline-flex items-center gap-2 rounded-full bg-[#015d52] px-4 py-1.5 text-sm font-medium text-white hover:bg-[#01463d] transition-colors duration-200"
+            className="flex items-center gap-2 rounded-full bg-[#015d52] px-3 lg:px-4 py-1.5 text-sm font-medium text-white hover:bg-[#01463d] transition-colors duration-200"
           >
-            <User size={14} />
-            <span>Войти</span>
+            <User size={16} />
+            <span className="hidden lg:inline">Войти</span>
           </button>
 
           {/* Языки */}
-          <div className="hidden lg:flex items-center gap-1 text-sm">
+          <div className="flex items-center gap-1 text-sm">
             <button
               type="button"
               onClick={() => setActiveLang('RU')}
@@ -128,7 +128,7 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Мобильное меню */}
+      {/* Мобильное меню - ТОЛЬКО разделы */}
       {isMobileMenuOpen && (
         <div className="lg:hidden bg-white border-t">
           <div className="max-w-[1360px] mx-auto px-4 py-4">
@@ -151,29 +151,6 @@ export default function Header() {
                   </button>
                 );
               })}
-              
-              {/* Мобильные: вход и язык */}
-              <div className="pt-4 border-t flex items-center justify-between">
-                <button className="flex items-center gap-2 text-[#015d52] font-medium py-2">
-                  <User size={18} />
-                  Войти
-                </button>
-                <div className="flex items-center gap-3 text-base">
-                  <button
-                    onClick={() => setActiveLang('RU')}
-                    className={activeLang === 'RU' ? 'font-semibold text-[#015d52]' : 'text-gray-600'}
-                  >
-                    RU
-                  </button>
-                  <span className="text-gray-400">/</span>
-                  <button
-                    onClick={() => setActiveLang('EN')}
-                    className={activeLang === 'EN' ? 'font-semibold text-[#015d52]' : 'text-gray-600'}
-                  >
-                    EN
-                  </button>
-                </div>
-              </div>
             </nav>
           </div>
         </div>
