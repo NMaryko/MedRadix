@@ -1,26 +1,83 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  background-color: #fcfcee; /* общий фон сайта */
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Жёлтая "молния" слева от новостей */
+.news-lightning {
+  width: 4px;
+  border-radius: 9999px;
+  background: #facc15;
+  box-shadow: 0 0 8px rgba(250, 204, 21, 0.8);
+  animation: lightningPulse 1.2s ease-in-out infinite;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@keyframes lightningPulse {
+  0% {
+    transform: translateY(-2px);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(2px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-2px);
+    opacity: 0.6;
   }
 }
+/* Жёлтая "молния" слева от новостей */
+.lightning-bar {
+  position: relative;
+  width: 2px;
+  height: 32px;
+  border-radius: 999px;
+  overflow: hidden;
+  background-color: #fef3c7; /* светло-жёлтый */
+}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.lightning-bar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, #fde047, #eab308);
+  transform-origin: top;
+  animation: lightningFlow 1.6s ease-in-out infinite;
+}
+
+@keyframes lightningFlow {
+  0% {
+    transform: scaleY(0);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleY(0);
+    opacity: 0.4;
+  }
+}
+.lightning-bar {
+  transform-origin: bottom;
+  animation: lightning 2.2s ease-in-out infinite;
+}
+
+@keyframes lightning {
+  0% {
+    transform: scaleY(0);
+    opacity: 0.3;
+  }
+  40% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleY(0);
+    opacity: 0.3;
+  }
 }
