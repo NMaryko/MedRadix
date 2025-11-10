@@ -5,7 +5,7 @@ import {
   FileText,
   BookOpen,
   PenSquare,
-  Mic2,
+  Zap,
   GraduationCap,
   Calculator,
   Pill,
@@ -158,13 +158,17 @@ const SECTIONS: SectionConfig[] = [
 function getSectionIcon(id: SectionId) {
   switch (id) {
     case 'news':
-      return FileText;
+      // 6. Новое — узкая молния
+      return Zap;
     case 'guides':
-      return PenSquare;
-    case 'articles':
+      // 4. GUIDES ↔ ARTICLES: у Гайдов теперь книга
       return BookOpen;
+    case 'articles':
+      // Статьи — перо
+      return PenSquare;
     case 'experts':
-      return Mic2;
+      // 5. Голос эксперта — не микрофон, а более «экспертный» значок
+      return GraduationCap;
     case 'courses':
       return GraduationCap;
     case 'calculators':
@@ -187,7 +191,7 @@ export default function HomePage() {
 
   return (
     <main className="bg-[#fcfcee] min-h-screen">
-      {/* --- КОМПАКТНЫЙ БЛОК АФОРИЗМА СВЕРХУ (НЕ ТРОГАЛ) --- */}
+      {/* --- КОМПАКТНЫЙ БЛОК АФОРИЗМА СВЕРХУ (НЕ ТРОГАЮ РАСПОЛОЖЕНИЕ) --- */}
       <section className="border-b border-gray-200">
         <div className="max-w-[1360px] mx-auto px-4 pt-4 pb-4">
           {/* три колонки: чип слева, афоризм по центру, фильтр справа */}
@@ -232,7 +236,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* --- СПИСОК НОВОСТЕЙ С МОЛНИЕЙ СЛЕВА (НЕ ТРОГАЛ) --- */}
+      {/* --- СПИСОК НОВОСТЕЙ --- */}
       <section className="relative max-w-[1360px] mx-auto px-4 pt-8 pb-16">
         {/* Жёлтая линия от нижней до верхней новости */}
         <div className="absolute left-10 top-2 bottom-2 flex items-stretch pointer-events-none">
@@ -242,15 +246,15 @@ export default function HomePage() {
         <ul className="space-y-4 pl-16">
           {filteredNews.map((item) => (
             <li key={item.id} className="flex items-start gap-4">
-              {/* Иконка-кружок */}
+              {/* Иконка-кружок слева (оставляю как было) */}
               <div className="flex h-7 w-7 flex-none items-center justify-center rounded-full border border-[#3b3640] bg-white shadow-[0_0_0_1px_rgba(0,0,0,0.03)]">
                 <span className="h-4 w-[2px] bg-[#facc15] rounded-full" />
               </div>
 
-              {/* Кликабельная новость, шрифт чуть крупнее */}
+              {/* 1. Увеличиваем шрифт новостей до шрифта описаний разделов */}
               <a
                 href={item.href}
-                className="text-[16px] md:text-[17px] leading-relaxed text-[#3b342d] hover:text-[#015d52] transition-colors"
+                className="text-base md:text-lg leading-relaxed text-[#3b342d] hover:text-[#015d52] transition-colors"
               >
                 {item.title}
               </a>
@@ -270,7 +274,11 @@ export default function HomePage() {
             const textColorTitle =
               section.id === 'news' ? 'text-[#e68a00]' : 'text-[#3b2b22]';
 
-            const haloBase = isNews ? 'bg-[#f59e0b33]' : 'bg-[#015d5230]';
+            // 2. Нимбы только при ховере:
+            const haloHover =
+              section.id === 'news'
+                ? 'group-hover:bg-[#f59e0b33]'
+                : 'group-hover:bg-[#015d5230]';
             const circleBase = isNews ? 'bg-[#f59e0b]' : 'bg-[#015d52]';
 
             return (
@@ -280,8 +288,7 @@ export default function HomePage() {
                 className="block group"
               >
                 <div
-                  className={`flex items-center gap-10 rounded-3xl bg-white/80 px-10 py-8 shadow-[0_10px_25px_rgba(0,0,0,0.04)] transition-all duration-300 group-hover:shadow-[0_16px_40px_rgba(0,0,0,0.12)] group-hover:-translate-y-0.5
-                  `}
+                  className={`flex items-center gap-10 rounded-3xl bg-white/80 px-10 py-8 shadow-[0_10px_25px_rgba(0,0,0,0.04)] transition-all duration-300 group-hover:shadow-[0_16px_40px_rgba(0,0,0,0.12)] group-hover:-translate-y-0.5`}
                 >
                   {isOdd ? (
                     <>
@@ -300,11 +307,12 @@ export default function HomePage() {
                       {/* Иконка справа */}
                       <div className="flex-none flex justify-end">
                         <div
-                          className={`relative rounded-full p-3 ${haloBase} transition-all duration-300 group-hover:scale-110 group-hover:bg-opacity-70`}
+                          className={`relative rounded-full p-3 bg-transparent transition-all duration-300 group-hover:scale-110 ${haloHover}`}
                         >
                           <div
                             className={`flex h-16 w-16 items-center justify-center rounded-full ${circleBase} text-white`}
                           >
+                            {/* 6. Для Нового Zap выглядит как узкая молния за счёт пропорций */}
                             <Icon className="h-8 w-8" />
                           </div>
                         </div>
@@ -315,7 +323,7 @@ export default function HomePage() {
                       {/* Иконка слева */}
                       <div className="flex-none flex justify-start">
                         <div
-                          className={`relative rounded-full p-3 ${haloBase} transition-all duration-300 group-hover:scale-110 group-hover:bg-opacity-70`}
+                          className={`relative rounded-full p-3 bg-transparent transition-all duration-300 group-hover:scale-110 ${haloHover}`}
                         >
                           <div
                             className={`flex h-16 w-16 items-center justify-center rounded-full ${circleBase} text-white`}
@@ -354,7 +362,9 @@ export default function HomePage() {
           <p className="mt-4 text-sm md:text-base text-[#4b3b2f]">
             для врачей — от $12/мес, для медсестер — от $7/мес
           </p>
-          <p className="mt-10 text-sm md:text-base text-[#4b3b2f]">
+
+          {/* 3. Большой отступ и более крупный support */}
+          <p className="mt-16 text-base md:text-lg text-[#4b3b2f]">
             support@medradix.info
           </p>
         </div>
