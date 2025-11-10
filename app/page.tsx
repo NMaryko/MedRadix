@@ -1,4 +1,4 @@
-// app/page.tsx - АДАПТИВНАЯ версия для всех устройств
+// app/page.tsx - ИСПРАВЛЕНА ШАХМАТКА
 'use client';
 
 import { useState } from 'react';
@@ -230,7 +230,7 @@ export default function HomePage() {
         </ul>
       </section>
 
-      {/* Шахматка разделов - АДАПТИВНАЯ */}
+      {/* Шахматка разделов - ИСПРАВЛЕНА ЧЕРЕДОВАНИЕМ */}
       <section className="border-t border-gray-200 bg-[#f8f4ee]/80">
         <div className="max-w-[1360px] mx-auto px-4 py-12 lg:py-16 space-y-8 lg:space-y-10">
           {SECTIONS.map((section, index) => {
@@ -243,9 +243,7 @@ export default function HomePage() {
 
             return (
               <a key={section.id} href={section.href} className="block group">
-                <div className={`flex flex-col lg:flex-row items-center gap-6 lg:gap-10 rounded-3xl bg-white/80 px-6 lg:px-10 py-6 lg:py-8 shadow-[0_10px_25px_rgba(0,0,0,0.04)] transition-all duration-300 group-hover:shadow-[0_16px_40px_rgba(0,0,0,0.12)] group-hover:-translate-y-0.5 ${
-                  isOdd ? 'lg:flex-row' : 'lg:flex-row-reverse'
-                }`}>
+                <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-10 rounded-3xl bg-white/80 px-6 lg:px-10 py-6 lg:py-8 shadow-[0_10px_25px_rgba(0,0,0,0.04)] transition-all duration-300 group-hover:shadow-[0_16px_40px_rgba(0,0,0,0.12)] group-hover:-translate-y-0.5">
                   
                   {/* Мобильная версия: всегда иконка сверху, текст снизу */}
                   <div className="lg:hidden w-full text-center">
@@ -262,12 +260,31 @@ export default function HomePage() {
                     </p>
                   </div>
 
-                  {/* Десктоп версия: шахматка с иконками по краям */}
-                  {isOdd ? (
-                    <>
-                      {/* Текст справа */}
-                      <div className="hidden lg:flex flex-1 text-right">
-                        <div className="w-full">
+                  {/* Десктоп версия: ЧЕРЕДУЮЩАЯСЯ ШАХМАТКА */}
+                  <div className="hidden lg:flex items-center gap-10 w-full">
+                    {isOdd ? (
+                      // Нечетные: иконка СЛЕВА, текст СПРАВА
+                      <>
+                        <div className="flex-none flex justify-start">
+                          <div className={`relative rounded-full p-3 ${haloBase} transition-all duration-300 group-hover:scale-110 group-hover:bg-opacity-70`}>
+                            <div className={`flex h-16 w-16 items-center justify-center rounded-full ${circleBase} text-white`}>
+                              <Icon className="h-8 w-8" />
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex-1 text-left">
+                          <h3 className={`${textColorTitle} text-3xl font-semibold mb-3`}>
+                            {section.title}
+                          </h3>
+                          <p className="text-lg leading-relaxed text-[#4b3b2f] max-w-xl">
+                            {section.description}
+                          </p>
+                        </div>
+                      </>
+                    ) : (
+                      // Четные: текст СЛЕВА, иконка СПРАВА
+                      <>
+                        <div className="flex-1 text-right">
                           <h3 className={`${textColorTitle} text-3xl font-semibold mb-3`}>
                             {section.title}
                           </h3>
@@ -275,41 +292,16 @@ export default function HomePage() {
                             {section.description}
                           </p>
                         </div>
-                      </div>
-
-                      {/* Иконка справа */}
-                      <div className="hidden lg:flex flex-none justify-end">
-                        <div className={`relative rounded-full p-3 ${haloBase} transition-all duration-300 group-hover:scale-110 group-hover:bg-opacity-70`}>
-                          <div className={`flex h-16 w-16 items-center justify-center rounded-full ${circleBase} text-white`}>
-                            <Icon className="h-8 w-8" />
+                        <div className="flex-none flex justify-end">
+                          <div className={`relative rounded-full p-3 ${haloBase} transition-all duration-300 group-hover:scale-110 group-hover:bg-opacity-70`}>
+                            <div className={`flex h-16 w-16 items-center justify-center rounded-full ${circleBase} text-white`}>
+                              <Icon className="h-8 w-8" />
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      {/* Иконка слева */}
-                      <div className="hidden lg:flex flex-none justify-start">
-                        <div className={`relative rounded-full p-3 ${haloBase} transition-all duration-300 group-hover:scale-110 group-hover:bg-opacity-70`}>
-                          <div className={`flex h-16 w-16 items-center justify-center rounded-full ${circleBase} text-white`}>
-                            <Icon className="h-8 w-8" />
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Текст слева */}
-                      <div className="hidden lg:flex flex-1 text-left">
-                        <div className="w-full">
-                          <h3 className={`${textColorTitle} text-3xl font-semibold mb-3`}>
-                            {section.title}
-                          </h3>
-                          <p className="text-lg leading-relaxed text-[#4b3b2f] max-w-xl mr-auto">
-                            {section.description}
-                          </p>
-                        </div>
-                      </div>
-                    </>
-                  )}
+                      </>
+                    )}
+                  </div>
                 </div>
               </a>
             );
