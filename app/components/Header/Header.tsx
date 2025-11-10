@@ -33,7 +33,7 @@ export default function Header() {
           </span>
         </div>
 
-        {/* Меню */}
+        {/* Меню (центр) */}
         <nav className="flex-1 flex justify-center">
           <ul className="flex items-center space-x-7">
             {MENU_ITEMS.map((item) => {
@@ -47,8 +47,8 @@ export default function Header() {
                     onClick={() => setActiveMenuItem(item)}
                     className={`inline-flex flex-col items-center font-medium transition-all duration-200 ${
                       isActive
-                        ? 'text-[16px] md:text-[17px] scale-105'
-                        : 'text-[15px] md:text-base'
+                        ? 'text-[18px] md:text-[20px] scale-105'
+                        : 'text-[17px] md:text-lg'
                     } ${
                       isNovoje
                         ? 'text-[#e6a800]'
@@ -70,18 +70,18 @@ export default function Header() {
           </ul>
         </nav>
 
-        {/* Правая часть: поиск, Войти, язык */}
-        <div className="flex items-center space-x-5">
-          {/* Лупа */}
-          <button
-            type="button"
-            onClick={() => setIsSearchOpen((v) => !v)}
-            className="text-[#4b3b2f] hover:text-[#015d52] transition-colors duration-200"
-            aria-label="Поиск"
-          >
-            <Search size={18} />
-          </button>
+        {/* Лупа строго между меню и блоком "Войти + язык" */}
+        <button
+          type="button"
+          onClick={() => setIsSearchOpen((v) => !v)}
+          className="ml-6 mr-4 text-[#4b3b2f] hover:text-[#015d52] transition-colors duration-200"
+          aria-label="Поиск"
+        >
+          <Search size={22} />
+        </button>
 
+        {/* Правая часть: Войти, язык */}
+        <div className="flex items-center space-x-5">
           {/* Кнопка Войти (зелёная, текст и иконка белые) */}
           <button
             type="button"
@@ -137,6 +137,5 @@ export default function Header() {
     </header>
   );
 }
-
 
 
