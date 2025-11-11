@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { ArrowRight, ChevronDown } from 'lucide-react';
 
 // ТЕ ЖЕ СПЕЦИАЛЬНОСТИ, ЧТО И НА ГЛАВНОЙ
-const SPECIALTIES: string[] = [
+const SPECIALTIES = [
   'Все',
   'Акушерство и гинекология',
   'Аллергология и иммунология',
@@ -80,20 +80,20 @@ const ACS_SECTIONS = [
 ];
 
 export default function GuidesPage() {
-  const [selectedSpecialty, setSelectedSpecialty] = useState<string>('Кардиология');
-  const [selectedNosology, setSelectedNosology] = useState<string>('acs');
+  const [selectedSpecialty, setSelectedSpecialty] = useState('Кардиология');
+  const [selectedNosology, setSelectedNosology] = useState('acs');
 
   const isCardiology = selectedSpecialty === 'Кардиология';
   const isACS = isCardiology && selectedNosology === 'acs';
 
-  const handleScenarioClick = (scenarioId: string) => {
-    const el = document.getElementById(scenario-${scenarioId});
+  const handleScenarioClick = (scenarioId) => {
+    const el = document.getElementById(`scenario-${scenarioId}`);
     if (el) {
       el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
 
-  const handleSectionClick = (sectionId: string) => {
+  const handleSectionClick = (sectionId) => {
     const el = document.getElementById(sectionId);
     if (el) {
       el.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -165,7 +165,7 @@ export default function GuidesPage() {
                       disabled={!isCardiology}
                       className="min-w-[260px] appearance-none rounded-full border border-[#d3cec4] bg-white px-4 py-1.5 text-sm text-[#3b342d] shadow-sm focus:outline-none focus:border-[#015d52] disabled:bg-gray-100 disabled:text-gray-400"
                     >
-                      {CARDIO_NOSOLOGIES.map(👎 => (
+                      {CARDIO_NOSOLOGIES.map((n) => (
                         <option key={n.id} value={n.id}>
                           {n.label}
                         </option>
