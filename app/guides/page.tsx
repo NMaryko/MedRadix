@@ -853,16 +853,15 @@ export default function ACSPage() {
                         </p>
                       </div>
                       <RecommendationBadge
-                        rec={{
-                          class:
-                            escGuideline.treatment
-                              .antiplateletTherapy[0].class,
-                          level:
-                            escGuideline.treatment
-                              .antiplateletTherapy[0].level,
-                          text: '',
-                        }}
-                      />
+  rec={{
+    class: escGuideline.treatment.antiplateletTherapy[0]
+      .class as RecommendationClass,
+    level: escGuideline.treatment.antiplateletTherapy[0]
+      .level as EvidenceLevel,
+    text: '',
+  }}
+/>
+
                     </div>
                     <p className="text-gray-700">
                       {
