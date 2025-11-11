@@ -1,264 +1,291 @@
-// app/guides/page.tsx
+'use client';
+
+import { useState } from 'react';
+
+const SPECIALTIES: string[] = [
+  'Все',
+  'Акушерство и гинекология',
+  'Аллергология и иммунология',
+  'Анестезиология и реаниматология',
+  'Гастроэнтерология',
+  'Гематология',
+  'Гериатрия',
+  'Дерматология',
+  'Инфекционные болезни',
+  'Кардиология',
+  'Неврология',
+  'Нефрология',
+  'Онкология',
+  'Офтальмология',
+  'Педиатрия',
+  'Пульмонология',
+  'Психиатрия',
+  'Ревматология',
+  'Терапия',
+  'Травматология и ортопедия',
+  'Урология',
+  'Хирургия',
+  'Эндокринология',
+];
+
+// Нозологии для кардиологии (можно расширять)
+const CARDIO_DIAGNOSES: string[] = [
+  'Выберите нозологию',
+  'Острый коронарный синдром (ОКС)',
+  'Фибрилляция предсердий',
+  'Хроническая сердечная недостаточность',
+  'Артериальная гипертензия',
+  'Дислипидемия',
+];
+
+interface Scenario {
+  id: string;
+  title: string;
+  subtitle: string;
+  content: string;
+}
+
+const ACS_SCENARIOS: Scenario[] = [
+  {
+    id: 'stemi',
+    title: 'Сценарий 1. ОКС с подъёмом сегмента ST (STEMI)',
+    subtitle:
+      'Пациент с типичными болями и подъёмом ST — стратегия реперфузии в первые часы.',
+    content:
+      'Ключевые шаги: немедленная ЭКГ, оценка по шкалам риска, приоритет первичного ЧКВ в течение 120 минут от первого медицинского контакта. Если ЧКВ недоступно — системный тромболизис с последующим переводом в центр ЧКВ. Антитромбоцитарная терапия: нагрузочные дозы аспирина и ингибитора P2Y12 (предпочтительно тикагрелор/прасугрел в европейских рекомендациях, в США — чаще клопидогрел при высоком риске кровотечений).',
+  },
+  {
+    id: 'nstemi',
+    title: 'Сценарий 2. ОКС без подъёма ST (NSTEMI / нестабильная стенокардия)',
+    subtitle:
+      'Высокий или промежуточный риск по GRACE/ESC — ранняя инвазивная стратегия.',
+    content:
+      'Основные элементы: серийное измерение тропонина высокочувствительными тестами, стратификация риска (GRACE, TIMI). При высоком риске — коронарография в течение 24 часов, при очень высоком — в первые 2 часа. Антитромбоцитарная терапия двойная, антикоагулянты — фондапаринукс/НМГ; выбор конкретных препаратов зависит от наличия ЧКВ, риска кровотечения, сопутствующих состояний.',
+  },
+  {
+    id: 'acs-uncertain',
+    title: 'Сценарий 3. Подозрение на ОКС, но нет подъёма тропонина / неспецифическая ЭКГ',
+    subtitle:
+      'Пациент с грудной болью, но промежуточная вероятность ОКС — протокол наблюдения.',
+    content:
+      'Фокус: повторные ЭКГ, динамика высокочувствительного тропонина по ускоренным протоколам (0–1 ч, 0–2 ч). Если биомаркеры и ЭКГ остаются без изменений, рассматриваются неишемические причины болей. При сохранении симптомов и промежуточном риске — функциональные тесты или КТ-коронарография для уточнения диагноза.',
+  },
+];
+
+function MedRadixInsight() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="mt-8 max-w-3xl mx-auto">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="inline-flex items-center gap-2 rounded-full border border-[#015d52] bg-white px-5 py-2 text-xs md:text-sm font-semibold uppercase tracking-[0.18em] text-[#015d52] shadow-sm hover:bg-[#015d52] hover:text-white transition-colors"
+      >
+        MedRadix Insight — EU / US
+        <span className="text-[10px] md:text-xs">
+          {open ? 'Свернуть' : 'Показать отличия'}
+        </span>
+      </button>
+
+      {open && (
+        <div className="mt-4 rounded-2xl bg-white/90 border border-[#d3cec4] p-5 text-sm md:text-base leading-relaxed text-[#3b342d] shadow-sm">
+          <ul className="list-disc pl-5 space-y-2">
+            <li>
+              <strong>Стратегия реперфузии при STEMI.</strong> ESC более жёстко
+              настаивает на первичном ЧКВ в первые 120 минут; американские
+              рекомендации допускают немного большую вариативность в зависимости
+              от логистики центра.
+            </li>
+            <li>
+              <strong>Выбор P2Y12-ингибитора.</strong> В европейских гайдах
+              тикагрелор/прасугрел чаще указаны как препараты первой линии у
+              пациентов без высокого риска кровотечения; в США шире
+              используется клопидогрел, особенно у пожилых и при ограниченном
+              доступе к новым препаратам.
+            </li>
+            <li>
+              <strong>Длительность двойной антитромбоцитарной терапии.</strong>{' '}
+              Общий диапазон 6–12 месяцев совпадает, но ESC активнее предлагает
+              сократить ДАТТ у пациентов с высоким риском кровотечений и
+              расширить у пациентов с высоким ишемическим риском.
+            </li>
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function AcuteCoronarySyndromeSection() {
+  const [openScenarioId, setOpenScenarioId] = useState<string | null>(null);
+
+  return (
+    <section className="max-w-[960px] mx-auto pt-10 pb-16">
+      {/* Заголовок ОКС */}
+      <div className="text-center">
+        <h1 className="text-2xl md:text-3xl font-semibold italic text-[#1f2933]">
+          Острый коронарный синдром (ОКС)
+        </h1>
+        <p className="mt-3 text-sm md:text-base text-[#3b342d] max-w-2xl mx-auto leading-relaxed">
+          ОКС объединяет STEMI, NSTEMI и нестабильную стенокардию. Основные
+          задачи — раннее распознавание, оценка риска и выбор оптимальной
+          стратегии реперфузии или инвазивного вмешательства в зависимости от
+          времени, доступности ЧКВ-центра и профиля риска пациента.
+        </p>
+      </div>
+
+      {/* Чип с отличиями EU/US */}
+      <MedRadixInsight />
+
+      {/* Сценарии ОКС */}
+      <div className="mt-10 space-y-4">
+        <h2 className="text-lg md:text-xl font-semibold text-[#1f2933] text-center mb-2">
+          Клинические сценарии
+        </h2>
+
+        {ACS_SCENARIOS.map((scenario) => {
+          const isOpen = openScenarioId === scenario.id;
+
+          return (
+            <div
+              key={scenario.id}
+              className="rounded-2xl bg-white/90 border border-[#e0dbd0] shadow-sm hover:shadow-md transition-shadow"
+            >
+              <button
+                type="button"
+                onClick={() =>
+                  setOpenScenarioId(isOpen ? null : scenario.id)
+                }
+                className="w-full text-left px-5 py-4 flex flex-col gap-1"
+              >
+                <span className="text-base md:text-lg font-semibold text-[#3b2b22]">
+                  {scenario.title}
+                </span>
+                <span className="text-xs md:text-sm text-[#6b5b4a]">
+                  {scenario.subtitle}
+                </span>
+                <span className="mt-1 text-[11px] md:text-xs text-[#9c8f80] uppercase tracking-[0.16em]">
+                  {isOpen ? 'Свернуть сценарий' : 'Открыть сценарий'}
+                </span>
+              </button>
+
+              {isOpen && (
+                <div className="px-5 pb-4 text-sm md:text-base text-[#3b342d] leading-relaxed border-t border-[#efe8dc]">
+                  {scenario.content}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
 
 export default function GuidesPage() {
+  const [selectedSpecialty, setSelectedSpecialty] = useState<string>('Все');
+  const [selectedDiagnosis, setSelectedDiagnosis] =
+    useState<string>('Выберите нозологию');
+
+  const isCardio = selectedSpecialty === 'Кардиология';
+  const showACS = isCardio && selectedDiagnosis === 'Острый коронарный синдром (ОКС)';
+
   return (
     <main className="bg-[#fcfcee] min-h-screen">
-      {/* HERO / ОБЛОЖКА */}
+      {/* Блок афоризма — как на главной */}
       <section className="border-b border-gray-200">
-        <div className="max-w-[1360px] mx-auto px-4 py-8 space-y-4">
-          <div className="flex flex-col gap-3">
-            <span className="inline-flex w-fit rounded-full border border-[#d3cec4] bg-white px-4 py-1 text-xs tracking-[0.18em] uppercase text-[#7a6a55]">
-              Гайды · Кардиология
-            </span>
+        <div className="max-w-[1360px] mx-auto px-4 pt-4 pb-4">
+          <div className="flex items-center">
+            {/* Чип слева */}
+            <div className="flex-1 flex justify-start">
+              <button className="px-5 py-1.5 text-xs font-medium rounded-full border border-[#b6b6c0] bg-white shadow-sm">
+                Афоризм месяца
+              </button>
+            </div>
 
-            <h1 className="text-3xl md:text-4xl font-semibold text-[#2b2115]">
-              Острый коронарный синдром (ОКС)
-            </h1>
+            {/* Афоризм по центру */}
+            <div className="flex-shrink-0 text-center">
+              <h2 className="text-2xl md:text-3xl font-semibold italic tracking-wide">
+                Mens sana in corpore sano
+              </h2>
+              <p className="mt-1.5 text-sm text-[#3b342d]">
+                В здоровом теле — здоровый дух (Ювенал)
+              </p>
+            </div>
 
-            <p className="max-w-2xl text-sm md:text-base text-[#4b3b2f]">
-              Структурированный гайд для приёмного отделения, кардиологов и
-              интенсивистов. Основан на ESC и ACC/AHA рекомендациях с
-              аналитикой MedRadix по отличиям EU / US.
-            </p>
-
-            {/* Фишка MedRadix */}
-            <div className="mt-2 inline-flex flex-wrap items-center gap-3 rounded-2xl bg-white px-4 py-3 shadow-sm">
-              <span className="inline-flex items-center rounded-full bg-[#015d52] px-3 py-1 text-xs font-semibold text-white">
-                MedRadix Insight
-              </span>
-              <span className="text-sm text-[#3b342d]">
-                Наша фирменная часть — сравнение тактики EU / US для ключевых
-                решений при ОКС.
-              </span>
+            {/* Фильтр специальности справа */}
+            <div className="flex-1 flex justify-end">
+              <div className="flex flex-col items-end gap-1">
+                <span className="text-[11px] uppercase tracking-[0.18em] text-[#9c978f]">
+                  Специальность
+                </span>
+                <select
+                  value={selectedSpecialty}
+                  onChange={(e) => {
+                    setSelectedSpecialty(e.target.value);
+                    setSelectedDiagnosis('Выберите нозологию');
+                  }}
+                  className="min-w-[190px] rounded-full border border-[#d3cec4] bg-white px-4 py-1.5 text-sm text-[#3b342d] shadow-sm focus:outline-none focus:border-[#015d52]"
+                >
+                  {SPECIALTIES.map((spec) => (
+                    <option key={spec} value={spec}>
+                      {spec}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
           </div>
+
+          {/* Второй фильтр — нозологии, только для кардиологии */}
+          {isCardio && (
+            <div className="mt-4 flex justify-center">
+              <div className="flex flex-col items-center gap-1">
+                <span className="text-[11px] uppercase tracking-[0.18em] text-[#9c978f]">
+                  Нозология
+                </span>
+                <select
+                  value={selectedDiagnosis}
+                  onChange={(e) => setSelectedDiagnosis(e.target.value)}
+                  className="min-w-[260px] rounded-full border border-[#d3cec4] bg-white px-4 py-1.5 text-sm text-[#3b342d] shadow-sm focus:outline-none focus:border-[#015d52]"
+                >
+                  {CARDIO_DIAGNOSES.map((d) => (
+                    <option key={d} value={d}>
+                      {d}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
-      {/* БЛОК: КЛЮЧЕВЫЕ ОТЛИЧИЯ EU / US (ФИРМЕННЫЙ) */}
-      <section className="border-b border-gray-200 bg-[#f8f4ee]/70">
-        <div className="max-w-[1360px] mx-auto px-4 py-10">
-          <div className="rounded-3xl bg-white px-6 py-6 md:px-8 md:py-8 shadow-[0_10px_25px_rgba(0,0,0,0.06)]">
-            <h2 className="text-xl md:text-2xl font-semibold text-[#2b2115] mb-4">
-              Ключевые отличия EU / US по ОКС
-            </h2>
-            <p className="text-sm md:text-base text-[#4b3b2f] mb-4">
-              Здесь будет компактная карта различий: где европейские и
-              американские гайдлайны реально расходятся по тактике. Этот блок
-              мы потом сделаем интерактивным и сохраняемым в «Избранное».
-            </p>
-
-            <ul className="space-y-2 text-sm md:text-base text-[#3b342d] list-disc pl-5">
-              <li>Сроки реперфузии при STEMI.</li>
-              <li>Стратегия при NSTE-ACS high-risk.</li>
-              <li>Баланс PCI / тромболизиса в зависимости от ресурса.</li>
-              <li>Подход к антитромботической терапии.</li>
-              <li>Особые группы (ХБП, пожилые, коморбидные пациенты).</li>
-            </ul>
+      {/* Основное содержимое: либо подсказка, либо ОКС */}
+      <section className="max-w-[1360px] mx-auto px-4">
+        {!isCardio && (
+          <div className="py-16 text-center text-sm md:text-base text-[#6b5b4a]">
+            Выберите специальность, чтобы увидеть список доступных гайдов.
           </div>
-        </div>
+        )}
+
+        {isCardio && !showACS && (
+          <div className="py-16 text-center text-sm md:text-base text-[#6b5b4a]">
+            Выберите нозологию, чтобы просмотреть структуру гайда. Для примера
+            сейчас реализован раздел «Острый коронарный синдром (ОКС)».
+          </div>
+        )}
+
+        {showACS && <AcuteCoronarySyndromeSection />}
       </section>
 
-      {/* ВЫБОР СЦЕНАРИЯ ОКС */}
-      <section className="border-b border-gray-200">
-        <div className="max-w-[1360px] mx-auto px-4 py-10 space-y-4">
-          <h2 className="text-lg md:text-xl font-semibold text-[#2b2115]">
-            Выберите сценарий ОКС
-          </h2>
+      {/* Низ страницы с support */}
+      <section className="border-t border-gray-200 mt-8">
+        <div className="max-w-[1360px] mx-auto px-4 py-10 text-center">
           <p className="text-sm md:text-base text-[#4b3b2f]">
-            Ниже — структуры для разных клинических сценариев. Пока они
-            статичные, позже добавим быстрый переход и фильтры.
+            support@medradix.info
           </p>
-
-          <div className="grid gap-4 md:grid-cols-3">
-            <div className="rounded-2xl bg-white px-4 py-4 shadow-sm border border-[#e5ded2]">
-              <h3 className="text-sm font-semibold text-[#2b2115] mb-1">
-                STEMI
-              </h3>
-              <p className="text-xs text-[#4b3b2f]">
-                Полный подъём ST, приоритет немедленной реперфузии.
-              </p>
-            </div>
-            <div className="rounded-2xl bg-white px-4 py-4 shadow-sm border border-[#e5ded2]">
-              <h3 className="text-sm font-semibold text-[#2b2115] mb-1">
-                NSTE-ACS / NSTEMI
-              </h3>
-              <p className="text-xs text-[#4b3b2f]">
-                Нестабильная ишемия без подъёма ST, акцент на стратификации
-                риска.
-              </p>
-            </div>
-            <div className="rounded-2xl bg-white px-4 py-4 shadow-sm border border-[#e5ded2]">
-              <h3 className="text-sm font-semibold text-[#2b2115] mb-1">
-                Нестабильная стенокардия
-              </h3>
-              <p className="text-xs text-[#4b3b2f]">
-                Клиника ОКС без выраженного тропонинового ответа.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* NSTE-ACS / NSTEMI — ПРИМЕР СТРУКТУРЫ БЕЗ РОМАНОВ */}
-      <section className="border-b border-gray-200">
-        <div className="max-w-[1360px] mx-auto px-4 py-10 space-y-8">
-          <div>
-            <h2 className="text-xl md:text-2xl font-semibold text-[#2b2115] mb-2">
-              NSTE-ACS / NSTEMI
-            </h2>
-            <p className="text-sm md:text-base text-[#4b3b2f]">
-              Ниже — скелет структуры. Тут будут не длинные тексты, а короткие
-              блоки и схемы, которые потом можно сохранять по отдельности.
-            </p>
-          </div>
-
-          {/* ОПРЕДЕЛЕНИЕ */}
-          <div className="space-y-2">
-            <h3 className="text-lg font-semibold text-[#2b2115]">
-              1. Определение и спектр
-            </h3>
-            <p className="text-sm md:text-base text-[#4b3b2f]">
-              Краткое определение, чем NSTE-ACS отличается от STEMI, какие
-              клинические формы сюда входят. 3–5 предложений, без «романа».
-            </p>
-          </div>
-
-          {/* РИСК-СТРАТИФИКАЦИЯ — БЛОК ДЛЯ СХЕМЫ */}
-          <div className="space-y-3">
-            <h3 className="text-lg font-semibold text-[#2b2115]">
-              2. Риск-стратификация и триаж
-            </h3>
-            <p className="text-sm md:text-base text-[#4b3b2f]">
-              Здесь будет схема: как быстро понять, кто low / intermediate /
-              high risk.
-            </p>
-            <div className="rounded-2xl border border-dashed border-[#d3cec4] bg-white/70 px-4 py-3 text-xs md:text-sm text-[#4b3b2f]">
-              [Здесь позже будет диаграмма/алгоритм риск-стратификации.
-              Сохраняемый блок.]
-            </div>
-          </div>
-
-          {/* ДИАГНОСТИКА */}
-          <div className="space-y-2">
-            <h3 className="text-lg font-semibold text-[#2b2115]">
-              3. Диагностика
-            </h3>
-            <ul className="list-disc pl-5 text-sm md:text-base text-[#4b3b2f] space-y-1">
-              <li>ECG: ключевые признаки, которые нельзя пропустить.</li>
-              <li>Биомаркеры: тропонин, динамика, интервалы.</li>
-              <li>Визуализация: когда и зачем.</li>
-            </ul>
-          </div>
-
-          {/* ЛЕЧЕНИЕ: ОБЩАЯ КАРТИНА */}
-          <div className="space-y-2">
-            <h3 className="text-lg font-semibold text-[#2b2115]">
-              4. Общая стратегия лечения
-            </h3>
-            <p className="text-sm md:text-base text-[#4b3b2f]">
-              Короткий обзор: что обязательно у всех, что зависит от риска,
-              когда вообще думаем про инвазивную тактику.
-            </p>
-          </div>
-
-          {/* КОНСЕРВАТИВНАЯ ТАКТИКА — БУДУЩИЙ БЛОК-АЛГОРИТМ */}
-          <div className="space-y-3">
-            <h3 className="text-lg font-semibold text-[#2b2115]">
-              5. Консервативная тактика
-            </h3>
-            <p className="text-sm md:text-base text-[#4b3b2f]">
-              Здесь будет компактный алгоритм медикаментозной терапии с
-              подразделами по классам препаратов.
-            </p>
-            <div className="rounded-2xl border border-dashed border-[#d3cec4] bg-white/70 px-4 py-3 text-xs md:text-sm text-[#4b3b2f]">
-              [Блок-алгоритм консервативного лечения NSTE-ACS. Тоже отдельный
-              сохраняемый блок.]
-            </div>
-          </div>
-
-          {/* ИНВАЗИВНАЯ ТАКТИКА — НАШ ОСНОВНОЙ БЛОК */}
-          <div className="space-y-3">
-            <h3 className="text-lg font-semibold text-[#2b2115]">
-              6. Инвазивная тактика
-            </h3>
-            <p className="text-sm md:text-base text-[#4b3b2f]">
-              Главный блок для инвазивной кардиологии: кто и когда должен
-              попадать в катлаб, сроки, high-risk критерии.
-            </p>
-            <div className="rounded-2xl border border-dashed border-[#d3cec4] bg-white/70 px-4 py-3 text-xs md:text-sm text-[#4b3b2f]">
-              [Здесь будет основная схема инвазивной тактики для NSTE-ACS.
-              Сохраняемый блок + внутри локальная мини-карта EU/US.]
-            </div>
-          </div>
-
-          {/* ОСОБЫЕ ГРУППЫ */}
-          <div className="space-y-2">
-            <h3 className="text-lg font-semibold text-[#2b2115]">
-              7. Особые группы пациентов
-            </h3>
-            <ul className="list-disc pl-5 text-sm md:text-base text-[#4b3b2f] space-y-1">
-              <li>Пожилые пациенты.</li>
-              <li>ХБП / диализ.</li>
-              <li>Коморбидные пациенты (ХСН, сахарный диабет и т.д.).</li>
-            </ul>
-          </div>
-
-          {/* ЛОКАЛЬНАЯ EU/US МИНИ-КАРТА ДЛЯ NSTE-ACS */}
-          <div className="space-y-2">
-            <h3 className="text-lg font-semibold text-[#2b2115]">
-              8. NSTE-ACS: отличия EU / US (локальная карта)
-            </h3>
-            <div className="rounded-2xl bg-white px-4 py-3 shadow-sm text-xs md:text-sm text-[#3b342d]">
-              [Краткая таблица/список: где именно по NSTE-ACS расходятся EU и
-              US. Отдельный сохраняемый блок.]
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ЗАГЛУШКИ ДЛЯ STEMI И НЕСТАБИЛЬНОЙ СТЕНОКАРДИИ */}
-      <section className="border-b border-gray-200">
-        <div className="max-w-[1360px] mx-auto px-4 py-10 space-y-6">
-          <div>
-            <h2 className="text-xl md:text-2xl font-semibold text-[#2b2115]">
-              STEMI
-            </h2>
-            <p className="text-sm md:text-base text-[#4b3b2f]">
-              Здесь будет похожая структурная схема для STEMI: блоки определения,
-              диагностики, реперфузии, инвазивной тактики и EU/US отличий.
-            </p>
-          </div>
-
-          <div>
-            <h2 className="text-xl md:text-2xl font-semibold text-[#2b2115]">
-              Нестабильная стенокардия
-            </h2>
-            <p className="text-sm md:text-base text-[#4b3b2f]">
-              И отдельная структура для нестабильной стенокардии. Сейчас это
-              заглушки, чтобы увидеть общую композицию страницы.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* ФИНАЛЬНАЯ СВОДКА EU/US ПО ВСЕМ СЦЕНАРИЯМ */}
-      <section>
-        <div className="max-w-[1360px] mx-auto px-4 py-12">
-          <div className="rounded-3xl bg-white px-6 py-6 md:px-8 md:py-8 shadow-[0_10px_25px_rgba(0,0,0,0.06)]">
-            <h2 className="text-xl md:text-2xl font-semibold text-[#2b2115] mb-3">
-              Итоговая сводка отличий EU / US по ОКС
-            </h2>
-            <p className="text-sm md:text-base text-[#4b3b2f] mb-3">
-              Здесь будет финальная «шпаргалка» по различиям: соберём в одном
-              месте ключевые расхождения по STEMI, NSTE-ACS и нестабильной
-              стенокардии.
-            </p>
-            <p className="text-xs md:text-sm text-[#7a6a55]">
-              Этот блок мы тоже пометим как отдельный, чтобы его можно было
-              добавлять в «Папки» и Избранное.
-            </p>
-          </div>
         </div>
       </section>
     </main>
