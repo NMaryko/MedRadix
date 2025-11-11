@@ -3,19 +3,12 @@
 
 import { useState } from 'react';
 import {
-  ArrowRight,
-  Download,
   ExternalLink,
-  AlertTriangle,
-  Heart,
   Clock,
   Stethoscope,
   Shield,
-  Zap,
   Scale,
   Pill,
-  Activity,
-  AlertCircle,
   CheckCircle,
 } from 'lucide-react';
 
@@ -23,9 +16,9 @@ type EvidenceLevel = 'A' | 'B' | 'C';
 type RecommendationClass = 'I' | 'IIa' | 'IIb' | 'III';
 
 interface Recommendation {
-  class: RecommendationClass;
-  level: EvidenceLevel;
-  text: string;
+  class?: RecommendationClass;
+  level?: EvidenceLevel;
+  text?: string;
 }
 
 export default function ACSPage() {
@@ -311,45 +304,6 @@ export default function ACSPage() {
         },
       ],
 
-      anticoagulation: [
-        {
-          drug: 'Фондапаринукс',
-          dose: '2.5 мг п/к 1 раз/сут',
-          advantages: [
-            'Предсказуемый эффект',
-            'Низкий риск ТЭО',
-            'Меньше кровотечений vs НФГ',
-          ],
-          disadvantages: [
-            'Противопоказан при почечной недостаточности (ClCr <30)',
-          ],
-          class: 'I' as RecommendationClass,
-          level: 'A' as EvidenceLevel,
-        },
-        {
-          drug: 'Низкомолекулярный гепарин (эноксапарин)',
-          dose: '1 мг/кг п/к 2 раза/сут',
-          advantages: ['Предсказуемый антикоагулянтный эффект'],
-          disadvantages: ['Накопление при почечной недостаточности'],
-          class: 'I' as RecommendationClass,
-          level: 'A' as EvidenceLevel,
-        },
-        {
-          drug: 'Нефракционированный гепарин',
-          dose: '60-70 Ед/кг в/в болюс (макс 5000 Ед), затем 12-15 Ед/кг/час',
-          advantages: [
-            'Короткий период полувыведения',
-            'Контроль по АЧТВ',
-          ],
-          disadvantages: [
-            'Непредсказуемый эффект',
-            'Гепарин-индуцированная тромбоцитопения',
-          ],
-          class: 'I' as RecommendationClass,
-          level: 'B' as EvidenceLevel,
-        },
-      ],
-
       reperfusion: {
         stemi: [
           {
@@ -556,34 +510,41 @@ export default function ACSPage() {
   };
 
   // Компоненты интерфейса
-  const RecommendationBadge = ({ rec }: { rec: Recommendation }) => (
-    <div className="flex items-center gap-2 text-sm">
-      <span
-        className={`px-2 py-1 rounded border ${
-          rec.class === 'I'
-            ? 'bg-green-100 text-green-800 border-green-300'
-            : rec.class === 'IIa'
-            ? 'bg-yellow-100 text-yellow-800 border-yellow-300'
-            : rec.class === 'IIb'
-            ? 'bg-blue-100 text-blue-800 border-blue-300'
-            : 'bg-red-100 text-red-800 border-red-300'
-        }`}
-      >
-        Класс {rec.class}
-      </span>
-      <span
-        className={`px-2 py-1 rounded border ${
-          rec.level === 'A'
-            ? 'bg-green-100 text-green-800 border-green-300'
-            : rec.level === 'B'
-            ? 'bg-yellow-100 text-yellow-800 border-yellow-300'
-            : 'bg-red-100 text-red-800 border-red-300'
-        }`}
-      >
-        Уровень {rec.level}
-      </span>
-    </div>
-  );
+  const RecommendationBadge = ({ rec }: { rec: Recommendation }) => {
+    const cls: RecommendationClass =
+      rec.class ?? 'I';
+    const lvl: EvidenceLevel =
+      rec.level ?? 'A';
+
+    return (
+      <div className="flex items-center gap-2 text-sm">
+        <span
+          className={`px-2 py-1 rounded border ${
+            cls === 'I'
+              ? 'bg-green-100 text-green-800 border-green-300'
+              : cls === 'IIa'
+              ? 'bg-yellow-100 text-yellow-800 border-yellow-300'
+              : cls === 'IIb'
+              ? 'bg-blue-100 text-blue-800 border-blue-300'
+              : 'bg-red-100 text-red-800 border-red-300'
+          }`}
+        >
+          Класс {cls}
+        </span>
+        <span
+          className={`px-2 py-1 rounded border ${
+            lvl === 'A'
+              ? 'bg-green-100 text-green-800 border-green-300'
+              : lvl === 'B'
+              ? 'bg-yellow-100 text-yellow-800 border-yellow-300'
+              : 'bg-red-100 text-red-800 border-red-300'
+          }`}
+        >
+          Уровень {lvl}
+        </span>
+      </div>
+    );
+  };
 
   const TimingBadge = ({ time }: { time: string }) => (
     <div className="flex items-center gap-1 bg-gray-100 px-3 py-1 rounded-full text-sm text-gray-700">
@@ -853,15 +814,15 @@ export default function ACSPage() {
                         </p>
                       </div>
                       <RecommendationBadge
-  rec={{
-    class: escGuideline.treatment.antiplateletTherapy[0]
-      .class as RecommendationClass,
-    level: escGuideline.treatment.antiplateletTherapy[0]
-      .level as EvidenceLevel,
-    text: '',
-  }}
-/>
-
+                        rec={{
+                          class:
+                            escGuideline.treatment
+                              .antiplateletTherapy[0].class,
+                          level:
+                            escGuideline.treatment
+                              .antiplateletTherapy[0].level,
+                        }}
+                      />
                     </div>
                     <p className="text-gray-700">
                       {
@@ -875,86 +836,57 @@ export default function ACSPage() {
                   <div>
                     <h3 className="text-xl font-semibold text-gray-900 mb-4">
                       P2Y12 ингибиторы - выбор препарата
-                    <h3 className="text-xl font-semibold text-gray-900 mb-4">
-  P2Y12 ингибиторы - выбор препарата
-</h3>
+                    </h3>
+                    <div className="grid md:grid-cols-3 gap-6">
+                      {(
+                        escGuideline.treatment.antiplateletTherapy[1]
+                          ?.options ?? []
+                      ).map((drug, idx) => (
+                        <div
+                          key={idx}
+                          className="bg-white rounded-xl p-6 border-2 border-blue-200 shadow-sm"
+                        >
+                          <h4 className="text-lg font-semibold text-gray-900 mb-3">
+                            {drug.name}
+                          </h4>
 
-<div className="grid md:grid-cols-3 gap-6">
-  {(escGuideline.treatment.antiplateletTherapy[1]?.options ?? []).map(
-    (drug, idx) => (
-      <div
-        key={idx}
-        className="bg-white rounded-xl p-6 border-2 border-blue-200 shadow-sm"
-      >
-        <h4 className="text-lg font-semibold text-gray-900 mb-3">
-          {drug.name}
-        </h4>
+                          <div className="space-y-3">
+                            <div>
+                              <span className="font-medium">
+                                Нагрузка:
+                              </span>
+                              <span className="text-gray-700 ml-2">
+                                {drug.loading}
+                              </span>
+                            </div>
+                            <div>
+                              <span className="font-medium">
+                                Поддержка:
+                              </span>
+                              <span className="text-gray-700 ml-2">
+                                {drug.maintenance}
+                              </span>
+                            </div>
+                            <div>
+                              <span className="font-medium">
+                                Длительность:
+                              </span>
+                              <span className="text-gray-700 ml-2">
+                                {drug.duration}
+                              </span>
+                            </div>
 
-        <div className="space-y-3">
-          <div>
-            <span className="font-medium">Нагрузка:</span>
-            <span className="text-gray-700 ml-2">{drug.loading}</span>
-          </div>
-          <div>
-            <span className="font-medium">Поддержка:</span>
-            <span className="text-gray-700 ml-2">{drug.maintenance}</span>
-          </div>
-          <div>
-            <span className="font-medium">Длительность:</span>
-            <span className="text-gray-700 ml-2">{drug.duration}</span>
-          </div>
-
-          <div className="mt-4">
-            <RecommendationBadge
-              rec={{
-                class: (drug.class ?? 'I') as RecommendationClass,
-                level: (drug.level ?? 'A') as EvidenceLevel,
-                text: '',
-              }}
-            />
-          </div>
-        </div>
-      </div>
-    )
-  )}
-</div>
-                                <span className="font-medium">
-                                  Нагрузка:
-                                </span>
-                                <span className="text-gray-700 ml-2">
-                                  {drug.loading}
-                                </span>
-                              </div>
-                              <div>
-                                <span className="font-medium">
-                                  Поддержка:
-                                </span>
-                                <span className="text-gray-700 ml-2">
-                                  {drug.maintenance}
-                                </span>
-                              </div>
-                              <div>
-                                <span className="font-medium">
-                                  Длительность:
-                                </span>
-                                <span className="text-gray-700 ml-2">
-                                  {drug.duration}
-                                </span>
-                              </div>
-
-                              <div className="mt-4">
-                                <RecommendationBadge
-                                  rec={{
-                                    class: drug.class,
-                                    level: drug.level,
-                                    text: '',
-                                  }}
-                                />
-                              </div>
+                            <div className="mt-4">
+                              <RecommendationBadge
+                                rec={{
+                                  class: drug.class,
+                                  level: drug.level,
+                                }}
+                              />
                             </div>
                           </div>
-                        )
-                      )}
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -986,7 +918,6 @@ export default function ACSPage() {
                               rec={{
                                 class: method.class,
                                 level: method.level,
-                                text: '',
                               }}
                             />
                           </div>
@@ -1024,7 +955,6 @@ export default function ACSPage() {
                               rec={{
                                 class: strategy.class,
                                 level: strategy.level,
-                                text: '',
                               }}
                             />
                           </div>
@@ -1072,7 +1002,6 @@ export default function ACSPage() {
                             rec={{
                               class: med.class,
                               level: med.level,
-                              text: '',
                             }}
                           />
                         </div>
@@ -1140,7 +1069,6 @@ export default function ACSPage() {
                             rec={{
                               class: item.class,
                               level: item.level,
-                              text: '',
                             }}
                           />
                         </div>
@@ -1247,8 +1175,3 @@ export default function ACSPage() {
     </main>
   );
 }
-
-
-
-
-
