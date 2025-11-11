@@ -5,345 +5,268 @@ import { useState } from 'react';
 
 type SpecialtyId = 'cardiology';
 
+interface Specialty {
+  id: SpecialtyId;
+  label: string;
+}
+
+const SPECIALTIES: Specialty[] = [
+  { id: 'cardiology', label: 'Кардиология' },
+];
+
 type NosologyId =
-  | 'acs'
-  | 'af'
-  | 'chf'
   | 'htn'
-  | 'stableIhd'
-  | 'postMi'
-  | 'pe'
-  | 'tachy'
-  | 'brady'
+  | 'ischemic'
+  | 'acs'
+  | 'arrhythmias'
+  | 'hf'
   | 'valvular'
   | 'cmp'
   | 'myocarditis'
   | 'pericarditis'
-  | 'congenital';
+  | 'ie'
+  | 'pe'
+  | 'chd';
 
-type ScenarioId = 'stemi' | 'nstemi' | 'ua';
+interface Nosology {
+  id: NosologyId;
+  label: string;
+}
 
-// --- Справочники ---
-
-const SPECIALTIES: { id: SpecialtyId; label: string }[] = [
-  { id: 'cardiology', label: 'Кардиология' },
-];
-
-const CARDIO_NOSOLOGIES: { id: NosologyId; label: string }[] = [
-  { id: 'acs', label: 'Острый коронарный синдром (ОКС)' },
-  { id: 'stableIhd', label: 'Стабильная ишемическая болезнь сердца' },
+const CARDIO_NOSOLOGIES: Nosology[] = [
   { id: 'htn', label: 'Артериальная гипертензия' },
-  { id: 'chf', label: 'Хроническая сердечная недостаточность' },
-  { id: 'af', label: 'Фибрилляция предсердий' },
-  { id: 'tachy', label: 'Тахиаритмии' },
-  { id: 'brady', label: 'Брадиаритмии и блокады проведения' },
-  { id: 'pe', label: 'Тромбоэмболия лёгочной артерии' },
-  { id: 'postMi', label: 'Постинфарктный период' },
+  { id: 'ischemic', label: 'Ишемическая болезнь сердца (стабильная)' },
+  { id: 'acs', label: 'Острый коронарный синдром (ОКС)' },
+  { id: 'arrhythmias', label: 'Нарушения ритма и проводимости' },
+  { id: 'hf', label: 'Хроническая сердечная недостаточность' },
   { id: 'valvular', label: 'Клапанные пороки сердца' },
   { id: 'cmp', label: 'Кардиомиопатии' },
   { id: 'myocarditis', label: 'Миокардиты' },
   { id: 'pericarditis', label: 'Перикардиты' },
-  { id: 'congenital', label: 'Врожденные пороки сердца у взрослых' },
+  { id: 'ie', label: 'Инфекционный эндокардит' },
+  { id: 'pe', label: 'Тромбоэмболия лёгочной артерии (ТЭЛА)' },
+  { id: 'chd', label: 'Врожденные пороки сердца' },
 ];
 
-const ACS_SCENARIOS: {
+type ScenarioId = 'stemi' | 'nstemi' | 'unstable' | 'noStElevation';
+
+interface Scenario {
   id: ScenarioId;
   title: string;
   subtitle: string;
-}[] = [
+}
+
+const ACS_SCENARIOS: Scenario[] = [
   {
     id: 'stemi',
     title: 'STEMI: подъём ST и типичный болевой синдром',
-    subtitle: 'Приоритет немедленной реперфузии и первичного ЧКВ.',
+    subtitle: 'Сценарий немедленной реперфузии и первичного ЧКВ.',
   },
   {
     id: 'nstemi',
-    title: 'NSTEMI: ОКС без подъёма ST',
+    title: 'NSTEMI: некроз без подъёма ST',
     subtitle:
-      'Повреждение миокарда по тропонину, риск-стратификация и ранняя инвазивная тактика.',
+      'Повышение тропонина без подъёма ST, необходимость ранней инвазивной стратегии.',
   },
   {
-    id: 'ua',
+    id: 'unstable',
     title: 'Нестабильная стенокардия',
     subtitle:
-      'Ишемия без тропонинового некроза, динамика симптомов и ЭКГ, отбор для инвазивного подхода.',
+      'Болевой синдром без некроза миокарда, оценка риска и выбор инвазивной тактики.',
   },
 ];
 
-// --- Структура разделов гайда по ОКС ---
-
 type GuideSectionId =
-  | 'sciMed'
-  | 'overview'
+  | 'sm_eu_us'
+  | 'definition'
   | 'diagnostics'
   | 'risk'
-  | 'reperfusion'
+  | 'strategy'
   | 'pharm'
-  | 'secondary';
+  | 'invasive'
+  | 'followup';
 
 interface GuideSection {
   id: GuideSectionId;
-  title: string;
-  accent?: boolean;
+  shortTitle: string;
+  fullTitle: string;
 }
 
 const ACS_SECTIONS: GuideSection[] = [
   {
-    id: 'sciMed',
-    title: 'Scientia MedRadix: различия рекомендаций Европы и США',
-    accent: true,
+    id: 'sm_eu_us',
+    shortTitle: 'Scientia MedRadix: EU / US',
+    fullTitle: 'Scientia MedRadix: ключевые отличия европейских и американских рекомендаций',
   },
   {
-    id: 'overview',
-    title: 'Общие положения и классификация ОКС',
+    id: 'definition',
+    shortTitle: 'Определение',
+    fullTitle: 'Определение и классификация ОКС',
   },
   {
     id: 'diagnostics',
-    title: 'Диагностика и начальная оценка',
+    shortTitle: 'Диагностика',
+    fullTitle: 'Диагностика и первичная оценка пациента с подозрением на ОКС',
   },
   {
     id: 'risk',
-    title: 'Риск-стратификация и выбор стратегии',
+    shortTitle: 'Риск',
+    fullTitle: 'Стратификация риска',
   },
   {
-    id: 'reperfusion',
-    title: 'Реперфузионная терапия',
+    id: 'strategy',
+    shortTitle: 'Тактика',
+    fullTitle: 'Стратегия ведения и выбор реперфузии',
   },
   {
     id: 'pharm',
-    title: 'Медикаментозная терапия',
+    shortTitle: 'Фармакотерапия',
+    fullTitle: 'Антитромботическая и сопутствующая фармакотерапия',
   },
   {
-    id: 'secondary',
-    title: 'Вторичная профилактика и наблюдение',
+    id: 'invasive',
+    shortTitle: 'Инвазивные методы',
+    fullTitle: 'Инвазивные вмешательства и особенности ЧКВ',
+  },
+  {
+    id: 'followup',
+    shortTitle: 'Наблюдение',
+    fullTitle: 'Долгосрочное наблюдение и вторичная профилактика',
   },
 ];
 
-// --- Компонент гайда по ОКС ---
-
-function AcsGuide({ scenario }: { scenario: ScenarioId | null }) {
-  return (
-    <div className="mt-10 flex gap-10">
-      {/* ЛЕВАЯ КОЛОНКА: разделы */}
-      <aside className="hidden lg:block w-64 flex-none">
-        <nav className="sticky top-28 space-y-2">
-          {ACS_SECTIONS.map((section) => (
-            <a
-              key={section.id}
-              href={`#acs-${section.id}`}
-              className={`block rounded-full px-4 py-2 text-sm transition-colors ${
-                section.accent
-                  ? 'bg-[#fef3c7] text-[#92400e] font-semibold hover:bg-[#fde68a]'
-                  : 'text-[#4b3b2f] hover:bg-[#e5e7eb]'
-              }`}
-            >
-              {section.title}
-            </a>
-          ))}
-        </nav>
-      </aside>
-
-      {/* ПРАВАЯ КОЛОНКА: контент */}
-      <div className="flex-1 space-y-10">
-        {/* Контекст выбранного сценария */}
-        {scenario && (
-          <section className="rounded-2xl bg-[#f3f4ff] px-6 py-4 text-sm text-[#111827]">
-            {scenario === 'stemi' && (
-              <p>
-                <span className="font-semibold">Выбран сценарий:</span> STEMI —
-                подъём сегмента ST с типичным болевым синдромом. Критично
-                минимизировать задержку до реперфузии: «door-to-balloon» ≤ 90
-                минут при первичном ЧКВ или «door-to-needle» ≤ 30 минут при
-                тромболизисе, если ЧКВ недоступно.
-              </p>
-            )}
-            {scenario === 'nstemi' && (
-              <p>
-                <span className="font-semibold">Выбран сценарий:</span> NSTEMI —
-                ОКС без подъёма ST с повышенными тропонинами. Фокус — ранняя
-                риск-стратификация (GRACE, TIMI) и выбор времени инвазивного
-                вмешательства.
-              </p>
-            )}
-            {scenario === 'ua' && (
-              <p>
-                <span className="font-semibold">Выбран сценарий:</span>{' '}
-                Нестабильная стенокардия — ишемия без тропонинового некроза.
-                Важны динамика симптомов, ЭКГ и отбор пациентов для инвазивного
-                подхода.
-              </p>
-            )}
-          </section>
-        )}
-
-        {/* Scientia MedRadix – EU/US различия */}
-        <section
-          id="acs-sciMed"
-          className="rounded-3xl border border-[#facc15] bg-[#fffbeb] px-6 py-6 shadow-sm"
-        >
-          <h3 className="text-xl md:text-2xl font-semibold text-[#92400e] mb-3">
-            Scientia MedRadix: различия рекомендаций Европы и США
-          </h3>
-          <ul className="list-disc pl-5 space-y-2 text-sm md:text-base text-[#4b3b2f]">
-            <li>
-              <span className="font-semibold">Стратегия реперфузии STEMI.</span>{' '}
-              ESC приоритизирует первичное ЧКВ и допускает фармакоинвазивный
-              подход при недоступности катетеризации в установленные сроки.
-              ACC/AHA детальнее расписывают маршруты трансфера между центрами.
-            </li>
-            <li>
-              <span className="font-semibold">
-                Риск-стратификация NSTEMI/нестабильной стенокардии.
-              </span>{' '}
-              В ESC акцент на GRACE, в ACC/AHA шире обсуждается использование
-              TIMI и HEART.
-            </li>
-            <li>
-              <span className="font-semibold">Антитромботическая терапия.</span>{' '}
-              Отличаются уровни рекомендаций для тикагрелора/прасугрела,
-              длительность ДАТ у больных с высоким риском кровотечений и
-              подходы к деэскалации.
-            </li>
-            <li>
-              <span className="font-semibold">
-                Вторичная профилактика и цели терапии.
-              </span>{' '}
-              ESC задаёт более жёсткие целевые уровни ЛПНП; ACC/AHA — больше
-              внимания совместному принятию решений и ступенчатому усилению
-              терапии.
-            </li>
-          </ul>
-          <p className="mt-3 text-xs md:text-sm text-[#6b7280]">
-            Позже здесь появятся точные ссылки на ESC и ACC/AHA через Sanity
-            CMS.
+function renderAcsSectionBody(sectionId: GuideSectionId, scenarioId: ScenarioId) {
+  // Здесь пока академичные, но короткие черновые тексты-шаблоны.
+  // Потом вы сможете заменить их реальными выдержками из ESC/ACC/AHA.
+  switch (sectionId) {
+    case 'sm_eu_us':
+      return (
+        <>
+          <p className="mb-3">
+            В этом блоке будут системно собраны отличия между европейскими рекомендациями
+            (ESC) и американскими (ACC/AHA) по ведению пациентов с острым коронарным синдромом.
           </p>
-        </section>
-
-        {/* Общие положения */}
-        <section id="acs-overview">
-          <h3 className="text-xl md:text-2xl font-semibold text-[#111827] mb-3">
-            Общие положения и классификация ОКС
-          </h3>
-          <p className="text-sm md:text-base text-[#4b3b2f] leading-relaxed">
-            Острый коронарный синдром объединяет инфаркт миокарда с подъёмом
-            ST, инфаркт без подъёма ST и нестабильную стенокардию. Ключевое
-            отличие между ними — наличие некроза миокарда по тропонину и
-            характер изменений ЭКГ.
+          <p className="mb-3">
+            Для каждого шага маршрута пациента — от догоспитального этапа до вторичной
+            профилактики — будут указаны:
           </p>
-        </section>
-
-        {/* Диагностика */}
-        <section id="acs-diagnostics">
-          <h3 className="text-xl md:text-2xl font-semibold text-[#111827] mb-3">
-            Диагностика и начальная оценка
-          </h3>
-          <ul className="list-disc pl-5 space-y-2 text-sm md:text-base text-[#4b3b2f]">
-            <li>
-              <span className="font-semibold">Клиника:</span> загрудинная боль,
-              иррадиация, вегетативные симптомы, атипичные проявления у
-              пожилых, женщин и больных с диабетом.
-            </li>
-            <li>
-              <span className="font-semibold">ЭКГ:</span> повторные записи при
-              сохраняющейся симптоматике; дополнительные отведения при подозрении
-              на заднюю / правожелудочковую локализацию.
-            </li>
-            <li>
-              <span className="font-semibold">Высокочувствительные тропонины:</span>{' '}
-              оценка динамики по алгоритмам 0/1-ч или 0/2-ч.
-            </li>
-            <li>
-              <span className="font-semibold">Базовый риск:</span> гемодинамика,
-              признаки СН, сопутствующие заболевания, риск кровотечений.
-            </li>
+          <ul className="list-disc list-inside space-y-1 mb-3">
+            <li>различия в классах рекомендаций и уровне доказательности;</li>
+            <li>отличия в пороговых значениях (тайминги, дозировки, шкалы риска);</li>
+            <li>особенности выбора стратегии реперфузии и фармакотерапии.</li>
           </ul>
-        </section>
-
-        {/* Риск-стратификация */}
-        <section id="acs-risk">
-          <h3 className="text-xl md:text-2xl font-semibold text-[#111827] mb-3">
-            Риск-стратификация и выбор стратегии
-          </h3>
-          <p className="text-sm md:text-base text-[#4b3b2f] mb-2">
-            В NSTEMI/нестабильной стенокардии определяем время инвазивного
-            вмешательства:
+          <p className="text-sm text-gray-500">
+            Источники: актуальные версии ESC и ACC/AHA по ОКС, ссылки будут вынесены
+            отдельным списком литературы.
           </p>
-          <ul className="list-disc pl-5 space-y-2 text-sm md:text-base text-[#4b3b2f]">
-            <li>Очень высокий риск — немедленная инвазия (&lt; 2 часов).</li>
-            <li>Высокий риск — ранняя инвазия (&lt; 24 часов).</li>
-            <li>Промежуточный риск — инвазия в течение 72 часов.</li>
-          </ul>
-          <p className="mt-2 text-sm md:text-base text-[#4b3b2f]">
-            Для STEMI выбираем между первичным ЧКВ и тромболизисом с последующим
-            ЧКВ (фармакоинвазивная стратегия) в зависимости от логистики.
+        </>
+      );
+    case 'definition':
+      return (
+        <>
+          <p className="mb-3">
+            Острый коронарный синдром (ОКС) — клинико-биохимический синдром, возникающий
+            при остром нарушении коронарного кровотока и включающий STEMI, NSTEMI и
+            нестабильную стенокардию.
           </p>
-        </section>
-
-        {/* Реперфузия */}
-        <section id="acs-reperfusion">
-          <h3 className="text-xl md:text-2xl font-semibold text-[#111827] mb-3">
-            Реперфузионная терапия
-          </h3>
-          <ul className="list-disc pl-5 space-y-2 text-sm md:text-base text-[#4b3b2f]">
+          <p className="mb-3">
+            В шаблоне гайда здесь будет краткая, но точная формулировка из оригинального
+            документа ESC / ACC/AHA, а также упрощённая схема классификации для ежедневной
+            практики.
+          </p>
+        </>
+      );
+    case 'diagnostics':
+      return (
+        <>
+          <p className="mb-3">
+            Диагностический блок собирает воедино клинику, ЭКГ, динамику высокочувствительного
+            тропонина и визуализацию. Для каждого сценария ОКС акценты различаются:
+          </p>
+          <ul className="list-disc list-inside space-y-1 mb-3">
+            <li>для STEMI — приоритет немедленной ЭКГ и фиксации подъёма ST;</li>
             <li>
-              <span className="font-semibold">STEMI:</span> первичное ЧКВ
-              предпочтительно; тромболизис — альтернатива при невозможности
-              своевременного ЧКВ.
+              для NSTEMI / нестабильной стенокардии — повторная ЭКГ, серийный тропонин,
+              шкалы риска (GRACE, TIMI);
             </li>
-            <li>
-              <span className="font-semibold">NSTEMI/нестабильная стенокардия:</span>{' '}
-              тромболизис не показан; стратегия определяется риском и
-              коронарной анатомией.
-            </li>
+            <li>учёт дифференциального диагноза (МИНОКА, миокардит, ТЭЛА и др.).</li>
           </ul>
-        </section>
-
-        {/* Фармакотерапия */}
-        <section id="acs-pharm">
-          <h3 className="text-xl md:text-2xl font-semibold text-[#111827] mb-3">
-            Медикаментозная терапия
-          </h3>
-          <ul className="list-disc pl-5 space-y-2 text-sm md:text-base text-[#4b3b2f]">
-            <li>
-              Двойная антитромбоцитарная терапия (аспирин + ингибитор P2Y12) с
-              выбором препарата по риску ишемии/кровотечений.
-            </li>
-            <li>Антикоагулянты в остром периоде (НМГ, фондапаринукс и др.).</li>
-            <li>
-              Бета-блокаторы, статины высокой интенсивности, ингибиторы РААС,
-              нитраты по показаниям.
-            </li>
+        </>
+      );
+    case 'risk':
+      return (
+        <>
+          <p className="mb-3">
+            Стратификация риска основана на сочетании клинических, электрокардиографических
+            и биохимических критериев. В таблицах будут представлены ключевые пороги
+            и критерии высокого/очень высокого риска для выбора инвазивной стратегии.
+          </p>
+        </>
+      );
+    case 'strategy':
+      return (
+        <>
+          <p className="mb-3">
+            В этой секции будет маршрут пациента для выбранного сценария{' '}
+            <span className="font-semibold">{scenarioId.toUpperCase()}</span> — в виде
+            схем и алгоритмов:
+          </p>
+          <ul className="list-disc list-inside space-y-1 mb-3">
+            <li>тайминги реперфузии (door-to-balloon, door-to-needle);</li>
+            <li>показания к первичному ЧКВ и фармакоинвазивной стратегии;</li>
+            <li>когда допустима консервативная тактика.</li>
           </ul>
-        </section>
-
-        {/* Вторичная профилактика */}
-        <section id="acs-secondary">
-          <h3 className="text-xl md:text-2xl font-semibold text-[#111827] mb-3">
-            Вторичная профилактика и наблюдение
-          </h3>
-          <ul className="list-disc pl-5 space-y-2 text-sm md:text-base text-[#4b3b2f]">
-            <li>Контроль АД, липидов, гликемии, массы тела, отказ от курения.</li>
-            <li>Кардиореабилитация и обучение пациента.</li>
-            <li>Мониторинг приверженности и побочных эффектов терапии.</li>
-          </ul>
-        </section>
-      </div>
-    </div>
-  );
+        </>
+      );
+    case 'pharm':
+      return (
+        <>
+          <p className="mb-3">
+            Раздел фармакотерапии обобщит схемы антитромботической терапии (DAPT, тройная
+            терапия), антикоагулянтов и вторичной профилактики (статины, ИАПФ, β-блокаторы).
+          </p>
+        </>
+      );
+    case 'invasive':
+      return (
+        <>
+          <p className="mb-3">
+            Здесь будут сосредоточены инвазивные аспекты: показания к ЧКВ / АКШ, особенности
+            стентирования, тактика при многофокусном поражении, сроки вмешательства при
+            NSTEMI/нестабильной стенокардии.
+          </p>
+        </>
+      );
+    case 'followup':
+      return (
+        <>
+          <p className="mb-3">
+            Блок наблюдения и вторичной профилактики объединит рекомендации по контролю
+            факторов риска, физической реабилитации и длительности антитромботической
+            терапии с учётом шкал ишемического и геморрагического риска.
+          </p>
+        </>
+      );
+    default:
+      return null;
+  }
 }
 
-// --- Основная страница Гайдов ---
-
 export default function GuidesPage() {
-  const [specialty, setSpecialty] = useState<SpecialtyId>('cardiology');
-  const [nosology, setNosology] = useState<NosologyId | null>('acs');
-  const [scenario, setScenario] = useState<ScenarioId | null>(null);
+  const [selectedSpecialty, setSelectedSpecialty] = useState<SpecialtyId>('cardiology');
+  const [selectedNosology, setSelectedNosology] = useState<NosologyId | null>('acs');
+  const [selectedScenario, setSelectedScenario] = useState<ScenarioId>('stemi');
+  const [activeSection, setActiveSection] = useState<GuideSectionId>('sm_eu_us');
 
-  const showAcs = specialty === 'cardiology' && nosology === 'acs';
+  const currentNosologies =
+    selectedSpecialty === 'cardiology' ? CARDIO_NOSOLOGIES : [];
+
+  const showAcs =
+    selectedSpecialty === 'cardiology' && selectedNosology === 'acs';
 
   return (
     <main className="bg-[#fcfcee] min-h-screen">
-      {/* Афоризм и фильтры */}
+      {/* Блок афоризма + фильтры (как на главной) */}
       <section className="border-b border-gray-200">
         <div className="max-w-[1360px] mx-auto px-4 pt-4 pb-5">
           <div className="flex items-center">
@@ -364,113 +287,152 @@ export default function GuidesPage() {
               </p>
             </div>
 
-            {/* Специальность справа */}
+            {/* Справа: фильтр специальности + нозологии */}
             <div className="flex-1 flex justify-end">
-              <div className="flex flex-col items-end gap-1">
-                <span className="text-[11px] uppercase tracking-[0.18em] text-[#9c978f]">
-                  Специальность
-                </span>
-                <select
-                  value={specialty}
-                  onChange={(e) => {
-                    const value = e.target.value as SpecialtyId;
-                    setSpecialty(value);
-                    setNosology('acs');
-                    setScenario(null);
-                  }}
-                  className="min-w-[210px] rounded-full border border-[#d3cec4] bg-white px-4 py-1.5 text-sm text-[#3b342d] shadow-sm focus:outline-none focus:border-[#015d52]"
-                >
-                  {SPECIALTIES.map((s) => (
-                    <option key={s.id} value={s.id}>
-                      {s.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          </div>
+              <div className="flex flex-col items-end gap-2">
+                <div className="flex flex-col items-end gap-1">
+                  <span className="text-[11px] uppercase tracking-[0.18em] text-[#9c978f]">
+                    Специальность
+                  </span>
+                  <select
+                    value={selectedSpecialty}
+                    onChange={(e) =>
+                      setSelectedSpecialty(e.target.value as SpecialtyId)
+                    }
+                    className="min-w-[220px] rounded-full border border-[#d3cec4] bg-white px-4 py-1.5 text-sm text-[#3b342d] shadow-sm focus:outline-none focus:border-[#015d52]"
+                  >
+                    {SPECIALTIES.map((s) => (
+                      <option key={s.id} value={s.id}>
+                        {s.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-          {/* Фильтр нозологий под фильтром специальности */}
-          <div className="mt-4 flex justify-end">
-            <div className="flex flex-col items-end gap-1">
-              <span className="text-[11px] uppercase tracking-[0.18em] text-[#9c978f]">
-                Нозология
-              </span>
-              <select
-                value={nosology ?? 'acs'}
-                onChange={(e) => {
-                  const value = e.target.value as NosologyId;
-                  setNosology(value);
-                  setScenario(null);
-                }}
-                className="min-w-[260px] rounded-full border border-[#d3cec4] bg-white px-4 py-1.5 text-sm text-[#3b342d] shadow-sm focus:outline-none focus:border-[#015d52]" // ← ОБЯЗАТЕЛЬНО ">" В КОНЦЕ
-              >
-                {CARDIO_NOSOLOGIES.map(👎 => (
-                  <option key={n.id} value={n.id}>
-                    {n.label}
-                  </option>
-                ))}
-              </select>
+                <div className="flex flex-col items-end gap-1">
+                  <span className="text-[11px] uppercase tracking-[0.18em] text-[#9c978f]">
+                    Нозология
+                  </span>
+                  <select
+                    value={selectedNosology ?? ''}
+                    onChange={(e) =>
+                      setSelectedNosology(e.target.value as NosologyId)
+                    }
+                    className="min-w-[260px] rounded-full border border-[#d3cec4] bg-white px-4 py-1.5 text-sm text-[#3b342d] shadow-sm focus:outline-none focus:border-[#015d52]"
+                  >
+                    {currentNosologies.map(👎 => (
+                      <option key={n.id} value={n.id}>
+                        {n.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Тело страницы гайда */}
-      <section className="max-w-[1360px] mx-auto px-4 pt-10 pb-16">
-        {showAcs ? (
-          <>
-            {/* Заголовок нозологии и краткое пояснение */}
-            <div className="text-center max-w-3xl mx-auto">
-              <h1 className="text-2xl md:text-3xl font-semibold text-[#111827] mb-2">
-                Острый коронарный синдром (ОКС)
-              </h1>
-              <p className="text-sm md:text-base text-[#4b3b2f]">
-                ОКС объединяет STEMI, NSTEMI и нестабильную стенокардию. Ниже
-                представлены основные клинические сценарии, из которых можно
-                перейти к подробной структуре гайда.
-              </p>
-            </div>
+      {/* Описание нозологии и сценарии (пример для ОКС) */}
+      {showAcs && (
+        <section className="max-w-[1360px] mx-auto px-4 pt-10 pb-6">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-semibold text-[#2b2115] mb-3">
+              Острый коронарный синдром (ОКС)
+            </h1>
+            <p className="max-w-3xl mx-auto text-base text-[#4b3b2f] leading-relaxed">
+              ОКС объединяет STEMI, NSTEMI и нестабильную стенокардию и
+              отражает острое нарушение коронарного кровотока. Ниже представлены
+              ключевые клинические сценарии, из которых можно перейти к
+              подробной структуре гайда.
+            </p>
+          </div>
 
-            {/* Три сценария в ряд */}
-            <div className="mt-8 grid gap-4 md:grid-cols-3">
-              {ACS_SCENARIOS.map((sc) => (
+          <div className="grid md:grid-cols-3 gap-4 mb-4">
+            {ACS_SCENARIOS.map((scenario) => {
+              const isActive = selectedScenario === scenario.id;
+              return (
                 <button
-                  key={sc.id}
+                  key={scenario.id}
                   type="button"
-                  onClick={() => setScenario(sc.id)}
-                  className={`text-left rounded-3xl border px-5 py-4 shadow-sm transition-all ${
-                    scenario === sc.id
-                      ? 'border-[#015d52] shadow-md bg-white'
-                      : 'border-[#e5e7eb] bg-[#f9fafb] hover:border-[#015d52]/60 hover:shadow-md'
+                  onClick={() => setSelectedScenario(scenario.id)}
+                  className={`text-left rounded-3xl border px-5 py-4 shadow-sm transition-all duration-200 ${
+                    isActive
+                      ? 'border-[#015d52] bg-white shadow-[0_14px_30px_rgba(0,0,0,0.08)]'
+                      : 'border-[#e2dbcf] bg-white/70 hover:shadow-[0_10px_24px_rgba(0,0,0,0.06)]'
                   }`}
                 >
-                  <h2 className="text-sm md:text-base font-semibold text-[#111827] mb-1.5">
-                    {sc.title}
-                  </h2>
-                  <p className="text-xs md:text-sm text-[#4b3b2f]">
-                    {sc.subtitle}
-                  </p>
+                  <div className="text-sm font-semibold text-[#2b2115] mb-1">
+                    {scenario.title}
+                  </div>
+                  <div className="text-sm text-[#4b3b2f]">
+                    {scenario.subtitle}
+                  </div>
                 </button>
-              ))}
-            </div>
-
-            {/* Собственно гайд по ОКС */}
-            <AcsGuide scenario={scenario} />
-          </>
-        ) : (
-          <div className="text-center text-sm md:text-base text-[#4b3b2f]">
-            Подробная структура гайда для выбранной нозологии будет добавлена
-            позже. Сейчас в качестве примера реализован раздел по острому
-            коронарному синдрому (ОКС).
+              );
+            })}
           </div>
-        )}
+        </section>
+      )}
 
-        {/* Низ страницы — support */}
-        <p className="mt-16 text-center text-sm md:text-base text-[#4b3b2f]">
-          support@medradix.info
-        </p>
+      {/* Структура гайда по выбранному сценарию ОКС */}
+      {showAcs && (
+        <section className="border-t border-gray-200 bg-[#f8f4ee]/80">
+          <div className="max-w-[1360px] mx-auto px-4 py-10 flex gap-10">
+            {/* Левая колонка: разделы гайда */}
+            <aside className="w-64 flex-shrink-0">
+              <nav className="space-y-2">
+                {ACS_SECTIONS.map((section) => {
+                  const isActive = activeSection === section.id;
+                  const isSm = section.id === 'sm_eu_us';
+                  return (
+                    <button
+                      key={section.id}
+                      type="button"
+                      onClick={() => setActiveSection(section.id)}
+                      className={`w-full text-left rounded-xl px-4 py-2 text-sm font-medium transition-all duration-200 ${
+                        isActive
+                          ? 'bg-[#015d52] text-white shadow-md'
+                          : isSm
+                          ? 'bg-[#fff7e6] text-[#8a4b00] hover:bg-[#ffefd1]'
+                          : 'bg-white/80 text-[#3b342d] hover:bg-[#e9e1d6]'
+                      }`}
+                    >
+                      {section.shortTitle}
+                    </button>
+                  );
+                })}
+              </nav>
+            </aside>
+
+            {/* Правая колонка: тело выбранного раздела */}
+            <div className="flex-1 bg-white/90 rounded-3xl shadow-[0_18px_40px_rgba(0,0,0,0.06)] px-8 py-6">
+              {ACS_SECTIONS.map((section) =>
+                section.id === activeSection ? (
+                  <article key={section.id}>
+                    <h2 className="text-2xl font-semibold text-[#2b2115] mb-4">
+                      {section.fullTitle}
+                    </h2>
+                    <div className="text-[15px] leading-relaxed text-[#3b342d] space-y-2">
+                      {renderAcsSectionBody(section.id, selectedScenario)}
+                    </div>
+                  </article>
+                ) : null
+              )}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Низ страницы: support */}
+      <section className="border-t border-gray-200">
+        <div className="max-w-[1360px] mx-auto px-4 py-10 text-center">
+          <p className="text-sm md:text-base text-[#4b3b2f]">
+            support@medradix.info
+          </p>
+        </div>
       </section>
     </main>
   );
 }
+
