@@ -875,20 +875,49 @@ export default function ACSPage() {
                   <div>
                     <h3 className="text-xl font-semibold text-gray-900 mb-4">
                       P2Y12 ингибиторы - выбор препарата
-                    </h3>
-                    <div className="grid md:grid-cols-3 gap-6">
-                      {escGuideline.treatment.antiplateletTherapy[1].options.map(
-                        (drug, idx) => (
-                          <div
-                            key={idx}
-                            className="bg-white rounded-xl p-6 border-2 border-blue-200 shadow-sm"
-                          >
-                            <h4 className="text-lg font-semibold text-gray-900 mb-3">
-                              {drug.name}
-                            </h4>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-4">
+  P2Y12 ингибиторы - выбор препарата
+</h3>
 
-                            <div className="space-y-3">
-                              <div>
+<div className="grid md:grid-cols-3 gap-6">
+  {(escGuideline.treatment.antiplateletTherapy[1]?.options ?? []).map(
+    (drug, idx) => (
+      <div
+        key={idx}
+        className="bg-white rounded-xl p-6 border-2 border-blue-200 shadow-sm"
+      >
+        <h4 className="text-lg font-semibold text-gray-900 mb-3">
+          {drug.name}
+        </h4>
+
+        <div className="space-y-3">
+          <div>
+            <span className="font-medium">Нагрузка:</span>
+            <span className="text-gray-700 ml-2">{drug.loading}</span>
+          </div>
+          <div>
+            <span className="font-medium">Поддержка:</span>
+            <span className="text-gray-700 ml-2">{drug.maintenance}</span>
+          </div>
+          <div>
+            <span className="font-medium">Длительность:</span>
+            <span className="text-gray-700 ml-2">{drug.duration}</span>
+          </div>
+
+          <div className="mt-4">
+            <RecommendationBadge
+              rec={{
+                class: (drug.class ?? 'I') as RecommendationClass,
+                level: (drug.level ?? 'A') as EvidenceLevel,
+                text: '',
+              }}
+            />
+          </div>
+        </div>
+      </div>
+    )
+  )}
+</div>
                                 <span className="font-medium">
                                   Нагрузка:
                                 </span>
