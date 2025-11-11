@@ -1,528 +1,175 @@
-'use client';
-
-import { useState } from 'react';
-
-type CardioNosologyId =
-  | 'acs'
-  | 'stable-chd'
-  | 'htn'
-  | 'chronic-hf'
-  | 'acute-hf'
-  | 'af'
-  | 'svt'
-  | 'vt-vf'
-  | 'av-block'
-  | 'myocarditis'
-  | 'endocarditis'
-  | 'valve-disease'
-  | 'pulmonary-embolism'
-  | 'pulmonary-hypertension'
-  | 'congenital';
-
-interface NosologyOption {
-  id: CardioNosologyId;
-  label: string;
-}
-
-interface NosologyGroup {
-  label: string;
-  items: NosologyOption[];
-}
-
-interface AcsScenario {
-  id: 'stemi' | 'nstemi' | 'ua';
-  title: string;
-  subtitle: string;
-}
-
-interface GuideSection {
-  id: string;
-  label: string;
-}
-
-// ТОТ ЖЕ СПИСОК СПЕЦИАЛЬНОСТЕЙ, ЧТО И НА ГЛАВНОЙ
-const SPECIALTIES: string[] = [
-  'Все',
-  'Акушерство и гинекология',
-  'Аллергология и иммунология',
-  'Анестезиология и реаниматология',
-  'Гастроэнтерология',
-  'Гематология',
-  'Гериатрия',
-  'Дерматология',
-  'Инфекционные болезни',
-  'Кардиология',
-  'Неврология',
-  'Нефрология',
-  'Онкология',
-  'Офтальмология',
-  'Педиатрия',
-  'Пульмонология',
-  'Психиатрия',
-  'Ревматология',
-  'Терапия',
-  'Травматология и ортопедия',
-  'Урология',
-  'Хирургия',
-  'Эндокринология',
-];
-
-// СИСТЕМНЫЙ СПИСОК НОЗОЛОГИЙ ПО КАРДИОЛОГИИ
-const CARDIOLOGY_GROUPS: NosologyGroup[] = [
-  {
-    label: 'Ишемическая болезнь сердца',
-    items: [
-      { id: 'acs', label: 'Острый коронарный синдром (ОКС)' },
-      { id: 'stable-chd', label: 'Стабильная ишемическая болезнь сердца' },
-    ],
-  },
-  {
-    label: 'Артериальная гипертензия',
-    items: [{ id: 'htn', label: 'Артериальная (эссенциальная) гипертензия' }],
-  },
-  {
-    label: 'Сердечная недостаточность',
-    items: [
-      { id: 'chronic-hf', label: 'Хроническая сердечная недостаточность' },
-      { id: 'acute-hf', label: 'Острая сердечная недостаточность' },
-    ],
-  },
-  {
-    label: 'Нарушения ритма и проводимости',
-    items: [
-      { id: 'af', label: 'Фибрилляция и трепетание предсердий' },
-      { id: 'svt', label: 'Наджелудочковые тахикардии' },
-      { id: 'vt-vf', label: 'Желудочковые тахиаритмии и фибрилляция желудочков' },
-      { id: 'av-block', label: 'Атриовентрикулярные блокады' },
-    ],
-  },
-  {
-    label: 'Воспалительные и клапанные заболевания',
-    items: [
-      { id: 'myocarditis', label: 'Миокардит' },
-      { id: 'endocarditis', label: 'Инфекционный эндокардит' },
-      { id: 'valve-disease', label: 'Клапанные пороки сердца' },
-    ],
-  },
-  {
-    label: 'Лёгочные сосудистые заболевания и врождённые пороки',
-    items: [
-      { id: 'pulmonary-embolism', label: 'Тромбоэмболия лёгочной артерии' },
-      { id: 'pulmonary-hypertension', label: 'Лёгочная гипертензия' },
-      { id: 'congenital', label: 'Врожденные пороки сердца (у взрослых)' },
-    ],
-  },
-];
-
-// ТРИ ОТДЕЛЬНЫХ СЦЕНАРИЯ ОКС
-const ACS_SCENARIOS: AcsScenario[] = [
-  {
-    id: 'stemi',
-    title: 'STEMI: подъём ST и типичный болевой синдром',
-    subtitle: 'Приоритет немедленной реперфузии и первичного ЧКВ.',
-  },
-  {
-    id: 'nstemi',
-    title: 'NSTEMI: инфаркт без подъёма ST',
-    subtitle: 'Ранняя инвазивная стратегия при высоком риске по шкале GRACE.',
-  },
-  {
-    id: 'ua',
-    title: 'Нестабильная стенокардия',
-    subtitle:
-      'Ишемия без некроза миокарда; тактика схожа с NSTEMI с акцентом на стратификацию риска.',
-  },
-];
-
-const ACS_SECTIONS: GuideSection[] = [
-  { id: 'definition', label: 'Определение и классификация' },
-  { id: 'diagnostics', label: 'Диагностика и стратификация риска' },
-  { id: 'initial-therapy', label: 'Начальная терапия и антикоагуляция' },
-  { id: 'reperfusion', label: 'Реперфузионная и инвазивная стратегия' },
-  { id: 'secondary-prevention', label: 'Вторичная профилактика' },
-];
-
-export default function GuidesPage() {
-  const [selectedSpecialty, setSelectedSpecialty] =
-    useState<string>('Кардиология');
-  const [selectedNosologyId, setSelectedNosologyId] =
-    useState<CardioNosologyId>('acs');
-  const [scientiaOpen, setScientiaOpen] = useState<boolean>(false);
-
-  const isCardiology = selectedSpecialty === 'Кардиология';
-  const isACS = isCardiology && selectedNosologyId === 'acs';
-
-  const handleScrollToSection = (sectionId: string) => {
-    const el = document.getElementById(sectionId);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Фибрилляция предсердий — Алгоритмы (EU vs US)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg:#0b1020; --card:#111735; --ink:#e9edff; --muted:#a8b2d1;
+      --accent:#5ea2ff; --ok:#2ecc71; --warn:#f1c40f; --risk:#e74c3c;
+      --line:#2a3260; --chip:#1a2248;
     }
-  };
+    body {background:var(--bg); color:var(--ink); font:16px/1.5 Inter,system-ui,Segoe UI,Arial;}
+    .wrap {max-width:1150px; margin:32px auto; padding:0 16px;}
+    h1,h2,h3 {margin:0 0 12px}
+    h1 {font-size:28px}
+    h2 {font-size:22px; margin-top:28px}
+    h3 {font-size:18px; margin-top:18px; color:var(--muted)}
+    .card {background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px; margin:16px 0}
+    .grid {display:grid; gap:12px}
+    .g-2 {grid-template-columns:1fr 1fr}
+    .g-3 {grid-template-columns:1fr 1fr 1fr}
+    .badge {display:inline-block; padding:4px 8px; border-radius:999px; background:var(--chip); color:var(--ink); font-size:12px}
+    .tag {padding:2px 8px; border:1px solid var(--line); border-radius:999px; color:var(--muted); font-size:12px}
+    .note {color:var(--muted); font-size:14px}
+    .flow {display:flex; gap:12px; flex-wrap:wrap}
+    .step {flex:1 1 260px; border:1px dashed var(--line); border-radius:10px; padding:12px; position:relative}
+    .step::before {content:"→"; position:absolute; right:8px; top:8px; color:var(--muted)}
+    .pill {padding:6px 10px; border-radius:8px; background:#0f1736; border:1px solid var(--line); display:inline-block; margin:4px 6px 0 0}
+    .list {margin:8px 0 0 0; padding-left:16px}
+    .tbl {width:100%; border-collapse:separate; border-spacing:0; overflow:hidden; border-radius:12px; border:1px solid var(--line)}
+    .tbl th, .tbl td {padding:10px 12px; border-bottom:1px solid var(--line); vertical-align:top}
+    .tbl th {background:#0e1633; color:#cdd6ff; text-align:left}
+    .tbl tr:last-child td {border-bottom:none}
+    .callout {border-left:3px solid var(--accent); background:#0c1430; padding:12px; border-radius:8px}
+    .legend {display:flex; gap:8px; flex-wrap:wrap}
+    .chip-ok {background:rgba(46,204,113,.12); color:#b8f5d2; border:1px solid rgba(46,204,113,.35)}
+    .chip-warn {background:rgba(241,196,15,.12); color:#ffe8a3; border:1px solid rgba(241,196,15,.35)}
+    .chip-risk {background:rgba(231,76,60,.12); color:#ffb3a8; border:1px solid rgba(231,76,60,.35)}
+    .src {font-size:12px; color:#97a3cf}
+    .kpi {display:flex; gap:12px; flex-wrap:wrap}
+    .kpi > div {flex:1 1 180px; background:#0e1633; border:1px solid var(--line); border-radius:10px; padding:10px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Фибрилляция предсердий (ESC 2024 vs AHA/ACC/HRS 2023)</h1>
+    <div class="note">Для медицинских специалистов. Обзор и интерпретация; не заменяет официальные руководства. Следуйте локальным протоколам.</div>
 
-  return (
-    <main className="bg-[#fcfcee] min-h-screen">
-      {/* АФОРИЗМ + ФИЛЬТРЫ (как на главной) */}
-      <section className="border-b border-gray-200">
-        <div className="max-w-[1360px] mx-auto px-4 pt-4 pb-4">
-          <div className="flex items-center">
-            {/* Чип слева */}
-            <div className="flex-1 flex justify-start">
-              <button className="px-5 py-1.5 text-xs font-medium rounded-full border border-[#b6b6c0] bg-white shadow-sm">
-                Афоризм месяца
-              </button>
-            </div>
+    <div class="card kpi">
+      <div><b>Версия EU:</b><br>ESC 2024</div>
+      <div><b>Версия US:</b><br>AHA/ACC/HRS 2023</div>
+      <div><b>Последняя проверка:</b><br>ДД.ММ.ГГГГ</div>
+      <div><b>Цель:</b><br>Диагностика, стратификация риска, лечение, сравнение</div>
+    </div>
 
-            {/* Афоризм по центру */}
-            <div className="flex-shrink-0 text-center">
-              <h2 className="text-2xl md:text-3xl font-semibold italic tracking-wide">
-                Mens sana in corpore sano
-              </h2>
-              <p className="mt-1.5 text-sm text-[#3b342d]">
-                В здоровом теле — здоровый дух (Ювенал)
-              </p>
-            </div>
-
-            {/* Фильтры справа */}
-            <div className="flex-1 flex justify-end">
-              <div className="flex flex-col items-end gap-2">
-                {/* Специальность */}
-                <div className="flex flex-col items-end gap-1">
-                  <span className="text-[11px] uppercase tracking-[0.18em] text-[#9c978f]">
-                    Специальность
-                  </span>
-                  <select
-                    value={selectedSpecialty}
-                    onChange={(e) => setSelectedSpecialty(e.target.value)}
-                    className="min-w-[210px] rounded-full border border-[#d3cec4] bg-white px-4 py-1.5 text-sm text-[#3b342d] shadow-sm focus:outline-none focus:border-[#015d52]"
-                  >
-                    {SPECIALTIES.map((spec) => (
-                      <option key={spec} value={spec}>
-                        {spec}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Нозология — только если выбрана Кардиология */}
-                {isCardiology && (
-                  <div className="flex flex-col items-end gap-1">
-                    <span className="text-[11px] uppercase tracking-[0.18em] text-[#9c978f]">
-                      Нозология
-                    </span>
-                    <select
-                      value={selectedNosologyId}
-                      onChange={(e) =>
-                        setSelectedNosologyId(
-                          e.target.value as CardioNosologyId,
-                        )
-                      }
-                      className="min-w-[260px] rounded-full border border-[#d3cec4] bg-white px-4 py-1.5 text-sm text-[#3b342d] shadow-sm focus:outline-none focus:border-[#015d52]"
-                    >
-                      {CARDIOLOGY_GROUPS.map((group) => (
-                        <optgroup key={group.label} label={group.label}>
-                          {group.items.map((item) => (
-                            <option key={item.id} value={item.id}>
-                              {item.label}
-                            </option>
-                          ))}
-                        </optgroup>
-                      ))}
-                    </select>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
+    <h2>1) Диагностика: алгоритм</h2>
+    <div class="card">
+      <div class="legend">
+        <span class="badge">Симптомы/скрининг</span>
+        <span class="badge">Подтверждение</span>
+        <span class="badge">Поиск причин</span>
+      </div>
+      <div class="flow">
+        <div class="step">
+          <b>Подозрение на ФП</b>
+          <ul class="list">
+            <li>Нерегулярный пульс, палпитации, одышка, инсульт/ТИА в анамнезе</li>
+            <li>Оппортунистический скрининг >65 лет; таргетированный при факторах риска</li>
+          </ul>
         </div>
-      </section>
+        <div class="step">
+          <b>Подтверждение ритма</b>
+          <ul class="list">
+            <li>12‑кан. ЭКГ: нерегулярный RR, отсутствие P</li>
+            <li>Если пароксизмальная: Холтер/patch/имплантируемый монитор при криптогенном инсульте</li>
+          </ul>
+        </div>
+        <div class="step">
+          <b>Оценка причины и коморбидности</b>
+          <ul class="list">
+            <li>ТТЭ/ТЧЭ при показаниях; ТТГ, электролиты, креатинин</li>
+            <li>Оценить ожирение, АГ, ОАС, алког. нагрузку</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout src">Источники: официальные страницы ESC 2024 и AHA/ACC/HRS 2023 (ссылки будут указаны на карточке источников ниже).</div>
+    </div>
 
-      {/* СОДЕРЖИМОЕ ГАЙДА */}
-      {isACS ? (
-        <section className="max-w-[1360px] mx-auto px-4 pt-10 pb-16">
-          {/* Заголовок ОКС */}
-          <header className="max-w-3xl mx-auto text-center mb-8">
-            <h1 className="text-2xl md:text-3xl font-semibold text-[#2b2115] mb-3">
-              Острый коронарный синдром (ОКС)
-            </h1>
-            <p className="text-[15px] md:text-base text-[#4b3b2f] leading-relaxed">
-              ОКС объединяет STEMI, NSTEMI и нестабильную стенокардию и описывает
-              острое ишемическое повреждение миокарда. Ниже — ключевые клинические
-              сценарии, которые помогают ориентироваться в структуре гайда.
-            </p>
-          </header>
+    <h2>2) Антикоагуляция: решение по риску инсульта</h2>
+    <div class="card">
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th>Шаг</th>
+            <th>ESC 2024</th>
+            <th>US 2023</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Стратификация риска</td>
+            <td>CHA2DS2‑VASc (расширенные комментарии по промежуточному риску)</td>
+            <td>CHA2DS2‑VASc (разрешено расширение клин. факторов при пограничном балле)</td>
+          </tr>
+          <tr>
+            <td>Когда начинать ОАК</td>
+            <td>Мужчины ≥2, женщины ≥3 — рекомендовано; при 1 у мужчин — индивидуально</td>
+            <td>Сходно; акцент на shared decision при промежуточном риске</td>
+          </tr>
+          <tr>
+            <td>Выбор препарата</td>
+            <td>Преимущественно ДОАК; варфарин при МНКС, клапан. протезах, тяжелой МТР</td>
+            <td>То же; уточнения по ХБП (дозы апиксабана/рибоксабана)</td>
+          </tr>
+          <tr>
+            <td>Исключения/противопоказания</td>
+            <td>Высокий риск кровотечений — модифицируем факторы, не отменяем ОАК только по HAS‑BLED</td>
+            <td>То же; выделен подход к LAAO у непереносимости ОАК</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="note">Формулировки оригинальны; ориентированы на практику. Для точных порогов и классов рекомендаций — см. первоисточники.</div>
+    </div>
 
-          {/* ТРИ НЕ КЛИКАБЕЛЬНЫХ БЛОКА СЦЕНАРИЕВ */}
-          <div className="mb-10 flex flex-col md:flex-row justify-center gap-4">
-            {ACS_SCENARIOS.map((scenario) => (
-              <div
-                key={scenario.id}
-                className="flex-1 min-w-[220px] rounded-3xl border border-[#e0d7c8] bg-white/80 px-6 py-4 text-left shadow-sm"
-              >
-                <h3 className="text-[15px] md:text-base font-semibold text-[#2b2115] mb-1.5">
-                  {scenario.title}
-                </h3>
-                <p className="text-xs md:text-sm text-[#4b3b2f]">
-                  {scenario.subtitle}
-                </p>
-              </div>
-            ))}
-          </div>
+    <h2>3) Контроль ритма/частоты: выбор стратегии</h2>
+    <div class="card">
+      <div class="flow">
+        <div class="step">
+          <b>Немедленно</b>
+          <div class="pill chip-risk">Гемодинамическая нестабильность → срочная ЭИТ</div>
+          <div class="pill chip-warn">ОАК до/после ЭИТ по правилу 3 нед / 4 нед (или ТЧЭ‑направляемо)</div>
+        </div>
+        <div class="step">
+          <b>Контроль ритма</b>
+          <ul class="list">
+            <li>Ранняя абляция при симптомной пароксизмальной ФП и неэффективности/нежелании ААП</li>
+            <li>ААП по профилю: флекаинид/пропафенон (без структурной болезни), соталол/дронедарон, амиодарон при ССН/ГЛЖ</li>
+          </ul>
+        </div>
+        <div class="step">
+          <b>Контроль частоты</b>
+          <ul class="list">
+            <li>Бета‑блокаторы; недигидропиридиновые БКК; дигоксин при СН</li>
+            <li>Целевой ЧСС покоя ~80–110/мин индивидуально</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout">
+        Отличия: ESC акцентирует раннюю катетерную абляцию у избранных пациентов; US сходно, но подчёркивает shared decision и центры с опытом.
+      </div>
+    </div>
 
-          {/* ДВЕ КОЛОНКИ: слева Scientia + разделы, справа текст */}
-          <div className="flex flex-col lg:flex-row gap-10">
-            {/* ЛЕВАЯ КОЛОНКА */}
-            <aside className="lg:w-72 lg:flex-none">
-              {/* Scientia MedRadix — КОРОТКОЕ ОПИСАНИЕ + РАСКРЫВАЕМЫЙ КОНТЕНТ */}
-              <button
-                type="button"
-                onClick={() => setScientiaOpen((v) => !v)}
-                className="w-full text-left mb-6 rounded-2xl border border-[#015d52]/25 bg-[#015d52]/6 px-4 py-3 hover:bg-[#015d52]/10 transition-colors"
-              >
-                <h3 className="text-sm font-semibold text-[#015d52] mb-1">
-                  Scientia MedRadix: отличия EU / US
-                </h3>
-                <p className="text-xs text-[#3b342d] leading-relaxed">
-                  Сводка ключевых различий между европейскими (ESC) и
-                  американскими (ACC/AHA) рекомендациями по ОКС с прямыми
-                  ссылками на исходные документы.
-                </p>
-              </button>
+    <h2>4) Коморбидность и модификация факторов риска</h2>
+    <div class="card">
+      <ul class="list">
+        <li>АГ: строгий контроль, предпочтение схем с ИАПФ/БРА</li>
+        <li>Ожирение: снижение массы ≥10% улучшает удержание синусового ритма</li>
+        <li>ОАС: диагностика и СИПАП-терапия</li>
+        <li>Алкоголь: ограничение/абстиненция снижает рецидивы</li>
+      </ul>
+      <div class="note">Подход схож в EU и US; различаются формулировки классов/уровней доказательств.</div>
+    </div>
 
-              {scientiaOpen && (
-                <div className="mb-6 rounded-2xl border border-[#e0d7c8] bg-white/90 px-4 py-3 text-xs text-[#2b2115] leading-relaxed">
-                  <p className="mb-2 font-semibold">
-                    Примеры различий ESC vs ACC/AHA при ОКС:
-                  </p>
-                  <ul className="list-disc pl-5 space-y-1 mb-2">
-                    <li>
-                      Различия в деталях тайминга первичного ЧКВ и
-                      фибринолизиса (окна времени &laquo;door-to-balloon&raquo; и
-                      &laquo;door-to-needle&raquo;).
-                    </li>
-                    <li>
-                      Подход к длительности двойной антиагрегантной терапии (ДАТТ)
-                      при высоком риске кровотечений.
-                    </li>
-                    <li>
-                      Различные акценты в использовании шкал риска (GRACE,
-                      TIMI и др.) при выборе инвазивной стратегии.
-                    </li>
-                  </ul>
-                  <p className="mb-1">
-                    При заполнении этого блока нужно будет сослаться на
-                    конкретные документы (например, последние ESC Guidelines по
-                    ОКС и соответствующие ACC/AHA guidelines) и оформить их в
-                    виде таблицы/списка с классами рекомендаций и уровнями
-                    доказательности.
-                  </p>
-                </div>
-              )}
-
-              {/* Навигация по разделам */}
-              <nav className="space-y-2 text-sm">
-                {ACS_SECTIONS.map((section) => (
-                  <button
-                    key={section.id}
-                    type="button"
-                    onClick={() => handleScrollToSection(section.id)}
-                    className="w-full rounded-xl border border-transparent bg-transparent px-3 py-2 text-left text-[#4b3b2f] hover:border-[#015d52]/30 hover:bg-white/70 hover:text-[#015d52] transition-colors"
-                  >
-                    {section.label}
-                  </button>
-                ))}
-              </nav>
-            </aside>
-
-            {/* ПРАВАЯ КОЛОНКА — ТЕКСТ ГАЙДА */}
-            <article className="flex-1 space-y-10 text-[15px] leading-relaxed text-[#2b2115]">
-              {/* Определение и классификация */}
-              <section id="definition" className="scroll-mt-28">
-                <h2 className="text-xl md:text-2xl font-semibold mb-3">
-                  Определение и классификация
-                </h2>
-                <p className="mb-3">
-                  ОКС — это остро возникшая или усилившаяся ишемия миокарда,
-                  обусловленная несоответствием между потребностью в кислороде и
-                  коронарным кровотоком. В большинстве случаев причиной является
-                  разрыв или эрозия атеросклеротической бляшки с тромбозом
-                  коронарной артерии.
-                </p>
-                <ul className="list-disc pl-6 space-y-1 mb-3">
-                  <li>
-                    <strong>STEMI</strong> — инфаркт миокарда с подъёмом ST и
-                    формированием патологического зубца Q.
-                  </li>
-                  <li>
-                    <strong>NSTEMI</strong> — инфаркт без подъёма ST при наличии
-                    повышения/падения высокочувствительного тропонина.
-                  </li>
-                  <li>
-                    <strong>Нестабильная стенокардия</strong> — ишемия миокарда
-                    без некроза (тропонин в референсных пределах).
-                  </li>
-                </ul>
-              </section>
-
-              {/* Диагностика и стратификация риска */}
-              <section id="diagnostics" className="scroll-mt-28">
-                <h2 className="text-xl md:text-2xl font-semibold mb-3">
-                  Диагностика и стратификация риска
-                </h2>
-                <p className="mb-3">
-                  Диагностический алгоритм основан на совокупности клиники,
-                  ЭКГ-изменений и динамики высокочувствительного тропонина.
-                  Используются серийные измерения и быстрые протоколы (0–1 ч,
-                  0–2 ч) в соответствии с валидированными алгоритмами.
-                </p>
-                <ul className="list-disc pl-6 space-y-1 mb-3">
-                  <li>
-                    Повторные ЭКГ при сохранении симптомов или изменении
-                    состояния.
-                  </li>
-                  <li>
-                    Стратификация риска по шкале{' '}
-                    <strong>GRACE</strong> (госпитальная/6-месячная смертность) и
-                    <strong> TIMI</strong>.
-                  </li>
-                  <li>
-                    Использование эхокардиографии, коронарографии, КТ-ангиографии
-                    в зависимости от клинической ситуации.
-                  </li>
-                </ul>
-              </section>
-
-              {/* Начальная терапия и антикоагуляция */}
-              <section id="initial-therapy" className="scroll-mt-28">
-                <h2 className="text-xl md:text-2xl font-semibold mb-3">
-                  Начальная терапия и антикоагуляция
-                </h2>
-                <p className="mb-3">
-                  Базовый подход включает купирование боли, коррекцию
-                  гемодинамики, назначение антиагрегантов и парентеральных
-                  антикоагулянтов с учётом риска кровотечения.
-                </p>
-                <ul className="list-disc pl-6 space-y-1 mb-3">
-                  <li>
-                    Нагрузочная доза ацетилсалициловой кислоты + ингибитор P2Y12.
-                  </li>
-                  <li>
-                    Выбор между нефракционированным гепарином, эноксапарином,
-                    фондопаринуксом и др. в зависимости от сценария и стратегии
-                    реперфузии.
-                  </li>
-                  <li>
-                    Коррекция терапии при наличии показаний к пероральным
-                    антикоагулянтам (ФП, протезированные клапаны и т.п.).
-                  </li>
-                </ul>
-              </section>
-
-              {/* Реперфузионная и инвазивная стратегия */}
-              <section id="reperfusion" className="scroll-mt-28">
-                <h2 className="text-xl md:text-2xl font-semibold mb-3">
-                  Реперфузионная и инвазивная стратегия
-                </h2>
-                <p className="mb-4">
-                  Стратегия определяется наличием подъёма ST, сроками от начала
-                  симптомов, доступностью ЧКВ-центра и общим риском пациента.
-                </p>
-
-                {/* STEMI */}
-                <div className="mb-6">
-                  <h3 className="text-lg font-semibold mb-2">
-                    STEMI: приоритет немедленной реперфузии
-                  </h3>
-                  <ul className="list-disc pl-6 space-y-1">
-                    <li>Первичное ЧКВ в максимально короткие сроки.</li>
-                    <li>
-                      При недоступности ЧКВ — фибринолиз с последующей
-                      коронарографией.
-                    </li>
-                    <li>
-                      Выбор стентов и ДАТТ с учётом риска кровотечений и
-                      сопутствующей патологии.
-                    </li>
-                  </ul>
-                </div>
-
-                {/* NSTEMI */}
-                <div className="mb-6">
-                  <h3 className="text-lg font-semibold mb-2">
-                    NSTEMI: ранняя инвазивная тактика при высоком риске
-                  </h3>
-                  <ul className="list-disc pl-6 space-y-1">
-                    <li>
-                      Высокий риск по GRACE / динамике тропонина — ранняя
-                      коронарография.
-                    </li>
-                    <li>
-                      У умеренного/низкого риска — отсроченная инвазивная или
-                      консервативная стратегия.
-                    </li>
-                    <li>
-                      Роль КТ-ангиографии при низкой вероятности ИБС и
-                      неинтерпретируемой ЭКГ.
-                    </li>
-                  </ul>
-                </div>
-
-                {/* Нестабильная стенокардия */}
-                <div>
-                  <h3 className="text-lg font-semibold mb-2">
-                    Нестабильная стенокардия
-                  </h3>
-                  <ul className="list-disc pl-6 space-y-1">
-                    <li>
-                      Клиника ишемии при нормальном тропонине, часто с
-                      динамикой ЭКГ.
-                    </li>
-                    <li>
-                      Тактика близка к NSTEMI: стратификация риска, рассмотрение
-                      ранней коронарографии.
-                    </li>
-                    <li>
-                      Обязательное исключение альтернативных причин боли в
-                      груди.
-                    </li>
-                  </ul>
-                </div>
-              </section>
-
-              {/* Вторичная профилактика */}
-              <section id="secondary-prevention" className="scroll-mt-28">
-                <h2 className="text-xl md:text-2xl font-semibold mb-3">
-                  Вторичная профилактика
-                </h2>
-                <ul className="list-disc pl-6 space-y-1 mb-3">
-                  <li>Контроль факторов риска: АД, липиды, гликемия, курение.</li>
-                  <li>
-                    Оптимальная длительность ДАТТ в зависимости от стента, риска
-                    ишемии и кровотечения.
-                  </li>
-                  <li>
-                    Рекомендации по физической активности, кардиореабилитация,
-                    обучение пациента.
-                  </li>
-                </ul>
-              </section>
-            </article>
-          </div>
-
-          <div className="mt-12 text-center text-sm text-[#4b3b2f]">
-            support@medradix.info
-          </div>
-        </section>
-      ) : (
-        <section className="max-w-[1360px] mx-auto px-4 pt-10 pb-16">
-          <p className="text-center text-sm text-[#4b3b2f]">
-            Для выбранной нозологии структура гайда будет настроена отдельно.
-          </p>
-          <div className="mt-12 text-center text-sm text-[#4b3b2f]">
-            support@medradix.info
-          </div>
-        </section>
-      )}
-    </main>
-  );
-}
-
+    <h2>5) Карточка источников</h2>
+    <div class="card">
+      <ul class="list">
+        <li>ESC 2024 Atrial Fibrillation Guidelines — официальная страница (URL будет указан)</li>
+        <li>AHA/ACC/HRS 2023 Atrial Fibrillation Guideline — официальная страница (URL будет указан)</li>
+      </ul>
+      <div class="src">Права на оригинальные документы принадлежат соответствующим обществам. На данной странице — переработанные, оригинально оформленные конспекты и алгоритмы.</div>
+    </div>
+  </div>
+</body>
+</html>
