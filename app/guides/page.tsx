@@ -1,51 +1,52 @@
 // app/guides/acs/page.tsx
-// ОКС: ESC 2023/2024 vs ACC/AHA 2025 (оригинальная разметка, без копирования дизайна гайдов)
+import styles from "./styles.module.css";
+
 export default function ACSPage() {
   return (
-    <div className="wrap">
+    <div className={styles.wrap}>
       <h1>Острый коронарный синдром (ESC 2023–2024 vs ACC/AHA 2025)</h1>
-      <div className="note">Для медицинских специалистов. Обзор и интерпретация; не заменяет официальные руководства. Следуйте локальным протоколам.</div>
+      <div className={styles.note}>Для медицинских специалистов. Обзор и интерпретация; не заменяет официальные руководства. Следуйте локальным протоколам.</div>
 
-      <div className="card kpi">
-        <div><b>EU (ESC):</b><br />NSTE-ACS 2023; ACS with ST elevation 2024</div>
+      <div className={`${styles.card} ${styles.kpi}`}>
+        <div><b>EU (ESC):</b><br />NSTE-ACS 2023; STEMI 2024</div>
         <div><b>US (ACC/AHA):</b><br />ACS Guideline 2025</div>
-        <div><b>Последняя проверка:</b><br />ДД.ММ.ГГГГ</div>
-        <div><b>Фокус:</b><br />Диагностика, стратификация риска, реперфузия/инвазивная тактика, АТТ</div>
+        <div><b>Проверка:</b><br />ДД.ММ.ГГГГ</div>
+        <div><b>Фокус:</b><br />Диагностика, риск, реперфузия, АТТ</div>
       </div>
 
-      <h2>1) Диагностика и первичный маршрут</h2>
-      <div className="card">
-        <div className="flow">
-          <div className="step">
-            <b>Тriage</b>
-            <ul className="list">
-              <li>ECG ≤10 мин от контакта</li>
-              <li>Критическая нестабильность → немедленная реанимация/катетеризация</li>
+      <h2>1) Диагностика и маршрут</h2>
+      <div className={styles.card}>
+        <div className={styles.flow}>
+          <div className={styles.step}>
+            <b>Triage</b>
+            <ul className={styles.list}>
+              <li>ЭКГ ≤10 мин от контакта</li>
+              <li>Нестабильность → реанимация/катетеризация</li>
             </ul>
           </div>
-          <div className="step">
+          <div className={styles.step}>
             <b>STEMI</b>
-            <ul className="list">
-              <li>Подъем ST/новая БЛНПГ + клиника ишемии</li>
-              <li>Маршрут: первичное ЧКВ при доступности, иначе фибринолиз</li>
+            <ul className={styles.list}>
+              <li>Подъём ST/новая БЛНПГ + клиника</li>
+              <li>Первичное ЧКВ при доступности; иначе фибринолиз</li>
             </ul>
           </div>
-          <div className="step">
+          <div className={styles.step}>
             <b>NSTE-ACS</b>
-            <ul className="list">
-              <li>ECG без подъёма ST, боль/изменения ST-T</li>
-              <li>Высокочувствительный тропонин: 0/1ч или 0/2ч алгоритм</li>
+            <ul className={styles.list}>
+              <li>Без подъёма ST, ишемические симптомы/изменения ST-T</li>
+              <li>hs‑тропонин: протокол 0/1ч или 0/2ч</li>
             </ul>
           </div>
         </div>
-        <div className="callout">
-          Отличия: обе системы рекомендуют hs‑тропонин с протоколами 0/1ч; в EU шире акцент на валидации 0/1ч и безопасной выписке при низком риске. US 2025 подчёркивает системный подход и качество сети реперфузии.
+        <div className={styles.callout}>
+          Отличия: обе системы используют hs‑тропонин и ускоренные протоколы. ESC делает упор на валидированный 0/1ч и безопасную выписку низкого риска; US 2025 — на системные процессы и метрики сети.
         </div>
       </div>
 
-      <h2>2) Реперфузионная терапия при STEMI</h2>
-      <div className="card">
-        <table className="tbl">
+      <h2>2) Реперфузия при STEMI</h2>
+      <div className={styles.card}>
+        <table className={styles.tbl}>
           <thead>
             <tr>
               <th>Шаг</th>
@@ -56,17 +57,17 @@ export default function ACSPage() {
           <tbody>
             <tr>
               <td>Первичное ЧКВ</td>
-              <td>Цель door‑to‑balloon ≤90 мин; FMC‑to‑device ≤120 мин</td>
-              <td>Сходно; системные KPI по времени и транспорту</td>
+              <td>Door‑to‑balloon ≤90 мин; FMC‑to‑device ≤120 мин</td>
+              <td>Сходно; KPI и маршрутизация сети</td>
             </tr>
             <tr>
               <td>Фибринолиз</td>
-              <td>Если ожидаемая задержка ЧКВ >120 мин → фибринолиз ≤10 мин от диагноза</td>
-              <td>Сходно; при успешном лизисе — фармакоинвазивная стратегия</td>
+              <td>Если задержка ЧКВ >120 мин → лизис ≤10 мин от диагноза</td>
+              <td>Сходно; далее фармакоинвазивная тактика</td>
             </tr>
             <tr>
               <td>Rescue PCI</td>
-              <td>Показано при неудаче лизиса/персистирующей ишемии</td>
+              <td>При неудаче лизиса/персистирующей ишемии</td>
               <td>То же</td>
             </tr>
           </tbody>
@@ -74,8 +75,8 @@ export default function ACSPage() {
       </div>
 
       <h2>3) Инвазивная тактика при NSTE-ACS</h2>
-      <div className="card">
-        <table className="tbl">
+      <div className={styles.card}>
+        <table className={styles.tbl}>
           <thead>
             <tr>
               <th>Категория риска</th>
@@ -86,65 +87,65 @@ export default function ACSPage() {
           <tbody>
             <tr>
               <td>Очень высокий</td>
-              <td>Немедленно: нестабильность, рефрактерная боль, аритмии, шок</td>
+              <td>Немедленно: нестабильность, шок, аритмии</td>
               <td>Немедленно при тех же признаках</td>
             </tr>
             <tr>
               <td>Высокий</td>
-              <td>Ранний инвазивный ≤24 ч (динамика ST/T, ↑hs‑cTn, GRACE >140)</td>
-              <td>Ранний инвазивный ≤24 ч при сходных критериях</td>
+              <td>Ранний ≤24 ч (динамика ST/T, ↑hs‑cTn, GRACE &gt;140)</td>
+              <td>Ранний ≤24 ч при сходных критериях</td>
             </tr>
             <tr>
               <td>Умеренный/низкий</td>
               <td>Функц. тесты/КТ‑КАГ; селективная инвазия</td>
-              <td>Сходно; акцент на shared decision и ко‑морбидности</td>
+              <td>Сходно; акцент на ко‑морбидности и SDM</td>
             </tr>
           </tbody>
         </table>
       </div>
 
       <h2>4) Антитромботическая терапия</h2>
-      <div className="card">
-        <div className="flow">
-          <div className="step">
+      <div className={styles.card}>
+        <div className={styles.flow}>
+          <div className={styles.step}>
             <b>DAPT после ЧКВ</b>
-            <ul className="list">
+            <ul className={styles.list}>
               <li>Стандарт: АСК + тикагрелор/прасугрел 12 мес</li>
-              <li>Высокий риск кровотечений: укорочение (3–6 мес) с деэскалацией</li>
+              <li>HBR: укорочение 3–6 мес, возможна деэскалация</li>
             </ul>
           </div>
-          <div className="step">
-            <b>Предпочтение P2Y12</b>
-            <ul className="list">
+          <div className={styles.step}>
+            <b>P2Y12 выбор</b>
+            <ul className={styles.list}>
               <li>ESC: прасугрел у ЧКВ‑кандидатов; тикагрелор — альтернатива</li>
-              <li>US: тикагрелор/прасугрел предпочтительнее клопидогрела; выбор по профилю</li>
+              <li>US: тикагрелор или прасугрел — оба предпочтительнее клопидогрела</li>
             </ul>
           </div>
-          <div className="step">
-            <b>ФП + ОКС (тройная терапия)</b>
-            <ul className="list">
-              <li>Короткая ТАТ (ОАК + АСК + P2Y12) 1 нед → далее ОАК + P2Y12 до 6–12 мес</li>
-              <li>US сходно; акцент на минимизацию АСК</li>
+          <div className={styles.step}>
+            <b>ФП + ОКС (ТАТ)</b>
+            <ul className={styles.list}>
+              <li>Короткая ТАТ 1 нед → ОАК + P2Y12 до 6–12 мес</li>
+              <li>US: минимизация АСК так же приоритетна</li>
             </ul>
           </div>
         </div>
-        <div className="callout">
-          Отличия: ESC чаще рекомендует прасугрел у пациентов, идущих на ЧКВ, при отсутствии противопоказаний; US допускает более гибкий выбор между тикагрелором/прасугрелом. Варианты укороченной DAPT при HBR сходны.
+        <div className={styles.callout}>
+          Отличия: ESC чаще указывает прасугрел при планируемом ЧКВ (если нет противопоказаний); US допускает равнозначный выбор тикагрелор/прасугрел. Подходы к HBR и укорочению DAPT в целом совпадают.
         </div>
       </div>
 
-      <h2>5) Дополнительные меры</h2>
-      <div className="card">
-        <ul className="list">
-          <li>Ранняя вторичная профилактика: статины высокой интенсивности, ИАПФ/БРА, бета‑блокатор при показаниях, эзетимиб/PCSK9 по ЛПНП</li>
-          <li>Оценка кровотечения (ARC‑HBR), план деэскалации DAPT</li>
-          <li>Курение, сахар, давление, реабилитация, вакцинация</li>
+      <h2>5) Доп. меры</h2>
+      <div className={styles.card}>
+        <ul className={styles.list}>
+          <li>Статины высокой интенсивности; ИАПФ/БРА; бета‑блокатор по показаниям; эскалация липидснижающей терапии по ЛПНП</li>
+          <li>ARC‑HBR оценка, план деэскалации DAPT</li>
+          <li>Реабилитация, отказ от курения, контроль АД/СД, вакцинация</li>
         </ul>
       </div>
 
-      <h2>6) Краткая таблица отличий EU vs US</h2>
-      <div className="card">
-        <table className="tbl">
+      <h2>6) Отличия EU vs US — кратко</h2>
+      <div className={styles.card}>
+        <table className={styles.tbl}>
           <thead>
             <tr>
               <th>Тема</th>
@@ -154,63 +155,38 @@ export default function ACSPage() {
           </thead>
           <tbody>
             <tr>
-              <td>hs‑тропонин протокол</td>
-              <td>0/1ч в приоритете, валидированные отсечки</td>
-              <td>0/1ч и 0/2ч приемлемы; локальные протоколы качества</td>
+              <td>hs‑тропонин</td>
+              <td>0/1ч приоритет, валидированные отсечки</td>
+              <td>0/1ч и 0/2ч; гибкость локальных протоколов</td>
             </tr>
             <tr>
               <td>P2Y12 при ЧКВ</td>
-              <td>Прасугрел предпочтительно у подходящих</td>
-              <td>Тикагрелор или прасугрел — оба предпочтительнее клопидогрела</td>
+              <td>Прасугрел предпочтительно (если подходит)</td>
+              <td>Тикагрелор или прасугрел — оба ок</td>
             </tr>
             <tr>
-              <td>Укорочение DAPT (HBR)</td>
-              <td>3–6 мес с деэскалацией; возможен P2Y12‑монотерапия</td>
-              <td>Сходно; сильный акцент на индивидуализацию риска</td>
+              <td>DAPT при HBR</td>
+              <td>3–6 мес; P2Y12‑монотерапия возможна</td>
+              <td>Сходно; сильный акцент на индивидуализации</td>
             </tr>
             <tr>
               <td>NSTE‑ACS тайминг</td>
               <td>Очень высокий — немедленно; высокий — ≤24 ч</td>
-              <td>Сходно; подчёркнуты системные пути и доступность</td>
+              <td>Сходно; упор на доступность и пути</td>
             </tr>
           </tbody>
         </table>
       </div>
 
       <h2>7) Источники</h2>
-      <div className="card">
-        <ul className="list">
-          <li>ESC Guidelines: NSTE‑ACS (2023) — официальная страница: https://www.escardio.org</li>
-          <li>ESC Guidelines: STEMI/ACS with ST elevation (2024) — официальная страница: https://www.escardio.org</li>
-          <li>ACC/AHA ACS Guideline (2025) — официальная страница: https://www.acc.org / https://www.ahajournals.org</li>
+      <div className={styles.card}>
+        <ul className={styles.list}>
+          <li>ESC NSTE‑ACS (2023) — официальная страница: https://www.escardio.org</li>
+          <li>ESC STEMI (2024) — официальная страница: https://www.escardio.org</li>
+          <li>ACC/AHA ACS (2025) — официальные страницы: https://www.acc.org, https://www.ahajournals.org</li>
         </ul>
-        <div className="src">Права на оригинальные документы принадлежат соответствующим обществам. Здесь — переработанные, оригинально оформленные конспекты и схемы.</div>
+        <div className={styles.src}>Права на оригинальные документы принадлежат обществам. Здесь — переработанные, оригинально оформленные схемы и конспекты.</div>
       </div>
-
-      <style jsx>{`
-        :root {
-          --bg:#0b1020; --card:#111735; --ink:#e9edff; --muted:#a8b2d1;
-          --accent:#5ea2ff; --line:#2a3260; --chip:#1a2248;
-        }
-        .wrap {max-width:1150px; margin:32px auto; padding:0 16px; color:var(--ink); background:var(--bg); font:16px/1.55 Inter,system-ui,Arial;}
-        h1,h2 {margin:0 0 12px}
-        h1 {font-size:28px}
-        h2 {font-size:22px; margin-top:28px}
-        .note {color:var(--muted); font-size:14px; margin-bottom:8px}
-        .card {background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px; margin:16px 0}
-        .kpi {display:flex; gap:12px; flex-wrap:wrap}
-        .flow {display:flex; gap:12px; flex-wrap:wrap}
-        .step {flex:1 1 260px; border:1px dashed var(--line); border-radius:10px; padding:12px}
-        .list {margin:8px 0 0 0; padding-left:16px}
-        .tbl {width:100%; border-collapse:separate; border-spacing:0; overflow:hidden; border-radius:12px; border:1px solid var(--line)}
-        .tbl th, .tbl td {padding:10px 12px; border-bottom:1px solid var(--line); vertical-align:top}
-        .tbl th {background:#0e1633; color:#cdd6ff; text-align:left}
-        .tbl tr:last-child td {border-bottom:none}
-        .callout {border-left:3px solid var(--accent); background:#0c1430; padding:12px; border-radius:8px; margin-top:10px}
-        .src {font-size:12px; color:#97a3cf; margin-top:8px}
-        body {background:var(--bg)}
-      `}</style>
     </div>
   );
 }
-
