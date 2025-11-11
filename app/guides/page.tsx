@@ -1,610 +1,740 @@
-// app/guides/acs/page.tsx - ПОЛНЫЙ КОД СО ВСЕМИ ВКЛАДКАМИ
+// app/guides/acs/page.tsx - ПОЛНЫЙ ЕВРОПЕЙСКИЙ ГАЙД ОКС
 'use client';
 
 import { useState } from 'react';
-import { ArrowRight, Download, ExternalLink, AlertTriangle, Heart, Clock, Stethoscope, Shield, Zap, Scale } from 'lucide-react';
+import { ArrowRight, Download, ExternalLink, AlertTriangle, Heart, Clock, Stethoscope, Shield, Zap, Scale, Pill, Activity, AlertCircle, CheckCircle } from 'lucide-react';
 
-// Типы для уровней доказательности
 type EvidenceLevel = 'A' | 'B' | 'C';
+type RecommendationClass = 'I' | 'IIa' | 'IIb' | 'III';
 
-interface Evidence {
+interface Recommendation {
+  class: RecommendationClass;
   level: EvidenceLevel;
-  description: string;
+  text: string;
 }
 
-const EVIDENCE_LEVELS: Record<EvidenceLevel, { name: string; color: string }> = {
-  'A': { name: 'Высокий уровень', color: 'bg-green-100 text-green-800 border-green-300' },
-  'B': { name: 'Средний уровень', color: 'bg-yellow-100 text-yellow-800 border-yellow-300' },
-  'C': { name: 'Низкий уровень', color: 'bg-red-100 text-red-800 border-red-300' }
-};
-
 export default function ACSPage() {
-  const [selectedTab, setSelectedTab] = useState<'eu' | 'us' | 'comparison'>('eu');
+  const [selectedTab, setSelectedTab] = useState<'diagnosis' | 'treatment' | 'prevention' | 'comparison'>('diagnosis');
 
-  // Расширенные данные по ОКС
-  const acsData = {
-    diagnosis: "Острый коронарный синдром (ОКС)",
-    
-    eu_guideline: {
-      name: "ESC 2023 Guidelines for ACS",
-      source: "https://academic.oup.com/eurheartj/article/44/38/3720/7235365",
-      lastUpdate: "2023-08-25"
-    },
-    
-    us_guideline: {
-      name: "ACC/AHA 2022 Guideline for ACS", 
-      source: "https://www.ahajournals.org/doi/10.1161/CIR.0000000000001102",
-      lastUpdate: "2022-04-15"
+  // Полные данные ESC 2023-2024
+  const escGuideline = {
+    title: "Острый коронарный синдром (ОКС)",
+    version: "ESC 2023-2024",
+    sources: {
+      nsteacs: "https://academic.oup.com/eurheartj/article/44/38/3720/7235365",
+      stemi: "https://academic.oup.com/eurheartj/advance-article/doi/10.1093/eurheartj/ehae170/7649113",
+      full: "https://www.escardio.org/Guidelines/Clinical-Practice-Guidelines"
     },
 
-    // ДИАГНОСТИКА
-    diagnosis_section: {
-      title: "Диагностика ОКС",
-      criteria: {
-        clinical: [
-          { item: "Типичная боль в груди >20 мин", level: 'A' as EvidenceLevel },
-          { item: "Иррадиация в левую руку, шею, челюсть", level: 'A' as EvidenceLevel },
-          { item: "Сопутствующая одышка, тошнота, потливость", level: 'B' as EvidenceLevel }
+    // ДИАГНОСТИКА - ПОЛНАЯ ДЕТАЛИЗАЦИЯ
+    diagnosis: {
+      initialAssessment: [
+        {
+          step: "Немедленная оценка",
+          actions: [
+            "ЭКГ в течение 10 минут от первого медицинского контакта",
+            "Оценка жизненных показателей (АД, ЧСС, SatO2)",
+            "Венозный доступ + забор крови на тропонин",
+            "Быстрая стратификация риска"
+          ],
+          timing: "0-10 мин"
+        },
+        {
+          step: "Клиническая оценка",
+          actions: [
+            "Характер боли: давящая, жгучая, за грудиной",
+            "Иррадиация: левая рука, шея, челюсть, спина",
+            "Сопутствующие симптомы: одышка, тошнота, потливость",
+            "Длительность: >20 минут"
+          ],
+          timing: "10-20 мин"
+        }
+      ],
+
+      ecgCriteria: {
+        stemi: [
+          {
+            criteria: "ST-элевация в ≥2 смежных отведениях",
+            details: [
+              "Все отведения кроме V2-V3: ≥1 мм",
+              "V2-V3: мужчины <40 лет ≥2.5 мм, ≥40 лет ≥2.0 мм", 
+              "V2-V3: женщины ≥1.5 мм",
+              "Нижние отведения: II, III, aVF ≥1 мм"
+            ],
+            examples: [
+              "Передний STEMI: V1-V4",
+              "Нижний STEMI: II, III, aVF", 
+              "Боковой STEMI: I, aVL, V5-V6",
+              "Задний STEMI: V7-V9 (дополнительные отведения)"
+            ]
+          },
+          {
+            criteria: "Новая блокада ЛНПГ",
+            details: [
+              "Ширина QRS ≥120 мс",
+              "Типичная морфология БЛНПГ",
+              "Согласованность с клинической картиной"
+            ]
+          }
         ],
-        ecg: [
-          { item: "ST-элевация ≥1 мм в двух смежных отведениях", level: 'A' as EvidenceLevel },
-          { item: "Новая блокада левой ножки пучка Гиса", level: 'A' as EvidenceLevel },
-          { item: "ST-депрессия ≥0.5 мм", level: 'A' as EvidenceLevel },
-          { item: "Инверсия зубцов T ≥2 мм", level: 'B' as EvidenceLevel }
-        ],
-        biomarkers: [
-          { item: "Повышение высокочувствительного тропонина выше 99 перцентиля", level: 'A' as EvidenceLevel },
-          { item: "Динамика тропонина: ↑≥20% за 3-6 часов", level: 'A' as EvidenceLevel },
-          { item: "Повышение КФК-МВ, миоглобина", level: 'B' as EvidenceLevel }
+        nstemi: [
+          {
+            criteria: "ST-депрессия",
+            details: ["≥0.5 мм в ≥2 смежных отведениях", "Горизонтальная или косонисходящая"]
+          },
+          {
+            criteria: "Инверсия зубца T",
+            details: ["≥1 мм в отведениях с доминирующим R", "Глубокая симметричная инверсия"]
+          },
+          {
+            criteria: "Преходящая ST-элевация",
+            details: ["<20 минут", "Спонтанное разрешение"]
+          }
         ]
       },
-      differential: [
-        "Перикардит (боль зависит от положения тела)",
-        "ТЭЛА (одышка, гипоксия, правосторонняя ЭКГ)",
-        "Расслоение аорты (мигрирующая боль, асимметрия АД)",
-        "Острый панкреатит (амилаза, липаза)",
-        "Костно-мышечная боль (зависит от движения)"
-      ]
-    },
 
-    // ЕВРОПЕЙСКИЙ АЛГОРИТМ
-    eu_algorithm: {
-      title: "Европейский алгоритм ESC 2023",
-      steps: [
-        {
-          step: 1,
-          title: "Первичная оценка и диагностика",
-          description: "ЭКГ в течение 10 мин + тропонины высокочувствительные",
-          details: [
-            { item: "Оценка по шкале GRACE", level: 'A' as EvidenceLevel },
-            { item: "Экстренная стратификация риска", level: 'A' as EvidenceLevel }
+      biomarkers: {
+        highSensitivityTroponin: {
+          protocol: "0/1 час или 0/2 часа",
+          cutoff: "99-й перцентиль верхнего референсного предела (URL)",
+          dynamics: "Изменение ≥20% за 3-6 часов",
+          interpretation: [
+            "При поступлении <URL и через 1 ч <URL → низкий риск",
+            "При поступлении <URL и через 1 ч >URL → промежуточный риск", 
+            "При поступлении >URL и динамика ≥20% → высокий риск",
+            "При поступлении >URL и динамика <20% → повтор через 3-6 ч"
+          ]
+        },
+        additionalMarkers: [
+          "КФК-МВ: менее специфичен, но полезен при недоступности тропонина",
+          "Миоглобин: ранний маркер, низкая специфичность",
+          "BNP/NT-proBNP: прогностическая ценность"
+        ]
+      },
+
+      riskStratification: {
+        grace: {
+          parameters: ["Возраст", "ЧСС", "Систолическое АД", "Уровень креатинина", "Признаки СН", "ЭКГ изменения", "Повышение кардиальных ферментов"],
+          scores: [
+            "Низкий риск: <109 баллов",
+            "Средний риск: 109-140 баллов", 
+            "Высокий риск: >140 баллов"
           ],
-          time: "0-10 мин",
-          evidence: 'A' as EvidenceLevel
+          mortality: [
+            "Госпитальная: 0.6% (низкий риск) до 21% (высокий риск)",
+            "6-месячная: 3% (низкий риск) до 26% (высокий риск)"
+          ]
+        },
+        hematics: {
+          parameters: ["Возраст", "Уровень тропонина", "ЭКГ изменения", "Факторы риска", "Повторяемость боли"],
+          scores: ["Очень низкий риск: 0-2 балла", "Низкий риск: 3-5 баллов", "Высокий риск: ≥6 баллов"]
+        }
+      },
+
+      differentialDiagnosis: [
+        {
+          condition: "Перикардит",
+          features: ["Боль зависит от положения тела", "Шум трения перикарда", "Диффузная ST-элевация", "Отсутствие реципрокных изменений"]
         },
         {
-          step: 2, 
-          title: "Стратификация по ЭКГ и тактика",
-          description: "ST-подъем → экстренная реперфузия\nБез ST-подъема → ранняя инвазивная тактика",
-          details: [
-            { item: "STEMI: ЧКВ <90 мин от первого контакта", level: 'A' as EvidenceLevel },
-            { item: "NSTEMI высокого риска: ЧКВ <24 ч", level: 'A' as EvidenceLevel },
-            { item: "NSTEMI низкого риска: консервативная тактика", level: 'B' as EvidenceLevel }
-          ],
-          time: "10-30 мин",
-          evidence: 'A' as EvidenceLevel
+          condition: "ТЭЛА", 
+          features: ["Внезапная одышка", "Гипоксия", "Правосторонняя перегрузка на ЭКГ", "Повышение D-димера"]
         },
         {
-          step: 3,
-          title: "Медикаментозная терапия",
-          description: "Двойная антитромбоцитарная терапия + антикоагулянты",
-          details: [
-            { item: "Аспирин 150-300 мг нагрузка", level: 'A' as EvidenceLevel },
-            { item: "Клопидогрел 600 мг или Тикагрелор 180 мг", level: 'A' as EvidenceLevel },
-            { item: "Фондапаринукс 2.5 мг п/к или НФГ", level: 'A' as EvidenceLevel },
-            { item: "Статин высокой интенсивности", level: 'A' as EvidenceLevel }
-          ],
-          time: "0-30 мин",
-          evidence: 'A' as EvidenceLevel
+          condition: "Расслоение аорты",
+          features: ["Мигрирующая боль", "Асимметрия АД", "Расширение средостения на рентгене", "Неврологическая симптоматика"]
+        },
+        {
+          condition: "Острый панкреатит",
+          features: ["Боль в эпигастрии", "Повышение амилазы/липазы", "Связь с приемом алкоголя/пищи"]
         }
       ]
     },
 
-    // АМЕРИКАНСКИЙ АЛГОРИТМ
-    us_algorithm: {
-      title: "Американский алгоритм ACC/AHA 2022",
-      steps: [
+    // ЛЕЧЕНИЕ - ПОЛНЫЕ АЛГОРИТМЫ
+    treatment: {
+      generalMeasures: [
         {
-          step: 1,
-          title: "Первичная диагностика и оценка",
-          description: "ЭКГ в течение 10 мин + тропонины",
-          details: [
-            { item: "Оценка по TIMI Risk Score", level: 'A' as EvidenceLevel },
-            { item: "Быстрая стратификация риска", level: 'A' as EvidenceLevel }
-          ],
-          time: "0-10 мин",
-          evidence: 'A' as EvidenceLevel
+          measure: "Кислородотерапия",
+          indication: "SatO2 <90% или дыхательная недостаточность",
+          dose: "2-4 л/мин через назальные канюли",
+          class: "I" as RecommendationClass,
+          level: "C" as EvidenceLevel
         },
         {
-          step: 2,
-          title: "Тактика реперфузии при STEMI",
-          description: "ЧКВ предпочтительнее тромболизиса",
-          details: [
-            { item: "ЧКВ <90 мин от первого контакта", level: 'A' as EvidenceLevel },
-            { item: "При невозможности ЧКВ → тромболизис <30 мин", level: 'A' as EvidenceLevel },
-            { item: "Трансфер в ЧКВ-центр при задержках", level: 'B' as EvidenceLevel }
+          measure: "Обезболивание",
+          indication: "Боль умеренной-сильной интенсивности",
+          options: [
+            "Морфин 2-4 мг в/в + метоклопрамид 10 мг",
+            "При непереносимости: фентанил 25-50 мкг"
           ],
-          time: "10-90 мин",
-          evidence: 'A' as EvidenceLevel
+          class: "I" as RecommendationClass,
+          level: "C" as EvidenceLevel
         },
         {
-          step: 3, 
-          title: "Антитромбоцитарная терапия",
-          description: "Более агрессивный подход к ДАТТ",
-          details: [
-            { item: "Аспирин 325 мг нагрузка", level: 'A' as EvidenceLevel },
-            { item: "Тикагрелор 180 мг (предпочтительно)", level: 'A' as EvidenceLevel },
-            { item: "Прасугрел 60 мг как альтернатива", level: 'A' as EvidenceLevel },
-            { item: "Эноксапарин или Бивалирудин", level: 'B' as EvidenceLevel }
-          ],
-          time: "0-30 мин",
-          evidence: 'A' as EvidenceLevel
+          measure: "Нитроглицерин",
+          indication: "Персистирующая боль, СН, гипертензия",
+          contraindications: ["САД <90 мм рт.ст.", "Прием ингибиторов ФДЭ-5", "Выраженная брадикардия"],
+          dose: "0.3-0.6 мг сублингвально или 5-10 мкг/мин в/в",
+          class: "I" as RecommendationClass,
+          level: "C" as EvidenceLevel
+        }
+      ],
+
+      antiplateletTherapy: [
+        {
+          drug: "Аспирин",
+          loading: "150-300 мг перорально (разжевать)",
+          maintenance: "75-100 мг/сут постоянно",
+          class: "I" as RecommendationClass,
+          level: "A" as EvidenceLevel,
+          notes: "Начать немедленно при подозрении на ОКС"
+        },
+        {
+          drug: "P2Y12 ингибиторы - ВЫБОР",
+          options: [
+            {
+              name: "Тикагрелор",
+              loading: "180 мг",
+              maintenance: "90 мг 2 раза/сут",
+              duration: "12 месяцев",
+              advantages: ["Быстрое начало действия", "Обратимое связывание"],
+              disadvantages: ["Одышка (10-15%)", "Кровотечения", "Взаимодействие с сильными ингибиторами CYP3A4"],
+              class: "I" as RecommendationClass,
+              level: "A" as EvidenceLevel
+            },
+            {
+              name: "Прасугрел",
+              loading: "60 мг", 
+              maintenance: "10 мг/сут (5 мг при массе <60 кг)",
+              duration: "12 месяцев",
+              advantages: ["Мощный эффект", "Меньше одышки"],
+              disadvantages: ["Противопоказан при инсульте/ТИА", "Больше кровотечений"],
+              class: "I" as RecommendationClass,
+              level: "B" as EvidenceLevel
+            },
+            {
+              name: "Клопидогрел",
+              loading: "600 мг",
+              maintenance: "75 мг/сут", 
+              duration: "12 месяцев",
+              advantages: ["Хорошая переносимость", "Низкий риск кровотечений"],
+              disadvantages: ["Медленное начало", "Вариабельный ответ", "Взаимодействие с ИПП"],
+              class: "I" as RecommendationClass,
+              level: "B" as EvidenceLevel
+            }
+          ]
+        }
+      ],
+
+      anticoagulation: [
+        {
+          drug: "Фондапаринукс",
+          dose: "2.5 мг п/к 1 раз/сут",
+          advantages: ["Предсказуемый эффект", "Низкий риск ТЭО", "Меньше кровотечений vs НФГ"],
+          disadvantages: ["Противопоказан при почечной недостаточности (ClCr <30)"],
+          class: "I" as RecommendationClass,
+          level: "A" as EvidenceLevel
+        },
+        {
+          drug: "Низкомолекулярный гепарин (эноксапарин)",
+          dose: "1 мг/кг п/к 2 раза/сут",
+          advantages: ["Предсказуемый антикоагулянтный эффект"],
+          disadvantages: ["Накопление при почечной недостаточности"],
+          class: "I" as RecommendationClass, 
+          level: "A" as EvidenceLevel
+        },
+        {
+          drug: "Нефракционированный гепарин",
+          dose: "60-70 Ед/кг в/в болюс (макс 5000 Ед), затем 12-15 Ед/кг/час",
+          advantages: ["Короткий период полувыведения", "Контроль по АЧТВ"],
+          disadvantages: ["Непредсказуемый эффект", "Гепарин-индуцированная тромбоцитопения"],
+          class: "I" as RecommendationClass,
+          level: "B" as EvidenceLevel
+        }
+      ],
+
+      reperfusion: {
+        stemi: [
+          {
+            method: "Первичное ЧКВ",
+            timing: "FMC-to-device ≤120 мин, door-to-balloon ≤90 мин",
+            indications: ["Всем пациентам с STEMI при доступности в сроки"],
+            results: ["Снижение смертности на 25-50%", "Уменьшение размеров ИМ", "Снижение частоты СН"],
+            class: "I" as RecommendationClass,
+            level: "A" as EvidenceLevel
+          },
+          {
+            method: "Фибринолиз",
+            timing: "FMC-to-needle ≤10 мин при задержке ЧКВ >120 мин",
+            indications: ["Раннее поступление (<2 ч)", "Молодой возраст", "Передне-септальная локализация"],
+            contraindications: [
+              "Абсолютные: внутричерепное кровоизлияние, ЗЧМТ, злокачественные опухоли ЦНС",
+              "Относительные: тяжелая гипертензия, операция ❤ нед, кровотечения"
+            ],
+            drugs: [
+              "Тенектеплаза: вес-зависимая доза (30-50 мг)",
+              "Альтеплаза: 15 мг болюс + 0.75 мг/кг (макс 50 мг) за 30 мин + 0.5 мг/кг (макс 35 мг) за 60 мин"
+            ],
+            class: "I" as RecommendationClass,
+            level: "A" as EvidenceLevel
+          }
+        ],
+        nstemi: [
+          {
+            strategy: "Ранняя инвазивная (<24 ч)",
+            indications: [
+              "Гемодинамическая нестабильность/кардиогенный шок",
+              "Рецидивирующая/рефрактерная ишемия",
+              "Жизнеопасные аритмии",
+              "Механические осложнения",
+              "Острая СН",
+              "GRACE >140"
+            ],
+            class: "I" as RecommendationClass,
+            level: "A" as EvidenceLevel
+          },
+          {
+            strategy: "Отсроченная инвазивная (25-72 ч)",
+            indications: ["Диабет", "Почечная недостаточность", "Снижение ФВ ЛЖ", "Ранняя постинфарктная стенокардия"],
+            class: "I" as RecommendationClass,
+            level: "A" as EvidenceLevel
+          }
+        ]
+      },
+
+      adjunctiveTherapy: [
+        {
+          drug: "Бета-блокаторы",
+          indication: "Тахикардия, гипертензия, сохраненная функция ЛЖ",
+          contraindications: ["СН", "Брадикардия", "АВ-блокада", "Бронхоспазм"],
+          options: ["Метопролол 25-50 мг 2 раза/сут", "Бисопролол 2.5-10 мг/сут"],
+          timing: "В первые 24 часа при стабильном состоянии",
+          class: "I" as RecommendationClass,
+          level: "A" as EvidenceLevel
+        },
+        {
+          drug: "Статины высокой интенсивности",
+          indication: "Все пациенты с ОКС",
+          options: ["Аторвастатин 80 мг/сут", "Розувастатин 20-40 мг/сут"],
+          timing: "Немедленно при поступлении",
+          class: "I" as RecommendationClass,
+          level: "A" as EvidenceLevel
+        },
+        {
+          drug: "ИАПФ/БРА",
+          indication: "СН, дисфункция ЛЖ (ФВ <40%), диабет, гипертензия",
+          options: ["Рамиприл 2.5-10 мг/сут", "Периндоприл 2-8 мг/сут", "Валсартан 80-320 мг/сут"],
+          timing: "В первые 24 часа при стабильном состоянии",
+          class: "I" as RecommendationClass,
+          level: "A" as EvidenceLevel
         }
       ]
     },
 
     // ВТОРИЧНАЯ ПРОФИЛАКТИКА
-    secondary_prevention: {
-      eu: {
-        medications: [
-          { item: "ДАТТ: 12 месяцев после ЧКВ", level: 'A' as EvidenceLevel },
-          { item: "Статины высокой интенсивности", level: 'A' as EvidenceLevel },
-          { item: "Бета-блокаторы (метопролол, бисопролол)", level: 'A' as EvidenceLevel },
-          { item: "ИАПФ/БРА при СН или дисфункции ЛЖ", level: 'A' as EvidenceLevel }
-        ]
-      },
-      us: {
-        medications: [
-          { item: "ДАТТ: 12 месяцев после ЧКВ", level: 'A' as EvidenceLevel },
-          { item: "Статины высокой интенсивности", level: 'A' as EvidenceLevel },
-          { item: "Бета-блокаторы", level: 'A' as EvidenceLevel },
-          { item: "ИАПФ/БРА при СН, СД, ХБП", level: 'A' as EvidenceLevel }
-        ]
-      }
+    secondaryPrevention: {
+      duration: "Пожизненно после ОКС",
+      medications: [
+        {
+          drug: "Двойная антитромбоцитарная терапия",
+          duration: "12 месяцев после ЧКВ",
+          deescalation: [
+            "При высоком риске кровотечений: 3-6 месяцев",
+            "Рассмотреть переход на клопидогрел после 1-3 месяцев",
+            "Оценка по шкале PRECISE-DAPT и ARC-HBR"
+          ],
+          class: "I" as RecommendationClass,
+          level: "A" as EvidenceLevel
+        },
+        {
+          drug: "Статины",
+          target: "ЛПНП снижение ≥50% от исходного и <1.4 ммоль/л",
+          monitoring: "Через 4-12 недель, затем ежегодно",
+          escalation: ["При недостижении цели: + эзетимиб 10 мг/сут", "При персистирующем высоком ЛПНП: + ингибитор PCSK9"],
+          class: "I" as RecommendationClass,
+          level: "A" as EvidenceLevel
+        }
+      ],
+      lifestyle: [
+        {
+          area: "Курение",
+          recommendation: "Полное прекращение",
+          interventions: ["Консультирование", "Никотин-заместительная терапия", "Варениклин/бупропион"],
+          class: "I" as RecommendationClass,
+          level: "B" as EvidenceLevel
+        },
+        {
+          area: "Диета",
+          recommendation: "Средиземноморская диета",
+          components: ["Овощи, фрукты, цельнозерновые", "Рыба 2 раза/неделю", "Оливковое масло", "Ограничение соли <5 г/сут"],
+          class: "I" as RecommendationClass,
+          level: "B" as EvidenceLevel
+        },
+        {
+          area: "Физическая активность",
+          recommendation: "150 мин/неделю умеренной или 75 мин/неделю интенсивной нагрузки",
+          progression: "Постепенное увеличение под контролем",
+          class: "I" as RecommendationClass,
+          level: "A" as EvidenceLevel
+        }
+      ]
     },
 
-    // КЛЮЧЕВЫЕ РАЗЛИЧИЯ
-    keyDifferences: [
-      {
-        aspect: "Дозировка аспирина",
-        eu: "150-300 мг нагрузка",
-        us: "325 мг нагрузка", 
-        significance: "Более высокая нагрузочная доза в US",
-        evidence_eu: 'A' as EvidenceLevel,
-        evidence_us: 'A' as EvidenceLevel
-      },
-      {
-        aspect: "Сроки ЧКВ при NSTEMI",
-        eu: "<24 ч для высокого риска", 
-        us: "<12-24 ч для среднего/высокого риска",
-        significance: "Более агрессивные сроки в US",
-        evidence_eu: 'A' as EvidenceLevel,
-        evidence_us: 'A' as EvidenceLevel
-      },
-      {
-        aspect: "Препараты ДАТТ",
-        eu: "Клопидогрел или Тикагрелор",
-        us: "Тикагрелор предпочтительнее",
-        significance: "Более сильные антиагреганты в US", 
-        evidence_eu: 'A' as EvidenceLevel,
-        evidence_us: 'A' as EvidenceLevel
-      },
-      {
-        aspect: "Оценка риска",
-        eu: "Шкала GRACE",
-        us: "TIMI Risk Score", 
-        significance: "Разные подходы к стратификации",
-        evidence_eu: 'A' as EvidenceLevel,
-        evidence_us: 'A' as EvidenceLevel
-      }
-    ],
-
-    // КАЛЬКУЛЯТОРЫ
-    calculators: [
-      {
-        name: "GRACE Risk Score",
-        description: "Оценка риска смертности при ОКС",
-        parameters: ["Возраст", "ЧСС", "САД", "Креатинин", "Сердечная недостаточность", "ЭКГ изменения", "Повышение ферментов"],
-        level: 'A' as EvidenceLevel
-      },
-      {
-        name: "TIMI Risk Score", 
-        description: "Стратификация риска при NSTEMI",
-        parameters: ["Возраст ≥65", "≥3 фактора риска", "Стеноз КА >50%", "ЭКГ изменения", "≥2 приступов за 24ч", "Аспирин за 7 дней", "Повышение маркеров"],
-        level: 'A' as EvidenceLevel
-      }
-    ]
+    // СРАВНЕНИЕ С US
+    comparison: {
+      keyDifferences: [
+        {
+          aspect: "Дозировка аспирина",
+          eu: "150-300 мг нагрузка, 75-100 мг/сут поддержка",
+          us: "325 мг нагрузка, 81 мг/сут поддержка",
+          significance: "US использует более высокую нагрузочную дозу"
+        },
+        {
+          aspect: "Выбор P2Y12 ингибитора",
+          eu: "Прасугрел предпочтителен при планируемом ЧКВ",
+          us: "Тикагрелор или прасугрел - равноправный выбор",
+          significance: "ESC более конкретен в выборе прасугрела"
+        },
+        {
+          aspect: "Сроки ЧКВ при NSTEMI",
+          eu: "<24 ч для высокого риска, <72 ч для промежуточного",
+          us: "<12-24 ч для среднего/высокого риска", 
+          significance: "Более агрессивные сроки в US"
+        }
+      ],
+      practicalImplications: [
+        "EU подход более консервативен в выборе антиагрегантов",
+        "US подход более агрессивен в сроках инвазивного лечения",
+        "Оба подхода сходятся в принципах вторичной профилактики"
+      ]
+    }
   };
 
-  // Компонент для отображения уровня доказательности
-  const EvidenceBadge = ({ level }: { level: EvidenceLevel }) => (
-    <span className={`px-2 py-1 rounded-full text-xs font-medium border ${EVIDENCE_LEVELS[level].color}`}>
-      Уровень {level}
-    </span>
+  // Компоненты интерфейса
+  const RecommendationBadge = ({ rec }: { rec: Recommendation }) => (
+    <div className="flex items-center gap-2 text-sm">
+      <span className={`px-2 py-1 rounded border ${
+        rec.class === 'I' ? 'bg-green-100 text-green-800 border-green-300' :
+        rec.class === 'IIa' ? 'bg-yellow-100 text-yellow-800 border-yellow-300' :
+        rec.class === 'IIb' ? 'bg-blue-100 text-blue-800 border-blue-300' :
+        'bg-red-100 text-red-800 border-red-300'
+      }`}>
+        Класс {rec.class}
+      </span>
+      <span className={`px-2 py-1 rounded border ${
+        rec.level === 'A' ? 'bg-green-100 text-green-800 border-green-300' :
+        rec.level === 'B' ? 'bg-yellow-100 text-yellow-800 border-yellow-300' :
+        'bg-red-100 text-red-800 border-red-300'
+      }`}>
+        Уровень {rec.level}
+      </span>
+    </div>
   );
 
-  // Компонент шага алгоритма
-  const AlgorithmStep = ({ step, color }: { step: any; color: string }) => (
-    <div className={`flex gap-6 p-6 ${color} rounded-xl border ${color.replace('bg-', 'border-')}200`}>
-      <div className="flex flex-col items-center">
-        <div className={`w-12 h-12 ${color.replace('bg-', 'bg-').replace('-50', '-500')} text-white rounded-full flex items-center justify-center font-bold text-lg`}>
-          {step.step}
-        </div>
-        <div className="flex items-center gap-1 mt-2 text-sm text-gray-600">
-          <Clock size={14} />
-          {step.time}
-        </div>
-        <EvidenceBadge level={step.evidence} />
-      </div>
-      <div className="flex-1">
-        <h4 className="text-xl font-semibold text-gray-900 mb-2">
-          {step.title}
-        </h4>
-        <p className="text-gray-700 mb-3 whitespace-pre-line">
-          {step.description}
-        </p>
-        <ul className="space-y-2">
-          {step.details.map((detail: any, idx: number) => (
-            <li key={idx} className="flex justify-between items-center bg-white rounded-lg px-3 py-2">
-              <span className="text-gray-700">{detail.item}</span>
-              <EvidenceBadge level={detail.level} />
-            </li>
-          ))}
-        </ul>
-      </div>
+  const TimingBadge = ({ time }: { time: string }) => (
+    <div className="flex items-center gap-1 bg-gray-100 px-3 py-1 rounded-full text-sm text-gray-700">
+      <Clock size={14} />
+      {time}
     </div>
   );
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-blue-50 to-cyan-50 py-8">
-      <div className="max-w-6xl mx-auto px-4">
+      <div className="max-w-7xl mx-auto px-4">
         
         {/* Заголовок */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            {acsData.diagnosis}
+            {escGuideline.title}
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Полное руководство по диагностике и лечению с сравнением EU vs US рекомендаций
+          <p className="text-xl text-gray-600 max-w-4xl mx-auto">
+            Полное клиническое руководство {escGuideline.version} • Диагностика, лечение, вторичная профилактика
           </p>
-        </div>
-
-        {/* Навигация по табам */}
-        <div className="flex border-b border-gray-200 mb-8 overflow-x-auto">
-          <button onClick={() => setSelectedTab('eu')} className={`flex items-center px-6 py-3 border-b-2 font-medium text-lg whitespace-nowrap ${selectedTab === 'eu' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500'}`}>
-            <span>🇪🇺 ESC 2023</span>
-          </button>
-          <button onClick={() => setSelectedTab('us')} className={`flex items-center px-6 py-3 border-b-2 font-medium text-lg whitespace-nowrap ${selectedTab === 'us' ? 'border-red-500 text-red-600' : 'border-transparent text-gray-500'}`}>
-            <span>🇺🇸 ACC/AHA 2022</span>
-          </button>
-          <button onClick={() => setSelectedTab('comparison')} className={`flex items-center px-6 py-3 border-b-2 font-medium text-lg whitespace-nowrap ${selectedTab === 'comparison' ? 'border-green-500 text-green-600' : 'border-transparent text-gray-500'}`}>
-            <span>⚖️ Сравнение EU/US</span>
-          </button>
-        </div>
-
-        {/* Контент табов */}
-        <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
-          {/* EU ВКЛАДКА */}
-          {selectedTab === 'eu' && (
-            <div className="space-y-12">
-              {/* ДИАГНОСТИКА */}
-              <section>
-                <div className="flex justify-between items-start mb-6">
-                  <h2 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-                    <Stethoscope className="text-blue-500" />
-                    Диагностика ОКС - ESC 2023
-                  </h2>
-                  <a href={acsData.eu_guideline.source} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors">
-                    <ExternalLink size={16} />
-                    Оригинальный гайд
-                  </a>
-                </div>
-                
-                <div className="grid md:grid-cols-3 gap-6 mb-8">
-                  <div className="bg-blue-50 rounded-xl p-6">
-                    <h3 className="text-xl font-semibold mb-4 text-blue-800">Клинические критерии</h3>
-                    <ul className="space-y-3">
-                      {acsData.diagnosis_section.criteria.clinical.map((item, idx) => (
-                        <li key={idx} className="flex justify-between items-start">
-                          <span className="text-gray-700">{item.item}</span>
-                          <EvidenceBadge level={item.level} />
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  
-                  <div className="bg-green-50 rounded-xl p-6">
-                    <h3 className="text-xl font-semibold mb-4 text-green-800">ЭКГ критерии</h3>
-                    <ul className="space-y-3">
-                      {acsData.diagnosis_section.criteria.ecg.map((item, idx) => (
-                        <li key={idx} className="flex justify-between items-start">
-                          <span className="text-gray-700">{item.item}</span>
-                          <EvidenceBadge level={item.level} />
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  
-                  <div className="bg-purple-50 rounded-xl p-6">
-                    <h3 className="text-xl font-semibold mb-4 text-purple-800">Биомаркеры</h3>
-                    <ul className="space-y-3">
-                      {acsData.diagnosis_section.criteria.biomarkers.map((item, idx) => (
-                        <li key={idx} className="flex justify-between items-start">
-                          <span className="text-gray-700">{item.item}</span>
-                          <EvidenceBadge level={item.level} />
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </section>
-
-              {/* ЛЕЧЕНИЕ */}
-              <section>
-                <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                  <Zap className="text-blue-500" />
-                  Алгоритм лечения ESC 2023
-                </h2>
-
-                <div className="space-y-6">
-                  {acsData.eu_algorithm.steps.map((step) => (
-                    <AlgorithmStep key={step.step} step={step} color="bg-blue-50" />
-                  ))}
-                </div>
-              </section>
-
-              {/* ПРОФИЛАКТИКА */}
-              <section>
-                <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                  <Shield className="text-blue-500" />
-                  Вторичная профилактика - ESC
-                </h2>
-
-                <div className="bg-blue-50 rounded-xl p-6">
-                  <h3 className="text-xl font-semibold mb-4 text-blue-800">Медикаментозная терапия</h3>
-                  <ul className="space-y-3">
-                    {acsData.secondary_prevention.eu.medications.map((item, idx) => (
-                      <li key={idx} className="flex justify-between items-center bg-white rounded-lg px-4 py-3">
-                        <span className="text-gray-700">{item.item}</span>
-                        <EvidenceBadge level={item.level} />
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </section>
-            </div>
-          )}
-
-          {/* US ВКЛАДКА */}
-          {selectedTab === 'us' && (
-            <div className="space-y-12">
-              {/* ДИАГНОСТИКА */}
-              <section>
-                <div className="flex justify-between items-start mb-6">
-                  <h2 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-                    <Stethoscope className="text-red-500" />
-                    Диагностика ОКС - ACC/AHA 2022
-                  </h2>
-                  <a href={acsData.us_guideline.source} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors">
-                    <ExternalLink size={16} />
-                    Оригинальный гайд
-                  </a>
-                </div>
-                
-                <div className="grid md:grid-cols-3 gap-6 mb-8">
-                  <div className="bg-red-50 rounded-xl p-6">
-                    <h3 className="text-xl font-semibold mb-4 text-red-800">Клинические критерии</h3>
-                    <ul className="space-y-3">
-                      {acsData.diagnosis_section.criteria.clinical.map((item, idx) => (
-                        <li key={idx} className="flex justify-between items-start">
-                          <span className="text-gray-700">{item.item}</span>
-                          <EvidenceBadge level={item.level} />
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  
-                  <div className="bg-orange-50 rounded-xl p-6">
-                    <h3 className="text-xl font-semibold mb-4 text-orange-800">ЭКГ критерии</h3>
-                    <ul className="space-y-3">
-                      {acsData.diagnosis_section.criteria.ecg.map((item, idx) => (
-                        <li key={idx} className="flex justify-between items-start">
-                          <span className="text-gray-700">{item.item}</span>
-                          <EvidenceBadge level={item.level} />
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  
-                  <div className="bg-pink-50 rounded-xl p-6">
-                    <h3 className="text-xl font-semibold mb-4 text-pink-800">Биомаркеры</h3>
-                    <ul className="space-y-3">
-                      {acsData.diagnosis_section.criteria.biomarkers.map((item, idx) => (
-                        <li key={idx} className="flex justify-between items-start">
-                          <span className="text-gray-700">{item.item}</span>
-                          <EvidenceBadge level={item.level} />
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </section>
-
-              {/* ЛЕЧЕНИЕ */}
-              <section>
-                <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                  <Zap className="text-red-500" />
-                  Алгоритм лечения ACC/AHA 2022
-                </h2>
-
-                <div className="space-y-6">
-                  {acsData.us_algorithm.steps.map((step) => (
-                    <AlgorithmStep key={step.step} step={step} color="bg-red-50" />
-                  ))}
-                </div>
-              </section>
-
-              {/* ПРОФИЛАКТИКА */}
-              <section>
-                <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                  <Shield className="text-red-500" />
-                  Вторичная профилактика - ACC/AHA
-                </h2>
-
-                <div className="bg-red-50 rounded-xl p-6">
-                  <h3 className="text-xl font-semibold mb-4 text-red-800">Медикаментозная терапия</h3>
-                  <ul className="space-y-3">
-                    {acsData.secondary_prevention.us.medications.map((item, idx) => (
-                      <li key={idx} className="flex justify-between items-center bg-white rounded-lg px-4 py-3">
-                        <span className="text-gray-700">{item.item}</span>
-                        <EvidenceBadge level={item.level} />
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </section>
-            </div>
-          )}
-
-          {/* СРАВНЕНИЕ EU/US */}
-          {selectedTab === 'comparison' && (
-            <div className="space-y-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-8 flex items-center gap-3">
-                <Scale className="text-green-500" />
-                Сравнение EU vs US подходов
-              </h2>
-
-              {/* КЛЮЧЕВЫЕ РАЗЛИЧИЯ */}
-              <section>
-                <h3 className="text-2xl font-semibold mb-6 flex items-center gap-2">
-                  <AlertTriangle className="text-yellow-500" />
-                  Ключевые различия в подходах
-                </h3>
-                <div className="grid gap-6">
-                  {acsData.keyDifferences.map((diff, index) => (
-                    <div key={index} className="p-6 border-2 border-green-200 rounded-xl bg-green-50">
-                      <h4 className="font-semibold text-lg text-gray-900 mb-4">
-                        {diff.aspect}
-                      </h4>
-                      <div className="grid md:grid-cols-3 gap-6">
-                        <div className="text-center">
-                          <div className="font-semibold text-blue-600 mb-2">🇪🇺 ESC</div>
-                          <div className="text-gray-700 mb-2">{diff.eu}</div>
-                          <EvidenceBadge level={diff.evidence_eu} />
-                        </div>
-                        <div className="text-center">
-                          <div className="font-semibold text-red-600 mb-2">🇺🇸 ACC/AHA</div>
-                          <div className="text-gray-700 mb-2">{diff.us}</div>
-                          <EvidenceBadge level={diff.evidence_us} />
-                        </div>
-                        <div className="text-center">
-                          <div className="font-semibold text-green-600 mb-2">Клиническая значимость</div>
-                          <div className="text-gray-700">{diff.significance}</div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-
-              {/* КАЛЬКУЛЯТОРЫ */}
-              <section>
-                <h3 className="text-2xl font-semibold mb-6 flex items-center gap-2">
-                  <Heart className="text-purple-500" />
-                  Калькуляторы риска
-                </h3>
-                <div className="grid md:grid-cols-2 gap-6">
-                  {acsData.calculators.map((calc, index) => (
-                    <div key={index} className="p-6 border border-purple-200 rounded-xl bg-purple-50">
-                      <div className="flex justify-between items-start mb-3">
-                        <h4 className="font-bold text-lg text-gray-900">
-                          {calc.name}
-                        </h4>
-                        <EvidenceBadge level={calc.level} />
-                      </div>
-                      <p className="text-gray-700 mb-4">{calc.description}</p>
-                      <div className="mb-4">
-                        <span className="font-semibold text-sm text-gray-600">Параметры:</span>
-                        <div className="flex flex-wrap gap-1 mt-2">
-                          {calc.parameters.map((param, idx) => (
-                            <span key={idx} className="bg-white px-2 py-1 rounded text-xs border border-gray-300">
-                              {param}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                      <button className="w-full bg-purple-500 text-white py-2 rounded-lg hover:bg-purple-600 transition-colors flex items-center justify-center gap-2">
-                        <Download size={16} />
-                        Рассчитать {calc.name}
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </section>
-
-              {/* ПРАКТИЧЕСКИЕ ВЫВОДЫ */}
-              <section>
-                <h3 className="text-2xl font-semibold mb-6">Практические выводы для клинициста</h3>
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="bg-blue-50 rounded-xl p-6">
-                    <h4 className="font-semibold text-blue-800 mb-3">Когда следовать EU подходу?</h4>
-                    <ul className="space-y-2 text-gray-700">
-                      <li>• При доступности GRACE score</li>
-                      <li>• При консервативной тактике ведения</li>
-                      <li>• В условиях ограниченных ресурсов</li>
-                      <li>• При использовании клопидогрела</li>
-                    </ul>
-                  </div>
-                  <div className="bg-red-50 rounded-xl p-6">
-                    <h4 className="font-semibold text-red-800 mb-3">Когда следовать US подходу?</h4>
-                    <ul className="space-y-2 text-gray-700">
-                      <li>• При необходимости агрессивной тактики</li>
-                      <li>• При доступности тикагрелора/прасугрела</li>
-                      <li>• В условиях быстрого доступа к ЧКВ</li>
-                      <li>• При использовании TIMI score</li>
-                    </ul>
-                  </div>
-                </div>
-              </section>
-            </div>
-          )}
-        </div>
-
-        {/* Легенда уровней доказательности */}
-        <div className="bg-gray-800 text-white rounded-2xl p-6">
-          <h3 className="text-xl font-semibold mb-4">Уровни доказательности</h3>
-          <div className="grid md:grid-cols-3 gap-4">
-            <div className="text-center">
-              <div className="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center mx-auto mb-2 font-bold">A</div>
-              <p className="text-green-300 font-semibold">Высокий уровень</p>
-              <p className="text-green-200 text-sm">Мета-анализы, РКИ</p>
-            </div>
-            <div className="text-center">
-              <div className="bg-yellow-500 text-white rounded-full w-8 h-8 flex items-center justify-center mx-auto mb-2 font-bold">B</div>
-              <p className="text-yellow-300 font-semibold">Средний уровень</p>
-              <p className="text-yellow-200 text-sm">Когортные исследования</p>
-            </div>
-            <div className="text-center">
-              <div className="bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center mx-auto mb-2 font-bold">C</div>
-              <p className="text-red-300 font-semibold">Низкий уровень</p>
-              <p className="text-red-200 text-sm">Экспертные мнения</p>
-            </div>
+          <div className="flex justify-center gap-4 mt-4">
+            <a href={escGuideline.sources.nsteacs} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors">
+              <ExternalLink size={16} />
+              NSTE-ACS 2023
+            </a>
+            <a href={escGuideline.sources.stemi} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors">
+              <ExternalLink size={16} />
+              STEMI 2024
+            </a>
           </div>
         </div>
-      </div>
-    </main>
-  );
-}
+
+        {/* Навигация */}
+        <div className="flex border-b border-gray-200 mb-8 overflow-x-auto">
+          {[
+            { id: 'diagnosis' as const, label: '🔍 Диагностика', icon: Stethoscope },
+            { id: 'treatment' as const, label: '💊 Лечение', icon: Pill },
+            { id: 'prevention' as const, label: '🛡️ Профилактика', icon: Shield },
+            { id: 'comparison' as const, label: '⚖️ Сравнение', icon: Scale }
+          ].map(({ id, label, icon: Icon }) => (
+            <button
+              key={id}
+              onClick={() => setSelectedTab(id)}
+              className={`flex items-center gap-2 px-6 py-3 border-b-2 font-medium text-lg whitespace-nowrap ${
+                selectedTab === id
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              <Icon size={20} />
+              {label}
+            </button>
+          ))}
+        </div>
+
+        {/* Контент */}
+        <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
+          
+          {/* ДИАГНОСТИКА */}
+          {selectedTab === 'diagnosis' && (
+            <div className="space-y-12">
+              {/* Первичная оценка */}
+              <section>
+                <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                  <Stethoscope className="text-blue-500" />
+                  Первичная оценка и диагностика
+                </h2>
+                
+                <div className="space-y-6">
+                  {escGuideline.diagnosis.initialAssessment.map((step, index) => (
+                    <div key={index} className="bg-blue-50 rounded-xl p-6 border border-blue-200">
+                      <div className="flex justify-between items-start mb-4">
+                        <h3 className="text-xl font-semibold text-gray-900">{step.step}</h3>
+                        <TimingBadge time={step.timing} />
+                      </div>
+                      <ul className="space-y-2">
+                        {step.actions.map((action, idx) => (
+                          <li key={idx} className="flex items-start gap-3">
+                            <CheckCircle size={18} className="text-green-500 mt-0.5 flex-shrink-0" />
+                            <span className="text-gray-700">{action}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              {/* ЭКГ критерии */}
+              <section>
+                <h3 className="text-2xl font-semibold text-gray-900 mb-6">ЭКГ критерии</h3>
+                
+                <div className="grid md:grid-cols-2 gap-6">
+                  {/* STEMI */}
+                  <div className="bg-red-50 rounded-xl p-6 border border-red-200">
+                    <h4 className="text-lg font-semibold text-red-800 mb-4">STEMI критерии</h4>
+                    {escGuideline.diagnosis.ecgCriteria.stemi.map((criteria, idx) => (
+                      <div key={idx} className="mb-4 last:mb-0">
+                        <p className="font-medium text-gray-900 mb-2">{criteria.criteria}</p>
+                        <ul className="text-sm text-gray-700 space-y-1">
+                          {criteria.details.map((detail, i) => (
+                            <li key={i}>• {detail}</li>
+                          ))}
+                        </ul>
+                        {criteria.examples && (
+                          <div className="mt-2">
+                            <p className="font-medium text-sm">Примеры:</p>
+                            <ul className="text-sm text-gray-600 space-y-1">
+                              {criteria.examples.map((example, i) => (
+                                <li key={i}>• {example}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* NSTEMI */}
+                  <div className="bg-orange-50 rounded-xl p-6 border border-orange-200">
+                    <h4 className="text-lg font-semibold text-orange-800 mb-4">NSTEMI критерии</h4>
+                    {escGuideline.diagnosis.ecgCriteria.nstemi.map((criteria, idx) => (
+                      <div key={idx} className="mb-4 last:mb-0">
+                        <p className="font-medium text-gray-900 mb-2">{criteria.criteria}</p>
+                        <ul className="text-sm text-gray-700 space-y-1">
+                          {criteria.details.map((detail, i) => (
+                            <li key={i}>• {detail}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </section>
+
+              {/* Биомаркеры */}
+              <section>
+                <h3 className="text-2xl font-semibold text-gray-900 mb-6">Биомаркеры</h3>
+                
+                <div className="bg-purple-50 rounded-xl p-6 border border-purple-200">
+                  <h4 className="text-lg font-semibold text-purple-800 mb-4">
+                    Высокочувствительный тропонин
+                  </h4>
+                  
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <p className="font-medium mb-2">Протокол: {escGuideline.diagnosis.biomarkers.highSensitivityTroponin.protocol}</p>
+                      <p className="text-sm text-gray-700 mb-4">
+                        Отсечка: {escGuideline.diagnosis.biomarkers.highSensitivityTroponin.cutoff}
+                      </p>
+                      <p className="text-sm text-gray-700">
+                        Динамика: {escGuideline.diagnosis.biomarkers.highSensitivityTroponin.dynamics}
+                      </p>
+                    </div>
+                    
+                    <div>
+                      <p className="font-medium mb-2">Интерпретация:</p>
+                      <ul className="text-sm text-gray-700 space-y-1">
+                        {escGuideline.diagnosis.biomarkers.highSensitivityTroponin.interpretation.map((item, idx) => (
+                          <li key={idx}>• {item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
+          )}
+
+          {/* ЛЕЧЕНИЕ */}
+          {selectedTab === 'treatment' && (
+            <div className="space-y-12">
+              {/* Антитромбоцитарная терапия */}
+              <section>
+                <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                  <Pill className="text-blue-500" />
+                  Антитромбоцитарная терапия
+                </h2>
+
+                <div className="space-y-6">
+                  {/* Аспирин */}
+                  <div className="bg-green-50 rounded-xl p-6 border border-green-200">
+                    <div className="flex justify-between items-start mb-4">
+                      <div>
+                        <h3 className="text-xl font-semibold text-gray-900">Аспирин</h3>
+                        <p className="text-gray-600">
+                          Нагрузка: {escGuideline.treatment.antiplateletTherapy[0].loading} • 
+                          Поддержка: {escGuideline.treatment.antiplateletTherapy[0].maintenance}
+                        </p>
+                      </div>
+                      <RecommendationBadge rec={{
+                        class: escGuideline.treatment.antiplateletTherapy[0].class,
+                        level: escGuideline.treatment.antiplateletTherapy[0].level,
+                        text: ''
+                      }} />
+                    </div>
+                    <p className="text-gray-700">{escGuideline.treatment.antiplateletTherapy[0].notes}</p>
+                  </div>
+
+                  {/* P2Y12 ингибиторы */}
+                  <div>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-4">P2Y12 ингибиторы - выбор препарата</h3>
+                    <div className="grid md:grid-cols-3 gap-6">
+                      {escGuideline.treatment.antiplateletTherapy[1].options.map((drug, idx) => (
+                        <div key={idx} className="bg-white rounded-xl p-6 border-2 border-blue-200 shadow-sm">
+                          <h4 className="text-lg font-semibold text-gray-900 mb-3">{drug.name}</h4>
+                          
+                          <div className="space-y-3">
+                            <div>
+                              <span className="font-medium">Нагрузка:</span>
+                              <span className="text-gray-700 ml-2">{drug.loading}</span>
+                            </div>
+                            <div>
+                              <span className="font-medium">Поддержка:</span>
+                              <span className="text-gray-700 ml-2">{drug.maintenance}</span>
+                            </div>
+                            <div>
+                              <span className="font-medium">Длительность:</span>
+                              <span className="text-gray-700 ml-2">{drug.duration}</span>
+                            </div>
+                            
+                            <div className="mt-4">
+                              <RecommendationBadge rec={{
+                                class: drug.class,
+                                level: drug.level,
+                                text: ''
+                              }} />
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              {/* Реперфузия */}
+              <section>
+                <h3 className="text-2xl font-semibold text-gray-900 mb-6">Стратегии реперфузии</h3>
+                
+                <div className="grid md:grid-cols-2 gap-6">
+                  {/* STEMI */}
+                  <div className="bg-red-50 rounded-xl p-6 border border-red-200">
+                    <h4 className="text-lg font-semibold text-red-800 mb-4">STEMI</h4>
+                    {escGuideline.treatment.reperfusion.stemi.map((method, idx) => (
+                      <div key={idx} className="mb-6 last:mb-0">
+                        <div className="flex justify-between items-start mb-3">
+                          <h5 className="font-semibold text-gray-900">{method.method}</h5>
+                          <RecommendationBadge rec={{
+                            class: method.class,
+                            level: method.level,
+                            text: ''
+                          }} />
+                        </div>
+                        <p className="text-sm text-gray-700 mb-2">
+                          <strong>Тайминг:</strong> {method.timing}
+                        </p>
+                        <p className="text-sm text-gray-700 mb-2">
+                          <strong>Результаты:</strong> {method.results?.join(', ')}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* NSTEMI */}
+                  <div className="bg-orange-50 rounded-xl p-6 border border-orange-200">
+                    <h4 className="text-lg font-semibold text-orange-800 mb-4">NSTEMI</h4>
+                    {escGuideline.treatment.reperfusion.nstemi.map((strategy, idx) => (
+                      <div key={idx} className="mb-6 last:mb-0">
+                        <div className="flex justify-between items-start mb-3">
+                          <h5 className="font-semibold text-gray-900">{strategy.strategy}</h5>
+                          <RecommendationBadge rec={{
+                            class: strategy.class,
+                            level: strategy.level,
+                            text: ''
+                          }} />
+                        </div>
+                        <ul className="text-sm text-gray-700 space-y-1">
+                          {strategy.indications.map((indication, i) => (
+                            <li key={i}>• {indication}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </section>
+            </div>
+          )}
+
+          {/* СРАВНЕНИЕ */}
+          {selectedTab === 'comparison' && (
+            <div className="space-y-8">
+              <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                <Scale className="text-green-500" />
+                Сравнение EU ESC vs US ACC/AHA
+              </h2>
+
+              {/* Ключевые различия */}
+              <div className="bg-green-50 rounded-xl p-6 border border-green-200">
+                <h3 className="text-xl font-semibold text-green-800 mb-4">Ключевые различия</h3>
+                <div className="space-y-4">
+                  {escGuideline.comparison.keyDifferences.map((diff, idx) => (
+                    <div key={idx} className="bg-white rounded-lg p-4
 
 
 
