@@ -68,7 +68,7 @@ export default function Header() {
                     href={item.href}
                     className={`inline-flex flex-col items-center font-medium transition-all duration-300 ${
                       isActive
-                        ? 'text-[24px] font-bold text-[#01463d] scale-110'
+                        ? 'text-[28px] font-bold text-[#01463d] scale-110'
                         : 'text-lg text-[#4b3b2f] hover:text-[#015d52]'
                     } ${isNovoje && !isActive ? 'text-[#e6a800]' : ''}`}
                   >
@@ -155,7 +155,7 @@ export default function Header() {
                     href={item.href}
                     className={`block w-full text-left py-3 px-4 transition-all duration-200 ${
                       isActive
-                        ? 'text-[22px] font-bold text-[#01463d]'
+                        ? 'text-[24px] font-bold text-[#01463d]'
                         : isNovoje 
                           ? 'text-[#e6a800] hover:bg-[#facc15]/5'
                           : 'text-[#4b3b2f] hover:bg-gray-50'
