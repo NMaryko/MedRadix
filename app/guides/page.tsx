@@ -1660,7 +1660,6 @@ export default function ACSPage() {
                             </div>
                             <p className="text-gray-700 mb-2">
                               <strong>Показания:</strong> {therapy.indication}
-                            </
                            <p className="text-gray-700 mb-2">
                               <strong>Показания:</strong> {therapy.indication}
                             </p>
