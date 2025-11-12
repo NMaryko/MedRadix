@@ -1321,7 +1321,7 @@ export default function ACSPage() {
               </p>
 
               {/* ОЧЕНЬ БОЛЬШОЙ «АБЗАЦ» — визуальный зазор перед e-mail */}
-              <div className="h-[800px]" aria-hidden="true"></div>
+              <div className="h-[300px]" aria-hidden="true"></div>
 
               <p className="text-lg font-medium text-gray-900">support@medradix.info</p>
             </section>
