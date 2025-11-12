@@ -145,37 +145,36 @@ const CARDIOLOGY_NOSOLOGIES: Nosology[] = [
   },
 ];
 
-// табы разделов гайда
-const SECTION_TABS = [
-  { id: 'diagnosis' as const, label: 'Диагностика' },
-  { id: 'treatment' as const, label: 'Лечение' },
-  { id: 'prevention' as const, label: 'Профилактика' },
-  { id: 'comparison' as const, label: 'Сравнение' },
-];
-
-type SectionTabId = (typeof SECTION_TABS)[number]['id'];
-
 export default function ACSPage() {
-  const [selectedTab, setSelectedTab] = useState<SectionTabId>('diagnosis');
+  const [selectedTab, setSelectedTab] = useState<
+    'diagnosis' | 'treatment' | 'prevention' | 'comparison'
+  >('diagnosis');
   const [selectedSpecialty, setSelectedSpecialty] = useState('Кардиология');
   const [selectedNosology, setSelectedNosology] = useState(
     'Острый коронарный синдром (ОКС)'
   );
+
+  // Группировка нозологий по разделам для красивого фильтра
+  const groupedCardiologyNosologies = CARDIOLOGY_NOSOLOGIES.reduce<
+    Record<string, Nosology[]>
+  >((acc, item) => {
+    if (!acc[item.group]) acc[item.group] = [];
+    acc[item.group].push(item);
+    return acc;
+  }, {});
 
   // Полные данные ESC 2023-2024
   const escGuideline = {
     title: 'Острый коронарный синдром',
     version: 'ESC 2023-2024',
     sources: {
-      nsteacs:
-        'https://academic.oup.com/eurheartj/article/44/38/3720/7235365',
-      stemi:
-        'https://academic.oup.com/eurheartj/advance-article/doi/10.1093/eurheartj/ehae170/7649113',
+      nsteacs: 'https://academic.oup.com/eurheartj/article/44/38/3720/7235365',
+      stemi: 'https://academic.oup.com/eurheartj/advance-article/doi/10.1093/eurheartj/ehae170/7649113',
       us: '#',
       full: 'https://www.escardio.org/Guidelines/Clinical-Practice-Guidelines',
     },
 
-    // ===== ДИАГНОСТИКА =====
+    // ДИАГНОСТИКА - ПОЛНАЯ ДЕТАЛИЗАЦИЯ
     diagnosis: {
       initialAssessment: [
         {
@@ -245,10 +244,7 @@ export default function ACSPage() {
         nstemi: [
           {
             criteria: 'ST-депрессия',
-            details: [
-              '≥0.5 мм в ≥2 смежных отведениях',
-              'Горизонтальная или косонисходящая',
-            ],
+            details: ['≥0.5 мм в ≥2 смежных отведениях', 'Горизонтальная или косонисходящая'],
             class: 'I' as RecommendationClass,
             level: 'B' as EvidenceLevel,
             evidenceText:
@@ -256,10 +252,7 @@ export default function ACSPage() {
           },
           {
             criteria: 'Инверсия зубца T',
-            details: [
-              '≥1 мм в отведениях с доминирующим R',
-              'Глубокая симметричная инверсия',
-            ],
+            details: ['≥1 мм в отведениях с доминирующим R', 'Глубокая симметричная инверсия'],
             class: 'I' as RecommendationClass,
             level: 'B' as EvidenceLevel,
             evidenceText:
@@ -325,18 +318,8 @@ export default function ACSPage() {
             'Класс I - Рекомендуется/Показано; Уровень B - Одно РКИ или крупные нерандомизированные исследования',
         },
         hematics: {
-          parameters: [
-            'Возраст',
-            'Уровень тропонина',
-            'ЭКГ изменения',
-            'Факторы риска',
-            'Повторяемость боли',
-          ],
-          scores: [
-            'Очень низкий риск: 0-2 балла',
-            'Низкий риск: 3-5 баллов',
-            'Высокий риск: ≥6 баллов',
-          ],
+          parameters: ['Возраст', 'Уровень тропонина', 'ЭКГ изменения', 'Факторы риска', 'Повторяемость боли'],
+          scores: ['Очень низкий риск: 0-2 балла', 'Низкий риск: 3-5 баллов', 'Высокий риск: ≥6 баллов'],
           class: 'I' as RecommendationClass,
           level: 'B' as EvidenceLevel,
           evidenceText:
@@ -356,12 +339,7 @@ export default function ACSPage() {
         },
         {
           condition: 'ТЭЛА',
-          features: [
-            'Внезапная одышка',
-            'Гипоксия',
-            'Правосторонняя перегрузка на ЭКГ',
-            'Повышение D-димера',
-          ],
+          features: ['Внезапная одышка', 'Гипоксия', 'Правосторонняя перегрузка на ЭКГ', 'Повышение D-димера'],
         },
         {
           condition: 'Расслоение аорты',
@@ -375,7 +353,7 @@ export default function ACSPage() {
       ],
     },
 
-    // ===== ЛЕЧЕНИЕ =====
+    // ЛЕЧЕНИЕ - ПОЛНЫЕ АЛГОРИТМЫ
     treatment: {
       generalMeasures: [
         {
@@ -391,10 +369,7 @@ export default function ACSPage() {
           measure: 'Обезболивание',
           indication: 'Боль умеренной-сильной интенсивности',
           dose: 'Морфин 2-4 мг в/в болюс + титрация; при непереносимости — фентанил 25-50 мкг в/в',
-          options: [
-            'Морфин 2-4 мг в/в + метоклопрамид 10 мг',
-            'При непереносимости: фентанил 25-50 мкг',
-          ],
+          options: ['Морфин 2-4 мг в/в + метоклопрамид 10 мг', 'При непереносимости: фентанил 25-50 мкг'],
           class: 'I' as RecommendationClass,
           level: 'C' as EvidenceLevel,
           evidenceText:
@@ -403,11 +378,7 @@ export default function ACSPage() {
         {
           measure: 'Нитроглицерин',
           indication: 'Персистирующая боль, СН, гипертензия',
-          contraindications: [
-            'САД <90 мм рт.ст.',
-            'Прием ингибиторов ФДЭ-5',
-            'Выраженная брадикардия',
-          ],
+          contraindications: ['САД <90 мм рт.ст.', 'Прием ингибиторов ФДЭ-5', 'Выраженная брадикардия'],
           dose: '0.3-0.6 мг сублингвально или 5-10 мкг/мин в/в',
           class: 'I' as RecommendationClass,
           level: 'C' as EvidenceLevel,
@@ -435,15 +406,8 @@ export default function ACSPage() {
               loading: '180 мг',
               maintenance: '90 мг 2 раза/сут',
               duration: '12 месяцев',
-              advantages: [
-                'Быстрое начало действия',
-                'Обратимое связывание',
-              ],
-              disadvantages: [
-                'Одышка (10-15%)',
-                'Кровотечения',
-                'Взаимодействие с сильными ингибиторами CYP3A4',
-              ],
+              advantages: ['Быстрое начало действия', 'Обратимое связывание'],
+              disadvantages: ['Одышка (10-15%)', 'Кровотечения', 'Взаимодействие с сильными ингибиторами CYP3A4'],
               class: 'I' as RecommendationClass,
               level: 'A' as EvidenceLevel,
               evidenceText:
@@ -455,10 +419,7 @@ export default function ACSPage() {
               maintenance: '10 мг/сут (5 мг при массе <60 кг)',
               duration: '12 месяцев',
               advantages: ['Мощный эффект', 'Меньше одышки'],
-              disadvantages: [
-                'Противопоказан при инсульте/ТИА',
-                'Больше кровотечений',
-              ],
+              disadvantages: ['Противопоказан при инсульте/ТИА', 'Больше кровотечений'],
               class: 'I' as RecommendationClass,
               level: 'B' as EvidenceLevel,
               evidenceText:
@@ -470,11 +431,7 @@ export default function ACSPage() {
               maintenance: '75 мг/сут',
               duration: '12 месяцев',
               advantages: ['Хорошая переносимость', 'Низкий риск кровотечений'],
-              disadvantages: [
-                'Медленное начало',
-                'Вариабельный ответ',
-                'Взаимодействие с ИПП',
-              ],
+              disadvantages: ['Медленное начало', 'Вариабельный ответ', 'Взаимодействие с ИПП'],
               class: 'I' as RecommendationClass,
               level: 'B' as EvidenceLevel,
               evidenceText:
@@ -484,14 +441,13 @@ export default function ACSPage() {
         },
       ],
 
+      // НОВОЕ: Антикоагулянты
       anticoagulation: [
         {
           drug: 'Фондапаринукс',
           dose: '2.5 мг п/к 1 раз/сут',
-          indication:
-            'Предпочтительный антикоагулянт при NSTE-ACS без показаний к срочному ЧКВ',
-          notes:
-            'Не применять при КК <30 мл/мин; при ЧКВ — дополнительно болюс НФГ',
+          indication: 'Предпочтительный антикоагулянт при NSTE-ACS без показаний к срочному ЧКВ',
+          notes: 'Не применять при КК <30 мл/мин; при ЧКВ — дополнительно болюс НФГ',
           class: 'I' as RecommendationClass,
           level: 'A' as EvidenceLevel,
           evidenceText:
@@ -500,10 +456,8 @@ export default function ACSPage() {
         {
           drug: 'Эноксапарин (НМГ)',
           dose: '1 мг/кг п/к каждые 12 ч (при КК <30 мл/мин — 1 мг/кг 1 раз/сут)',
-          indication:
-            'Альтернатива фондапаринуксу при невозможности его применения',
-          notes:
-            'Требует коррекции дозы при ХБП; учитывать суммарную антикоагуляцию при ЧКВ',
+          indication: 'Альтернатива фондапаринуксу при невозможности его применения',
+          notes: 'Требует коррекции дозы при ХБП; учитывать суммарную антикоагуляцию при ЧКВ',
           class: 'I' as RecommendationClass,
           level: 'A' as EvidenceLevel,
           evidenceText:
@@ -512,8 +466,7 @@ export default function ACSPage() {
         {
           drug: 'Нефракционированный гепарин',
           dose: '60–70 Ед/кг в/в болюс (макс 5000 Ед), затем 12–15 Ед/кг/ч с контролем АЧТВ',
-          indication:
-            'Пациенты со STEMI/NSTE-ACS при первичном ЧКВ или при ХБП тяжёлой степени',
+          indication: 'Пациенты со STEMI/NSTE-ACS при первичном ЧКВ или при ХБП тяжёлой степени',
           notes: 'Контролировать АЧТВ; помнить о риске ГИТ',
           class: 'I' as RecommendationClass,
           level: 'B' as EvidenceLevel,
@@ -528,11 +481,7 @@ export default function ACSPage() {
             method: 'Первичное ЧКВ',
             timing: 'FMC-to-device ≤120 мин, door-to-balloon ≤90 мин',
             indications: ['Всем пациентам с STEMI при доступности в сроки'],
-            results: [
-              'Снижение смертности на 25-50%',
-              'Уменьшение размеров ИМ',
-              'Снижение частоты СН',
-            ],
+            results: ['Снижение смертности на 25-50%', 'Уменьшение размеров ИМ', 'Снижение частоты СН'],
             class: 'I' as RecommendationClass,
             level: 'A' as EvidenceLevel,
             evidenceText:
@@ -540,16 +489,11 @@ export default function ACSPage() {
           },
           {
             method: 'Фибринолиз',
-            timing:
-              'FMC-to-needle ≤10 мин при задержке ЧКВ >120 мин',
-            indications: [
-              'Раннее поступление (<2 ч)',
-              'Молодой возраст',
-              'Передне-септальная локализация',
-            ],
+            timing: 'FMC-to-needle ≤10 мин при задержке ЧКВ >120 мин',
+            indications: ['Раннее поступление (<2 ч)', 'Молодой возраст', 'Передне-септальная локализация'],
             contraindications: [
               'Абсолютные: внутричерепное кровоизлияние, ЗЧМТ, злокачественные опухоли ЦНС',
-              'Относительные: тяжелая гипертензия, операция <3 нед, кровотечения',
+              'Относительные: тяжелая гипертензия, операция ❤ нед, кровотечения',
             ],
             drugs: [
               'Тенектеплаза: вес-зависимая доза (30-50 мг)',
@@ -579,12 +523,7 @@ export default function ACSPage() {
           },
           {
             strategy: 'Отсроченная инвазивная (25-72 ч)',
-            indications: [
-              'Диабет',
-              'Почечная недостаточность',
-              'Снижение ФВ ЛЖ',
-              'Ранняя постинфарктная стенокардия',
-            ],
+            indications: ['Диабет', 'Почечная недостаточность', 'Снижение ФВ ЛЖ', 'Ранняя постинфарктная стенокардия'],
             class: 'I' as RecommendationClass,
             level: 'A' as EvidenceLevel,
             evidenceText:
@@ -597,16 +536,8 @@ export default function ACSPage() {
         {
           drug: 'Бета-блокаторы',
           indication: 'Тахикардия, гипертензия, сохраненная функция ЛЖ',
-          contraindications: [
-            'Острая декомпенсация СН',
-            'Выраженная брадикардия',
-            'АВ-блокада II–III ст.',
-            'Бронхоспазм',
-          ],
-          options: [
-            'Метопролол 25-50 мг 2 раза/сут',
-            'Бисопролол 2.5-10 мг/сут',
-          ],
+          contraindications: ['Острая декомпенсация СН', 'Выраженная брадикардия', 'АВ-блокада II–III ст.', 'Бронхоспазм'],
+          options: ['Метопролол 25-50 мг 2 раза/сут', 'Бисопролол 2.5-10 мг/сут'],
           timing: 'В первые 24 часа при стабильном состоянии',
           class: 'I' as RecommendationClass,
           level: 'A' as EvidenceLevel,
@@ -616,7 +547,7 @@ export default function ACSPage() {
         {
           drug: 'Статины высокой интенсивности',
           indication: 'Все пациенты с ОКС',
-          options: ['Аторвастатин 80 мг/сут', 'Розувастатин 20-40 мг/сут'],
+          options: ['Аторвастатин 80 мг/сут', 'Розувастатин 20-40 мг/sut'],
           timing: 'Немедленно при поступлении',
           class: 'I' as RecommendationClass,
           level: 'A' as EvidenceLevel,
@@ -625,13 +556,8 @@ export default function ACSPage() {
         },
         {
           drug: 'ИАПФ/БРА',
-          indication:
-            'СН, дисфункция ЛЖ (ФВ <40%), диабет, гипертензия',
-          options: [
-            'Рамиприл 2.5-10 мг/сут',
-            'Периндоприл 2-8 мг/сут',
-            'Валсартан 80-320 мг/сут',
-          ],
+          indication: 'СН, дисфункция ЛЖ (ФВ <40%), диабет, гипертензия',
+          options: ['Рамиприл 2.5-10 мг/сут', 'Периндоприл 2-8 мг/сут', 'Валсартан 80-320 мг/сут'],
           timing: 'В первые 24 часа при стабильном состоянии',
           class: 'I' as RecommendationClass,
           level: 'A' as EvidenceLevel,
@@ -640,11 +566,9 @@ export default function ACSPage() {
         },
         {
           drug: 'Антагонисты минералокортикоидных рецепторов',
-          indication:
-            'ФВ ЛЖ ≤40% + СН или сахарный диабет после ОКС',
+          indication: 'ФВ ЛЖ ≤40% + СН или сахарный диабет после ОКС',
           options: ['Эплеренон 25–50 мг/сут', 'Спиронолактон 25–50 мг/сут'],
-          timing:
-            'В течение первых 3–7 суток при стабильном креатинине и калии',
+          timing: 'В течение первых 3–7 суток при стабильном креатинине и калии',
           contraindications: ['Калий >5.0 ммоль/л', 'КК <30 мл/мин'],
           class: 'I' as RecommendationClass,
           level: 'B' as EvidenceLevel,
@@ -653,13 +577,10 @@ export default function ACSPage() {
         },
         {
           drug: 'SGLT2 ингибиторы',
-          indication:
-            'СН с ФВ сниженной или умеренно сниженной после ОКС (с/без СД)',
+          indication: 'СН с ФВ сниженной или умеренно сниженной после ОКС (с/без СД)',
           options: ['Дапаглифлозин 10 мг/сут', 'Эмпаглифлозин 10 мг/сут'],
           timing: 'После стабилизации гемодинамики и функции почек',
-          contraindications: [
-            'КК <20–25 мл/мин (в зависимости от препарата)',
-          ],
+          contraindications: ['КК <20–25 мл/мин (в зависимости от препарата)'],
           class: 'IIa' as RecommendationClass,
           level: 'A' as EvidenceLevel,
           evidenceText:
@@ -667,6 +588,7 @@ export default function ACSPage() {
         },
       ],
 
+      // НОВОЕ: Частые ошибки
       commonPitfalls: [
         {
           title: 'Задержка реперфузии при STEMI',
@@ -707,7 +629,7 @@ export default function ACSPage() {
       ],
     },
 
-    // ===== ВТОРИЧНАЯ ПРОФИЛАКТИКА =====
+    // ВТОРИЧНАЯ ПРОФИЛАКТИКА
     secondaryPrevention: {
       duration: 'Пожизненно после ОКС',
       medications: [
@@ -726,8 +648,7 @@ export default function ACSPage() {
         },
         {
           drug: 'Статины',
-          target:
-            'ЛПНП снижение ≥50% от исходного и <1.4 ммоль/л',
+          target: 'ЛПНП снижение ≥50% от исходного и <1.4 ммоль/л',
           monitoring: 'Через 4-12 недель, затем ежегодно',
           escalation: [
             'При недостижении цели: + эзетимиб 10 мг/сут',
@@ -743,11 +664,7 @@ export default function ACSPage() {
         {
           area: 'Курение',
           recommendation: 'Полное прекращение',
-          interventions: [
-            'Консультирование',
-            'Никотин-заместительная терапия',
-            'Варениклин/бупропион',
-          ],
+          interventions: ['Консультирование', 'Никотин-заместительная терапия', 'Варениклин/бупропион'],
           class: 'I' as RecommendationClass,
           level: 'B' as EvidenceLevel,
           evidenceText:
@@ -769,8 +686,7 @@ export default function ACSPage() {
         },
         {
           area: 'Физическая активность',
-          recommendation:
-            '150 мин/неделю умеренной или 75 мин/неделю интенсивной нагрузки',
+          recommendation: '150 мин/неделю умеренной или 75 мин/неделю интенсивной нагрузки',
           progression: 'Постепенное увеличение под контролем',
           class: 'I' as RecommendationClass,
           level: 'A' as EvidenceLevel,
@@ -780,10 +696,9 @@ export default function ACSPage() {
       ],
     },
 
-    // ===== СРАВНЕНИЕ С US =====
+    // СРАВНЕНИЕ С US
     comparison: {
-      title:
-        'Сравнение Европейских (ESC 2023-2024) и Американских (ACC/AHA 2025) рекомендаций',
+      title: 'Сравнение Европейских (ESC 2023-2024) и Американских (ACC/AHA 2025) рекомендаций',
       keyDifferences: [
         {
           aspect: 'Дозировка аспирина',
@@ -842,7 +757,7 @@ export default function ACSPage() {
 
     return (
       <div className="flex flex-col gap-1 text-sm">
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex items-center gap-2">
           <span
             className={`px-2 py-1 rounded border ${
               cls === 'I'
@@ -882,18 +797,22 @@ export default function ACSPage() {
     </div>
   );
 
-  // пока без визуального уведомления — просто заглушка под будущую логику
-  const handleSaveSection = () => {
-    // TODO: подключить реальное сохранение в «Мои гайды»
-    console.log('Save current section clicked');
-  };
+  // Пока логика сохранения не реализована – оставляем пустую функцию
+  const handleSaveSection = () => {};
+
+  const sections = [
+    { id: 'diagnosis' as const, label: 'Диагностика' },
+    { id: 'treatment' as const, label: 'Лечение' },
+    { id: 'prevention' as const, label: 'Профилактика' },
+    { id: 'comparison' as const, label: 'Сравнение' },
+  ];
 
   return (
     <main className="min-h-screen bg-[#fcfcee] py-8">
-      <div className="max-w-6xl xl:max-w-7xl mx-auto px-4 xl:px-6">
+      <div className="max-w-7xl mx-auto px-4">
         {/* Заголовок и фильтры */}
         <section className="border-b border-gray-200 mb-8">
-          <div className="max-w-6xl xl:max-w-7xl mx-auto px-0 pt-4 pb-4">
+          <div className="max-w-7xl mx-auto px-4 pt-4 pb-4">
             <div className="flex flex-col lg:flex-row items-center gap-4 lg:gap-0">
               {/* Нозология */}
               <div className="flex-1 flex justify-start order-2 lg:order-1 w-full lg:w-auto">
@@ -904,19 +823,28 @@ export default function ACSPage() {
                   <select
                     value={selectedNosology}
                     onChange={(e) => setSelectedNosology(e.target.value)}
-                    className="rounded-full border border-[#d3cec4] bg-white px-4 py-1.5 text-sm text-[#3b342d] shadow-sm focus:outline-none focus:border-[#015d52] w-full lg:w-[220px]"
+                    className="rounded-full border border-[#d3cec4] bg-white px-4 py-1.5 text-sm text-[#3b342d] shadow-sm focus:outline-none focus:border-[#015d52] w-full lg:w-[230px]"
                   >
-                    {CARDIOLOGY_NOSOLOGIES.map((nosology) => (
-                      <option key={nosology.id} value={nosology.label}>
-                        {nosology.group} — {nosology.label}
-                      </option>
-                    ))}
+                    {Object.entries(groupedCardiologyNosologies).map(
+                      ([groupName, items]) => (
+                        <optgroup key={groupName} label={groupName}>
+                          {items.map((nosology) => (
+                            <option
+                              key={nosology.id}
+                              value={nosology.label}
+                            >
+                              {nosology.label}
+                            </option>
+                          ))}
+                        </optgroup>
+                      )
+                    )}
                   </select>
                 </div>
               </div>
 
               {/* Заголовок */}
-              <div className="flex-shrink-0 text-center order-1 lg:order-2 px-2">
+              <div className="flex-shrink-0 text-center order-1 lg:order-2">
                 <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
                   {escGuideline.title}
                 </h1>
@@ -934,10 +862,13 @@ export default function ACSPage() {
                   <select
                     value={selectedSpecialty}
                     onChange={(e) => setSelectedSpecialty(e.target.value)}
-                    className="rounded-full border border-[#d3cec4] bg-white px-4 py-1.5 text-sm text-[#3b342d] shadow-sm focus:outline-none focus:border-[#015d52] w-full lg:w-[220px]"
+                    className="rounded-full border border-[#d3cec4] bg-white px-4 py-1.5 text-sm text-[#3b342d] shadow-sm focus:outline-none focus:border-[#015d52] w-full lg:w-[230px]"
                   >
                     {SPECIALTIES.map((spec) => (
-                      <option key={spec} value={spec}>
+                      <option
+                        key={spec}
+                        value={spec}
+                      >
                         {spec}
                       </option>
                     ))}
@@ -946,9 +877,9 @@ export default function ACSPage() {
               </div>
             </div>
 
-            {/* Ссылки и дисклеймер */}
+            {/* Ссылки и предупреждение */}
             <div className="text-center mt-6 space-y-3">
-              <div className="flex justify-center flex-wrap gap-4">
+              <div className="flex justify-center gap-4 flex-wrap">
                 <a
                   href={escGuideline.sources.nsteacs}
                   target="_blank"
@@ -977,49 +908,53 @@ export default function ACSPage() {
               </div>
 
               <p className="text-sm text-gray-600 max-w-2xl mx-auto">
-                Для медицинских специалистов. Обзор и интерпретация; не
-                заменяет официальные руководства. Следуйте локальным
-                протоколам.
+                Для медицинских специалистов. Обзор и интерпретация; не заменяет официальные
+                руководства. Следуйте локальным протоколам.
               </p>
             </div>
           </div>
         </section>
 
-        {/* Основной layout: левое меню + контент */}
-        <div className="mt-4 lg:mt-6 flex gap-4 lg:gap-8 items-start">
-          {/* Левое меню разделов (десктоп) */}
-          <aside className="hidden md:block w-40 lg:w-48 flex-shrink-0">
-            <div className="sticky top-28 space-y-3">
-              <p className="text-[11px] uppercase tracking-[0.18em] text-[#9c978f]">
+        {/* Основная сетка: слева разделы, справа контент гайда */}
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Левое меню разделов (только десктоп) */}
+          <aside className="hidden lg:block lg:w-52 flex-shrink-0">
+            <div className="sticky top-32">
+              <div className="text-xs font-semibold tracking-[0.16em] text-[#9c978f] uppercase mb-3">
                 Разделы гайда
-              </p>
-              <div className="space-y-2">
-                {SECTION_TABS.map(({ id, label }) => (
-                  <button
-                    key={id}
-                    onClick={() => setSelectedTab(id)}
-                    className={`w-full text-sm font-medium px-4 py-2 rounded-full border transition-colors text-left ${
-                      selectedTab === id
-                        ? 'bg-[#015d52] text-white border-[#015d52]'
-                        : 'bg-white text-[#3b342d] border-[#d3cec4] hover:border-[#015d52]/70'
-                    }`}
-                  >
-                    {label}
-                  </button>
-                ))}
+              </div>
+              <div className="space-y-3">
+                {sections.map(({ id, label }) => {
+                  const active = selectedTab === id;
+                  return (
+                    <button
+                      key={id}
+                      onClick={() => setSelectedTab(id)}
+                      className={`w-full rounded-full border px-4 py-2 text-sm text-left font-medium transition
+                        ${
+                          active
+                            ? 'bg-[#013c37] text-white border-[#013c37]'
+                            : 'bg-white text-[#1f2933] border-[#d3cec4]'
+                        }
+                        hover:ring-2 hover:ring-emerald-400 hover:border-emerald-500 hover:bg-emerald-50`}
+                    >
+                      {label}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </aside>
 
-          {/* Контентная область */}
+          {/* Основной контент */}
           <div className="flex-1 min-w-0">
-            {/* Горизонтальное меню для мобильных */}
-            <div className="flex md:hidden border-b border-gray-200 mb-4 overflow-x-auto">
-              {SECTION_TABS.map(({ id, label }) => (
+            {/* Навигация чипами – только на мобильных/планшетах */}
+            <div className="flex lg:hidden border-b border-gray-200 mb-6 overflow-x-auto">
+              {sections.map(({ id, label }) => (
                 <button
                   key={id}
                   onClick={() => setSelectedTab(id)}
-                  className={`px-4 py-3 border-b-2 font-medium text-sm whitespace-nowrap ${
+                  className={`px-4 py-2 border-b-2 font-medium text-sm whitespace-nowrap ${
                     selectedTab === id
                       ? 'border-blue-500 text-blue-600'
                       : 'border-transparent text-gray-500 hover:text-gray-700'
@@ -1030,8 +965,8 @@ export default function ACSPage() {
               ))}
             </div>
 
-            {/* Карточка гайда */}
-            <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 mb-8">
+            {/* Карточка контента гайда */}
+            <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8 mb-8">
               {/* ДИАГНОСТИКА */}
               {selectedTab === 'diagnosis' && (
                 <div className="space-y-12">
@@ -1042,48 +977,44 @@ export default function ACSPage() {
                     </h2>
 
                     <div className="space-y-6">
-                      {escGuideline.diagnosis.initialAssessment.map(
-                        (step, index) => (
-                          <div
-                            key={index}
-                            className="bg-blue-50 rounded-xl p-6 border border-blue-200"
-                          >
-                            <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-4">
-                              <div>
-                                <h3 className="text-xl font-semibold text-gray-900">
-                                  {step.step}
-                                </h3>
-                              </div>
-                              <div className="flex flex-wrap gap-4 justify-start md:justify-end">
-                                <TimingBadge time={step.timing} />
-                                <RecommendationBadge
-                                  rec={{
-                                    class: step.class,
-                                    level: step.level,
-                                    evidenceText: step.evidenceText,
-                                  }}
-                                />
-                              </div>
+                      {escGuideline.diagnosis.initialAssessment.map((step, index) => (
+                        <div
+                          key={index}
+                          className="bg-blue-50 rounded-xl p-6 border border-blue-200"
+                        >
+                          <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-4">
+                            <div>
+                              <h3 className="text-xl font-semibold text-gray-900">
+                                {step.step}
+                              </h3>
                             </div>
-                            <ul className="space-y-2">
-                              {step.actions.map((action, idx) => (
-                                <li
-                                  key={idx}
-                                  className="flex items-start gap-3"
-                                >
-                                  <CheckCircle
-                                    size={18}
-                                    className="text-green-500 mt-0.5 flex-shrink-0"
-                                  />
-                                  <span className="text-gray-700">
-                                    {action}
-                                  </span>
-                                </li>
-                              ))}
-                            </ul>
+                            <div className="flex flex-col md:flex-row gap-3 md:items-center">
+                              <TimingBadge time={step.timing} />
+                              <RecommendationBadge
+                                rec={{
+                                  class: step.class,
+                                  level: step.level,
+                                  evidenceText: step.evidenceText,
+                                }}
+                              />
+                            </div>
                           </div>
-                        )
-                      )}
+                          <ul className="space-y-2">
+                            {step.actions.map((action, idx) => (
+                              <li
+                                key={idx}
+                                className="flex items-start gap-3"
+                              >
+                                <CheckCircle
+                                  size={18}
+                                  className="text-green-500 mt-0.5 flex-shrink-0"
+                                />
+                                <span className="text-gray-700">{action}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ))}
                     </div>
                   </section>
 
@@ -1099,44 +1030,40 @@ export default function ACSPage() {
                         <h4 className="text-lg font-semibold text-red-800 mb-4">
                           STEMI критерии
                         </h4>
-                        {escGuideline.diagnosis.ecgCriteria.stemi.map(
-                          (criteria, idx) => (
-                            <div
-                              key={idx}
-                              className="mb-6 last:mb-0"
-                            >
-                              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 mb-3">
-                                <h5 className="font-semibold text-gray-900">
-                                  {criteria.criteria}
-                                </h5>
-                                <RecommendationBadge
-                                  rec={{
-                                    class: criteria.class,
-                                    level: criteria.level,
-                                    evidenceText: criteria.evidenceText,
-                                  }}
-                                />
-                              </div>
-                              <ul className="text-sm text-gray-700 space-y-1">
-                                {criteria.details.map((detail, i) => (
-                                  <li key={i}>• {detail}</li>
-                                ))}
-                              </ul>
-                              {criteria.examples && (
-                                <div className="mt-2">
-                                  <p className="font-medium text-sm">
-                                    Примеры:
-                                  </p>
-                                  <ul className="text-sm text-gray-600 space-y-1">
-                                    {criteria.examples.map((example, i) => (
-                                      <li key={i}>• {example}</li>
-                                    ))}
-                                  </ul>
-                                </div>
-                              )}
+                        {escGuideline.diagnosis.ecgCriteria.stemi.map((criteria, idx) => (
+                          <div
+                            key={idx}
+                            className="mb-6 last:mb-0"
+                          >
+                            <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 mb-3">
+                              <h5 className="font-semibold text-gray-900">
+                                {criteria.criteria}
+                              </h5>
+                              <RecommendationBadge
+                                rec={{
+                                  class: criteria.class,
+                                  level: criteria.level,
+                                  evidenceText: criteria.evidenceText,
+                                }}
+                              />
                             </div>
-                          )
-                        )}
+                            <ul className="text-sm text-gray-700 space-y-1">
+                              {criteria.details.map((detail, i) => (
+                                <li key={i}>• {detail}</li>
+                              ))}
+                            </ul>
+                            {criteria.examples && (
+                              <div className="mt-2">
+                                <p className="font-medium text-sm">Примеры:</p>
+                                <ul className="text-sm text-gray-600 space-y-1">
+                                  {criteria.examples.map((example, i) => (
+                                    <li key={i}>• {example}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+                          </div>
+                        ))}
                       </div>
 
                       {/* NSTEMI */}
@@ -1144,32 +1071,30 @@ export default function ACSPage() {
                         <h4 className="text-lg font-semibold text-orange-800 mb-4">
                           NSTEMI критерии
                         </h4>
-                        {escGuideline.diagnosis.ecgCriteria.nstemi.map(
-                          (criteria, idx) => (
-                            <div
-                              key={idx}
-                              className="mb-6 last:mb-0"
-                            >
-                              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 mb-3">
-                                <h5 className="font-semibold text-gray-900">
-                                  {criteria.criteria}
-                                </h5>
-                                <RecommendationBadge
-                                  rec={{
-                                    class: criteria.class,
-                                    level: criteria.level,
-                                    evidenceText: criteria.evidenceText,
-                                  }}
-                                />
-                              </div>
-                              <ul className="text-sm text-gray-700 space-y-1">
-                                {criteria.details.map((detail, i) => (
-                                  <li key={i}>• {detail}</li>
-                                ))}
-                              </ul>
+                        {escGuideline.diagnosis.ecgCriteria.nstemi.map((criteria, idx) => (
+                          <div
+                            key={idx}
+                            className="mb-6 last:mb-0"
+                          >
+                            <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 mb-3">
+                              <h5 className="font-semibold text-gray-900">
+                                {criteria.criteria}
+                              </h5>
+                              <RecommendationBadge
+                                rec={{
+                                  class: criteria.class,
+                                  level: criteria.level,
+                                  evidenceText: criteria.evidenceText,
+                                }}
+                              />
                             </div>
-                          )
-                        )}
+                            <ul className="text-sm text-gray-700 space-y-1">
+                              {criteria.details.map((detail, i) => (
+                                <li key={i}>• {detail}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        ))}
                       </div>
                     </div>
                   </section>
@@ -1226,9 +1151,7 @@ export default function ACSPage() {
                         </div>
 
                         <div>
-                          <p className="font-medium mb-2">
-                            Интерпретация:
-                          </p>
+                          <p className="font-medium mb-2">Интерпретация:</p>
                           <ul className="text-sm text-gray-700 space-y-1">
                             {escGuideline.diagnosis.biomarkers.highSensitivityTroponin.interpretation.map(
                               (item, idx) => (
@@ -1264,21 +1187,21 @@ export default function ACSPage() {
                     <div className="grid md:grid-cols-2 gap-6">
                       {/* GRACE */}
                       <div className="bg-yellow-50 rounded-xl p-6 border border-yellow-200">
-                        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 mb-4">
+                        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-4">
                           <h4 className="text-lg font-semibold text-yellow-800">
                             Шкала GRACE
                           </h4>
                           <RecommendationBadge
                             rec={{
                               class:
-                                escGuideline.diagnosis.riskStratification
-                                  .grace.class,
+                                escGuideline.diagnosis.riskStratification.grace
+                                  .class,
                               level:
-                                escGuideline.diagnosis.riskStratification
-                                  .grace.level,
+                                escGuideline.diagnosis.riskStratification.grace
+                                  .level,
                               evidenceText:
-                                escGuideline.diagnosis.riskStratification
-                                  .grace.evidenceText,
+                                escGuideline.diagnosis.riskStratification.grace
+                                  .evidenceText,
                             }}
                           />
                         </div>
@@ -1290,9 +1213,7 @@ export default function ACSPage() {
                             )
                           )}
                         </ul>
-                        <p className="font-medium mb-2">
-                          Уровни риска:
-                        </p>
+                        <p className="font-medium mb-2">Уровни риска:</p>
                         <ul className="text-sm text-gray-700 space-y-1">
                           {escGuideline.diagnosis.riskStratification.grace.scores.map(
                             (score, idx) => (
@@ -1304,7 +1225,7 @@ export default function ACSPage() {
 
                       {/* HEART */}
                       <div className="bg-green-50 rounded-xl p-6 border border-green-200">
-                        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 mb-4">
+                        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-4">
                           <h4 className="text-lg font-semibold text-green-800">
                             Шкала HEART
                           </h4>
@@ -1330,9 +1251,7 @@ export default function ACSPage() {
                             )
                           )}
                         </ul>
-                        <p className="font-medium mb-2">
-                          Уровни риска:
-                        </p>
+                        <p className="font-medium mb-2">Уровни риска:</p>
                         <ul className="text-sm text-gray-700 space-y-1">
                           {escGuideline.diagnosis.riskStratification.hematics.scores.map(
                             (score, idx) => (
@@ -1349,18 +1268,17 @@ export default function ACSPage() {
                     <h3 className="text-2xl font-semibold text-gray-900 mb-4">
                       Калькуляторы риска (быстрый переход)
                     </h3>
-                    <div className="grid md:grid-cols-3 gap-4">
+                    <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
                       <a
                         href="/calculators/grace"
                         className="border border-blue-200 rounded-xl px-4 py-3 text-sm flex flex-col justify-between hover:bg-blue-50 transition"
                       >
                         <span className="font-semibold text-gray-900 mb-1">
-                          GRACE / TIMI NSTE-ACS
+                          GRACE / TIMI-like EU
                         </span>
                         <span className="text-gray-600">
-                          Европейская и американская модификации оценки
-                          риска госпитальной и 6-месячной смертности в одном
-                          калькуляторе.
+                          Госпитальная и 6-месячная смертность у пациентов с
+                          NSTE-ACS.
                         </span>
                       </a>
                       <a
@@ -1368,12 +1286,11 @@ export default function ACSPage() {
                         className="border border-green-200 rounded-xl px-4 py-3 text-sm flex flex-col justify-between hover:bg-green-50 transition"
                       >
                         <span className="font-semibold text-gray-900 mb-1">
-                          HEART / EDACS
+                          HEART / ED risk
                         </span>
                         <span className="text-gray-600">
-                          Быстрая оценка краткосрочного риска МАСЕ в
-                          приёмном отделении, включающая европейский HEART и
-                          международный EDACS.
+                          Быстрая оценка краткосрочного риска МАСЕ в приёмном
+                          отделении.
                         </span>
                       </a>
                       <a
@@ -1381,19 +1298,18 @@ export default function ACSPage() {
                         className="border border-purple-200 rounded-xl px-4 py-3 text-sm flex flex-col justify-between hover:bg-purple-50 transition"
                       >
                         <span className="font-semibold text-gray-900 mb-1">
-                          TIMI UA/NSTEMI / TRS-2°P
+                          TIMI для NSTE-ACS / US
                         </span>
                         <span className="text-gray-600">
-                          Стратификация риска осложнений и отдалённого
-                          прогноза у пациентов с NSTE-ACS (ESC + ACC/AHA
-                          подходы).
+                          Стратификация риска осложнений и выбора инвазивной
+                          стратегии.
                         </span>
                       </a>
                     </div>
                     <p className="mt-2 text-xs text-gray-500">
-                      Переход выполняется в раздел «Калькуляторы». При
-                      отсутствии конкретного калькулятора на момент просмотра
-                      страница может быть временно недоступна.
+                      Переход выполняется в раздел «Калькуляторы». При отсутствии
+                      калькулятора на момент просмотра страница может быть
+                      недоступна.
                     </p>
                   </section>
                 </div>
@@ -1409,49 +1325,45 @@ export default function ACSPage() {
                     </h2>
 
                     <div className="grid md:grid-cols-2 gap-6">
-                      {escGuideline.treatment.generalMeasures.map(
-                        (measure, idx) => (
-                          <div
-                            key={idx}
-                            className="bg-blue-50 rounded-xl p-6 border border-blue-200"
-                          >
-                            <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 mb-4">
-                              <h3 className="text-xl font-semibold text-gray-900">
-                                {measure.measure}
-                              </h3>
-                              <RecommendationBadge
-                                rec={{
-                                  class: measure.class,
-                                  level: measure.level,
-                                  evidenceText: measure.evidenceText,
-                                }}
-                              />
-                            </div>
-                            <p className="text-gray-700 mb-2">
-                              <strong>Показания:</strong>{' '}
-                              {measure.indication}
-                            </p>
-                            <p className="text-gray-700">
-                              <strong>Дозировка:</strong>{' '}
-                              {measure.dose}
-                            </p>
-                            {measure.contraindications && (
-                              <div className="mt-3">
-                                <p className="font-medium text-sm mb-1">
-                                  Противопоказания:
-                                </p>
-                                <ul className="text-sm text-gray-700 space-y-1">
-                                  {measure.contraindications.map(
-                                    (contra: string, i: number) => (
-                                      <li key={i}>• {contra}</li>
-                                    )
-                                  )}
-                                </ul>
-                              </div>
-                            )}
+                      {escGuideline.treatment.generalMeasures.map((measure, idx) => (
+                        <div
+                          key={idx}
+                          className="bg-blue-50 rounded-xl p-6 border border-blue-200"
+                        >
+                          <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-4">
+                            <h3 className="text-xl font-semibold text-gray-900">
+                              {measure.measure}
+                            </h3>
+                            <RecommendationBadge
+                              rec={{
+                                class: measure.class,
+                                level: measure.level,
+                                evidenceText: measure.evidenceText,
+                              }}
+                            />
                           </div>
-                        )
-                      )}
+                          <p className="text-gray-700 mb-2">
+                            <strong>Показания:</strong> {measure.indication}
+                          </p>
+                          <p className="text-gray-700">
+                            <strong>Дозировка:</strong> {measure.dose}
+                          </p>
+                          {measure.contraindications && (
+                            <div className="mt-3">
+                              <p className="font-medium text-sm mb-1">
+                                Противопоказания:
+                              </p>
+                              <ul className="text-sm text-gray-700 space-y-1">
+                                {measure.contraindications.map(
+                                  (contra: string, i: number) => (
+                                    <li key={i}>• {contra}</li>
+                                  )
+                                )}
+                              </ul>
+                            </div>
+                          )}
+                        </div>
+                      ))}
                     </div>
                   </section>
 
@@ -1464,17 +1376,14 @@ export default function ACSPage() {
                     <div className="space-y-6">
                       {/* Аспирин */}
                       <div className="bg-green-50 rounded-xl p-6 border border-green-200">
-                        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 mb-4">
+                        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-4">
                           <div>
                             <h3 className="text-xl font-semibold text-gray-900">
                               Аспирин
                             </h3>
                             <p className="text-gray-600">
                               Нагрузка:{' '}
-                              {
-                                escGuideline.treatment.antiplateletTherapy[0]
-                                  .loading
-                              }{' '}
+                              {escGuideline.treatment.antiplateletTherapy[0].loading}{' '}
                               • Поддержка:{' '}
                               {
                                 escGuideline.treatment.antiplateletTherapy[0]
@@ -1497,10 +1406,7 @@ export default function ACSPage() {
                           />
                         </div>
                         <p className="text-gray-700">
-                          {
-                            escGuideline.treatment.antiplateletTherapy[0]
-                              .notes
-                          }
+                          {escGuideline.treatment.antiplateletTherapy[0].notes}
                         </p>
                       </div>
 
@@ -1509,16 +1415,15 @@ export default function ACSPage() {
                         <h3 className="text-xl font-semibold text-gray-900 mb-4">
                           P2Y12 ингибиторы - выбор препарата
                         </h3>
-                        <div className="grid md:grid-cols-3 gap-6">
-                          {(
-                            escGuideline.treatment.antiplateletTherapy[1]
-                              ?.options ?? []
+                        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+                          {(escGuideline.treatment.antiplateletTherapy[1]
+                            ?.options ?? []
                           ).map((drug: any, idx: number) => (
                             <div
                               key={idx}
                               className="bg-white rounded-xl p-6 border-2 border-blue-200 shadow-sm"
                             >
-                              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 mb-4">
+                              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-4">
                                 <h4 className="text-lg font-semibold text-gray-900">
                                   {drug.name}
                                 </h4>
@@ -1531,12 +1436,10 @@ export default function ACSPage() {
                                 />
                               </div>
 
-                              <div className="space-y-3 text-sm text-gray-700">
+                              <div className="space-y-3">
                                 <div>
-                                  <span className="font-medium">
-                                    Нагрузка:
-                                  </span>
-                                  <span className="ml-2">
+                                  <span className="font-medium">Нагрузка:</span>
+                                  <span className="text-gray-700 ml-2">
                                     {drug.loading}
                                   </span>
                                 </div>
@@ -1544,7 +1447,7 @@ export default function ACSPage() {
                                   <span className="font-medium">
                                     Поддержка:
                                   </span>
-                                  <span className="ml-2">
+                                  <span className="text-gray-700 ml-2">
                                     {drug.maintenance}
                                   </span>
                                 </div>
@@ -1552,7 +1455,7 @@ export default function ACSPage() {
                                   <span className="font-medium">
                                     Длительность:
                                   </span>
-                                  <span className="ml-2">
+                                  <span className="text-gray-700 ml-2">
                                     {drug.duration}
                                   </span>
                                 </div>
@@ -1599,14 +1502,14 @@ export default function ACSPage() {
                     <h2 className="text-3xl font-bold text-gray-900 mb-6">
                       Антикоагулянтная терапия
                     </h2>
-                    <div className="grid md:grid-cols-3 gap-6">
+                    <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
                       {escGuideline.treatment.anticoagulation.map(
                         (ac: any, idx: number) => (
                           <div
                             key={idx}
                             className="bg-white rounded-xl p-6 border border-gray-200"
                           >
-                            <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 mb-3">
+                            <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-3">
                               <h4 className="text-lg font-semibold text-gray-900">
                                 {ac.drug}
                               </h4>
@@ -1736,14 +1639,14 @@ export default function ACSPage() {
                       Дополнительная терапия
                     </h3>
 
-                    <div className="grid md:grid-cols-3 gap-6">
+                    <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
                       {escGuideline.treatment.adjunctiveTherapy.map(
                         (therapy: any, idx: number) => (
                           <div
                             key={idx}
                             className="bg-purple-50 rounded-xl p-6 border border-purple-200"
                           >
-                            <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 mb-4">
+                            <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-4">
                               <h4 className="text-lg font-semibold text-gray-900">
                                 {therapy.drug}
                               </h4>
@@ -1756,12 +1659,10 @@ export default function ACSPage() {
                               />
                             </div>
                             <p className="text-gray-700 mb-2">
-                              <strong>Показания:</strong>{' '}
-                              {therapy.indication}
+                              <strong>Показания:</strong> {therapy.indication}
                             </p>
                             <p className="text-gray-700 mb-2">
-                              <strong>Тайминг:</strong>{' '}
-                              {therapy.timing}
+                              <strong>Тайминг:</strong> {therapy.timing}
                             </p>
                             {therapy.options && (
                               <div className="mt-2">
@@ -1855,7 +1756,7 @@ export default function ACSPage() {
                             key={idx}
                             className="bg-white rounded-lg p-4 border border-blue-100"
                           >
-                            <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 mb-2">
+                            <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-2">
                               <h4 className="font-semibold text-gray-900">
                                 {med.drug}
                               </h4>
@@ -1927,7 +1828,7 @@ export default function ACSPage() {
                             key={idx}
                             className="bg-white rounded-lg p-4 border border-green-100"
                           >
-                            <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 mb-2">
+                            <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-2">
                               <h4 className="font-semibold text-gray-900">
                                 {item.area}
                               </h4>
@@ -1990,7 +1891,7 @@ export default function ACSPage() {
                             key={idx}
                             className="bg-white rounded-lg p-4 border border-green-100 shadow-sm"
                           >
-                            <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 mb-3">
+                            <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-3">
                               <h4 className="font-semibold text-gray-900">
                                 {diff.aspect}
                               </h4>
@@ -2050,31 +1951,30 @@ export default function ACSPage() {
                 </div>
               )}
             </div>
-
-            {/* Кнопка сохранения раздела */}
-            <section className="mt-4 mb-8 text-center">
-              <button
-                onClick={handleSaveSection}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-emerald-500 bg-white text-sm font-medium text-emerald-800 shadow-sm transition-all hover:border-emerald-600 hover:shadow-[0_0_0_3px_rgba(16,185,129,0.35)]"
-              >
-                <FolderPlus size={16} />
-                <span>Сохранить текущий раздел в «Мои гайды»</span>
-              </button>
-            </section>
           </div>
         </div>
 
-        {/* Footer с дисклеймером */}
+        {/* Кнопка сохранения раздела */}
+        <section className="mt-4 mb-8 text-center">
+          <button
+            onClick={handleSaveSection}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-emerald-500 bg-white text-sm font-medium text-emerald-800 hover:bg-emerald-50 hover:ring-2 hover:ring-emerald-400 hover:shadow-md transition"
+          >
+            <FolderPlus size={16} />
+            <span>Сохранить текущий раздел в «Мои гайды»</span>
+          </button>
+        </section>
+
+        {/* Footer с поддержкой */}
         <section className="border-t border-gray-200 mt-12 pt-8 text-center">
           <p className="text-sm text-gray-600 mb-6 max-w-4xl mx-auto">
             Данное руководство представляет собой обзор и интерпретацию
-            клинических рекомендаций для медицинских специалистов.
-            Информация носит исключительно образовательный характер и не
-            заменяет профессиональное медицинское заключение. При принятии
-            клинических решений всегда следуйте официальным руководствам и
-            локальным протоколам вашего учреждения. Авторы не несут
-            ответственности за использование представленной информации в
-            клинической практике.
+            клинических рекомендаций для медицинских специалистов. Информация
+            носит исключительно образовательный характер и не заменяет
+            профессиональное медицинское заключение. При принятии клинических
+            решений всегда следуйте официальным руководствам и локальным
+            протоколам вашего учреждения. Авторы не несут ответственности за
+            использование представленной информации в клинической практике.
           </p>
           <p className="text-lg font-medium text-gray-900">
             support@medradix.info
