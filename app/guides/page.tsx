@@ -810,7 +810,7 @@ export default function ACSPage() {
 
     return (
       <div className="flex flex-col gap-1 text-sm">
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <span
             className={`px-2 py-1 rounded border ${
               cls === 'I'
@@ -905,7 +905,7 @@ export default function ACSPage() {
 
               {/* Специальность */}
               <div className="flex-1 flex justify-end order-3 w-full lg:w-auto">
-                <div className="flex flex-col items-end gap-1 w_full lg:w-auto">
+                <div className="flex flex-col items-end gap-1 w-full lg:w-auto">
                   <span className="text-[11px] uppercase tracking-[0.18em] text-[#9c978f] hidden lg:block">
                     Специальность
                   </span>
@@ -977,13 +977,13 @@ export default function ACSPage() {
                     <button
                       key={id}
                       onClick={() => setSelectedTab(id)}
-                      className={`w-full rounded-full border px-3 py-2 text-xs text-left font-medium transition
+                      className={`w-full rounded-full border px-3 py-2 text-sm text-left font-medium transition
                         ${
                           active
                             ? 'bg-[#013c37] text-white border-[#013c37]'
                             : 'bg-white text-[#1f2933] border-[#d3cec4]'
                         }
-                        hover:ring-1 hover:ring-emerald-300 hover:shadow-sm`}
+                        hover:ring-1 hover:ring-[#015d52] hover:shadow-sm`}
                     >
                       {label}
                     </button>
@@ -1569,7 +1569,7 @@ export default function ACSPage() {
                             key={idx}
                             className="bg-white rounded-xl p-6 border border-gray-200"
                           >
-                            <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-3">
+                            <div className="flex flex-col md:items-start gap-4 mb-3">
                               <h4 className="text-lg font-semibold text-gray-900">
                                 {ac.drug}
                               </h4>
@@ -1706,7 +1706,7 @@ export default function ACSPage() {
                             key={idx}
                             className="bg-purple-50 rounded-xl p-6 border border-purple-200"
                           >
-                            <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-4">
+                            <div className="flex flex-col md:items-start gap-4 mb-4">
                               <h4 className="text-lg font-semibold text-gray-900">
                                 {therapy.drug}
                               </h4>
@@ -2018,7 +2018,7 @@ export default function ACSPage() {
         <section className="mt-4 mb-8 text-center">
           <button
             onClick={handleSaveSection}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-emerald-300 bg-white text-sm font-medium text-emerald-800 hover:ring-1 hover:ring-emerald-300 hover:shadow-sm transition"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#015d52] bg-white text-sm font-medium text-[#015d52] hover:ring-1 hover:ring-[#015d52] hover:shadow-sm transition"
           >
             <FolderPlus size={16} />
             <span>Сохранить текущий раздел в «Мои гайды»</span>
