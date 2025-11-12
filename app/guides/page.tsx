@@ -452,7 +452,10 @@ export default function ACSPage() {
               maintenance: '10 мг/сут (5 мг при массе <60 кг)',
               duration: '12 месяцев',
               advantages: ['Мощный эффект', 'Меньше одышки'],
-              disadvantages: ['Противопоказан при инсульте/ТИА', 'Больше кровотечений'],
+              disadvantages: [
+                'Противопоказан при инсульте/ТИА',
+                'Больше кровотечений',
+              ],
               class: 'I' as RecommendationClass,
               level: 'B' as EvidenceLevel,
               evidenceText:
@@ -464,7 +467,11 @@ export default function ACSPage() {
               maintenance: '75 мг/сут',
               duration: '12 месяцев',
               advantages: ['Хорошая переносимость', 'Низкий риск кровотечений'],
-              disadvantages: ['Медленное начало', 'Вариабельный ответ', 'Взаимодействие с ИПП'],
+              disadvantages: [
+                'Медленное начало',
+                'Вариабельный ответ',
+                'Взаимодействие с ИПП',
+              ],
               class: 'I' as RecommendationClass,
               level: 'B' as EvidenceLevel,
               evidenceText:
@@ -479,7 +486,8 @@ export default function ACSPage() {
         {
           drug: 'Фондапаринукс',
           dose: '2.5 мг п/к 1 раз/сут',
-          indication: 'Предпочтительный антикоагулянт при NSTE-ACS без показаний к срочному ЧКВ',
+          indication:
+            'Предпочтительный антикоагулянт при NSTE-ACS без показаний к срочному ЧКВ',
           notes: 'Не применять при КК <30 мл/мин; при ЧКВ — дополнительно болюс НФГ',
           class: 'I' as RecommendationClass,
           level: 'A' as EvidenceLevel,
@@ -489,7 +497,8 @@ export default function ACSPage() {
         {
           drug: 'Эноксапарин (НМГ)',
           dose: '1 мг/кг п/к каждые 12 ч (при КК <30 мл/мин — 1 мг/кг 1 раз/сут)',
-          indication: 'Альтернатива фондапаринуксу при невозможности его применения',
+          indication:
+            'Альтернатива фондапаринуксу при невозможности его применения',
           notes: 'Требует коррекции дозы при ХБП; учитывать суммарную антикоагуляцию при ЧКВ',
           class: 'I' as RecommendationClass,
           level: 'A' as EvidenceLevel,
@@ -499,7 +508,8 @@ export default function ACSPage() {
         {
           drug: 'Нефракционированный гепарин',
           dose: '60–70 Ед/кг в/в болюс (макс 5000 Ед), затем 12–15 Ед/кг/ч с контролем АЧТВ',
-          indication: 'Пациенты со STEMI/NSTE-ACS при первичном ЧКВ или при ХБП тяжёлой степени',
+          indication:
+            'Пациенты со STEMI/NSTE-ACS при первичном ЧКВ или при ХБП тяжёлой степени',
           notes: 'Контролировать АЧТВ; помнить о риске ГИТ',
           class: 'I' as RecommendationClass,
           level: 'B' as EvidenceLevel,
@@ -527,7 +537,11 @@ export default function ACSPage() {
           {
             method: 'Фибринолиз',
             timing: 'FMC-to-needle ≤10 мин при задержке ЧКВ >120 мин',
-            indications: ['Раннее поступление (<2 ч)', 'Молодой возраст', 'Передне-септальная локализация'],
+            indications: [
+              'Раннее поступление (<2 ч)',
+              'Молодой возраст',
+              'Передне-септальная локализация',
+            ],
             contraindications: [
               'Абсолютные: внутричерепное кровоизлияние, ЗЧМТ, злокачественные опухоли ЦНС',
               'Относительные: тяжелая гипертензия, операция ❤ нед, кровотечения',
@@ -584,7 +598,10 @@ export default function ACSPage() {
             'АВ-блокада II–III ст.',
             'Бронхоспазм',
           ],
-          options: ['Метопролол 25-50 мг 2 раза/сут', 'Бисопролол 2.5-10 мг/сут'],
+          options: [
+            'Метопролол 25-50 мг 2 раза/сут',
+            'Бисопролол 2.5-10 мг/сут',
+          ],
           timing: 'В первые 24 часа при стабильном состоянии',
           class: 'I' as RecommendationClass,
           level: 'A' as EvidenceLevel,
@@ -604,7 +621,11 @@ export default function ACSPage() {
         {
           drug: 'ИАПФ/БРА',
           indication: 'СН, дисфункция ЛЖ (ФВ <40%), диабет, гипертензия',
-          options: ['Рамиприл 2.5-10 мг/сут', 'Периндоприл 2-8 мг/сут', 'Валсартан 80-320 мг/сут'],
+          options: [
+            'Рамиприл 2.5-10 мг/сут',
+            'Периндоприл 2-8 мг/сут',
+            'Валсартан 80-320 мг/сут',
+          ],
           timing: 'В первые 24 часа при стабильном состоянии',
           class: 'I' as RecommendationClass,
           level: 'A' as EvidenceLevel,
@@ -624,10 +645,13 @@ export default function ACSPage() {
         },
         {
           drug: 'SGLT2 ингибиторы',
-          indication: 'СН с ФВ сниженной или умеренно сниженной после ОКС (с/без СД)',
+          indication:
+            'СН с ФВ сниженной или умеренно сниженной после ОКС (с/без СД)',
           options: ['Дапаглифлозин 10 мг/сут', 'Эмпаглифлозин 10 мг/сут'],
           timing: 'После стабилизации гемодинамики и функции почек',
-          contraindications: ['КК <20–25 мл/мин (в зависимости от препарата)'],
+          contraindications: [
+            'КК <20–25 мл/мин (в зависимости от препарата)',
+          ],
           class: 'IIa' as RecommendationClass,
           level: 'A' as EvidenceLevel,
           evidenceText:
@@ -810,7 +834,7 @@ export default function ACSPage() {
 
     return (
       <div className="flex flex-col gap-1 text-sm">
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex items-center gap-2">
           <span
             className={`px-2 py-1 rounded border ${
               cls === 'I'
@@ -1331,11 +1355,12 @@ export default function ACSPage() {
                         className="border border-blue-200 rounded-xl px-4 py-3 text-sm flex flex-col justify-between hover:bg-blue-50 transition"
                       >
                         <span className="font-semibold text-gray-900 mb-1">
-                          GRACE / TIMI-like EU
+                          GRACE / TIMI NSTE-ACS
                         </span>
                         <span className="text-gray-600">
-                          Госпитальная и 6-месячная смертность у пациентов с
-                          NSTE-ACS.
+                          Европейская и американская модификация оценки риска
+                          госпитальной и 6-месячной смертности в одном
+                          калькуляторе.
                         </span>
                       </a>
                       <a
@@ -1343,11 +1368,12 @@ export default function ACSPage() {
                         className="border border-green-200 rounded-xl px-4 py-3 text-sm flex flex-col justify-between hover:bg-green-50 transition"
                       >
                         <span className="font-semibold text-gray-900 mb-1">
-                          HEART / ED risk
+                          HEART / EDACS
                         </span>
                         <span className="text-gray-600">
-                          Быстрая оценка краткосрочного риска МАСЕ в приёмном
-                          отделении.
+                          Быстрая оценка краткосрочного риска MACE в приёмном
+                          отделении, включающая европейский HEART и
+                          международный EDACS.
                         </span>
                       </a>
                       <a
@@ -1355,19 +1381,14 @@ export default function ACSPage() {
                         className="border border-purple-200 rounded-xl px-4 py-3 text-sm flex flex-col justify-between hover:bg-purple-50 transition"
                       >
                         <span className="font-semibold text-gray-900 mb-1">
-                          TIMI для NSTE-ACS / US
+                          TIMI UA/NSTEMI / TRS-2P
                         </span>
                         <span className="text-gray-600">
-                          Стратификация риска осложнений и выбора инвазивной
-                          стратегии.
+                          Стратификация риска осложнений и отдалённого прогноза
+                          у пациентов с NSTE-ACS (ESC + ACC/AHA подходы).
                         </span>
                       </a>
                     </div>
-                    <p className="mt-2 text-xs text-gray-500">
-                      Переход выполняется в раздел «Калькуляторы». При
-                      отсутствии калькулятора на момент просмотра страница может
-                      быть недоступна.
-                    </p>
                   </section>
                 </div>
               )}
@@ -1442,8 +1463,10 @@ export default function ACSPage() {
                             </h3>
                             <p className="text-gray-600">
                               Нагрузка:{' '}
-                              {escGuideline.treatment.antiplateletTherapy[0]
-                                .loading}{' '}
+                              {
+                                escGuideline.treatment.antiplateletTherapy[0]
+                                  .loading
+                              }{' '}
                               • Поддержка:{' '}
                               {
                                 escGuideline.treatment.antiplateletTherapy[0]
@@ -1564,36 +1587,46 @@ export default function ACSPage() {
                     </h2>
                     <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
                       {escGuideline.treatment.anticoagulation.map(
-                        (ac: any, idx: number) => (
-                          <div
-                            key={idx}
-                            className="bg-white rounded-xl p-6 border border-gray-200"
-                          >
-                            <div className="flex flex-col md:items-start gap-4 mb-3">
-                              <h4 className="text-lg font-semibold text-gray-900">
-                                {ac.drug}
-                              </h4>
-                              <RecommendationBadge
-                                rec={{
-                                  class: ac.class,
-                                  level: ac.level,
-                                  evidenceText: ac.evidenceText,
-                                }}
-                              />
-                            </div>
-                            <p className="text-sm text-gray-700 mb-1">
-                              <strong>Показания:</strong> {ac.indication}
-                            </p>
-                            <p className="text-sm text-gray-700 mb-1">
-                              <strong>Дозировка:</strong> {ac.dose}
-                            </p>
-                            {ac.notes && (
-                              <p className="text-sm text-gray-700">
-                                <strong>Особенности:</strong> {ac.notes}
+                        (ac: any, idx: number) => {
+                          const isLongTitle =
+                            ac.drug === 'Нефракционированный гепарин';
+                          return (
+                            <div
+                              key={idx}
+                              className="bg-white rounded-xl p-6 border border-gray-200"
+                            >
+                              <div
+                                className={`flex flex-col ${
+                                  isLongTitle
+                                    ? ''
+                                    : 'md:flex-row md:items-start md:justify-between'
+                                } gap-4 mb-3`}
+                              >
+                                <h4 className="text-lg font-semibold text-gray-900">
+                                  {ac.drug}
+                                </h4>
+                                <RecommendationBadge
+                                  rec={{
+                                    class: ac.class,
+                                    level: ac.level,
+                                    evidenceText: ac.evidenceText,
+                                  }}
+                                />
+                              </div>
+                              <p className="text-sm text-gray-700 mb-1">
+                                <strong>Показания:</strong> {ac.indication}
                               </p>
-                            )}
-                          </div>
-                        )
+                              <p className="text-sm text-gray-700 mb-1">
+                                <strong>Дозировка:</strong> {ac.dose}
+                              </p>
+                              {ac.notes && (
+                                <p className="text-sm text-gray-700">
+                                  <strong>Особенности:</strong> {ac.notes}
+                                </p>
+                              )}
+                            </div>
+                          );
+                        }
                       )}
                     </div>
                   </section>
@@ -1701,59 +1734,71 @@ export default function ACSPage() {
 
                     <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
                       {escGuideline.treatment.adjunctiveTherapy.map(
-                        (therapy: any, idx: number) => (
-                          <div
-                            key={idx}
-                            className="bg-purple-50 rounded-xl p-6 border border-purple-200"
-                          >
-                            <div className="flex flex-col md:items-start gap-4 mb-4">
-                              <h4 className="text-lg font-semibold text-gray-900">
-                                {therapy.drug}
-                              </h4>
-                              <RecommendationBadge
-                                rec={{
-                                  class: therapy.class,
-                                  level: therapy.level,
-                                  evidenceText: therapy.evidenceText,
-                                }}
-                              />
+                        (therapy: any, idx: number) => {
+                          const isLongTitle =
+                            therapy.drug ===
+                            'Антагонисты минералокортикоидных рецепторов';
+                          return (
+                            <div
+                              key={idx}
+                              className="bg-purple-50 rounded-xl p-6 border border-purple-200"
+                            >
+                              <div
+                                className={`flex flex-col ${
+                                  isLongTitle
+                                    ? ''
+                                    : 'md:flex-row md:items-start md:justify-between'
+                                } gap-4 mb-4`}
+                              >
+                                <h4 className="text-lg font-semibold text-gray-900">
+                                  {therapy.drug}
+                                </h4>
+                                <RecommendationBadge
+                                  rec={{
+                                    class: therapy.class,
+                                    level: therapy.level,
+                                    evidenceText: therapy.evidenceText,
+                                  }}
+                                />
+                              </div>
+                              <p className="text-gray-700 mb-2">
+                                <strong>Показания:</strong>{' '}
+                                {therapy.indication}
+                              </p>
+                              <p className="text-gray-700 mb-2">
+                                <strong>Тайминг:</strong> {therapy.timing}
+                              </p>
+                              {therapy.options && (
+                                <div className="mt-2">
+                                  <p className="font-medium text-sm mb-1">
+                                    Препараты:
+                                  </p>
+                                  <ul className="text-sm text-gray-700 space-y-1">
+                                    {therapy.options.map(
+                                      (opt: string, i: number) => (
+                                        <li key={i}>• {opt}</li>
+                                      )
+                                    )}
+                                  </ul>
+                                </div>
+                              )}
+                              {therapy.contraindications && (
+                                <div className="mt-2">
+                                  <p className="font-medium text-sm mb-1">
+                                    Противопоказания:
+                                  </p>
+                                  <ul className="text-sm text-gray-700 space-y-1">
+                                    {therapy.contraindications.map(
+                                      (contra: string, i: number) => (
+                                        <li key={i}>• {contra}</li>
+                                      )
+                                    )}
+                                  </ul>
+                                </div>
+                              )}
                             </div>
-                            <p className="text-gray-700 mb-2">
-                              <strong>Показания:</strong> {therapy.indication}
-                            </p>
-                            <p className="text-gray-700 mb-2">
-                              <strong>Тайминг:</strong> {therapy.timing}
-                            </p>
-                            {therapy.options && (
-                              <div className="mt-2">
-                                <p className="font-medium text-sm mb-1">
-                                  Препараты:
-                                </p>
-                                <ul className="text-sm text-gray-700 space-y-1">
-                                  {therapy.options.map(
-                                    (opt: string, i: number) => (
-                                      <li key={i}>• {opt}</li>
-                                    )
-                                  )}
-                                </ul>
-                              </div>
-                            )}
-                            {therapy.contraindications && (
-                              <div className="mt-2">
-                                <p className="font-medium text-sm mb-1">
-                                  Противопоказания:
-                                </p>
-                                <ul className="text-sm text-gray-700 space-y-1">
-                                  {therapy.contraindications.map(
-                                    (contra: string, i: number) => (
-                                      <li key={i}>• {contra}</li>
-                                    )
-                                  )}
-                                </ul>
-                              </div>
-                            )}
-                          </div>
-                        )
+                          );
+                        }
                       )}
                     </div>
                   </section>
@@ -2044,3 +2089,4 @@ export default function ACSPage() {
     </main>
   );
 }
+
