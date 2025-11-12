@@ -75,10 +75,14 @@ export default function Header() {
                   <Link
                     href={item.href}
                     className={`inline-flex flex-col items-center transition-all duration-300 ${
-                      isActive
-                        ? 'text-[32px] font-black text-[#01463d] leading-none'
+                      isActive && !isNovoje
+                        ? 'text-[26px] font-semibold text-[#01463d] leading-none'
+                        : isActive && isNovoje
+                        ? 'text-[26px] font-semibold text-[#e6a800] leading-none'
+                        : isNovoje
+                        ? 'text-[18px] font-medium text-[#e6a800]'
                         : 'text-[18px] font-medium text-[#4b3b2f] hover:text-[#015d52]'
-                    } ${isNovoje && !isActive ? 'text-[#e6a800]' : ''}`}
+                    }`}
                   >
                     <span className="relative z-10">{item.name}</span>
                     
@@ -86,10 +90,10 @@ export default function Header() {
                     <span
                       className={`mt-1 h-0.5 w-full origin-left transition-all duration-300 ${
                         isActive
-                          ? 'scale-x-100 bg-[#01463d]'
+                          ? 'scale-x-100'
                           : 'scale-x-0 group-hover:scale-x-100'
                       } ${
-                        isNovoje && !isActive ? 'bg-[#facc15]' : 'bg-[#015d52]'
+                        isNovoje ? 'bg-[#facc15]' : 'bg-[#015d52]'
                       }`}
                     />
                   </Link>
@@ -162,11 +166,13 @@ export default function Header() {
                     key={item.name}
                     href={item.href}
                     className={`block w-full text-left py-3 px-4 transition-all duration-200 ${
-                      isActive
-                        ? 'text-[26px] font-black text-[#01463d]'
-                        : isNovoje 
-                          ? 'text-[#e6a800] hover:bg-[#facc15]/5'
-                          : 'text-[18px] text-[#4b3b2f] hover:bg-gray-50'
+                      isActive && !isNovoje
+                        ? 'text-[22px] font-semibold text-[#01463d]'
+                        : isActive && isNovoje
+                        ? 'text-[22px] font-semibold text-[#e6a800]'
+                        : isNovoje
+                        ? 'text-[#e6a800] hover:bg-[#facc15]/5'
+                        : 'text-[18px] text-[#4b3b2f] hover:bg-gray-50'
                     } rounded-lg border border-gray-100`}
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
