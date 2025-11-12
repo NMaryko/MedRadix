@@ -1,5 +1,5 @@
-// app/guides/acs/page.tsx — ОКС (финал «код-окс»)
-// 'use client' + Next.js. Без framer-motion. Все правки по ТЗ включены.
+// app/guides/acs/page.tsx — ОКС (финал «код-окс», правки мобильных фильтров и большого абзаца)
+// 'use client' + Next.js. Без framer-motion. Селекты: большие тач-таргеты, мобильный порядок.
 
 'use client';
 
@@ -30,7 +30,6 @@ const SPECIALTIES: string[] = [
   'Анестезиология и реаниматология',
   'Гастроэнтерология',
   'Гематология',
-  'Гериатрия',
   'Дерматология',
   'Инфекционные болезни',
   'Кардиология',
@@ -42,6 +41,7 @@ const SPECIALTIES: string[] = [
   'Пульмонология',
   'Психиатрия',
   'Ревматология',
+  'Стоматология',
   'Терапия',
   'Травматология и ортопедия',
   'Урология',
@@ -238,7 +238,7 @@ export default function ACSPage() {
       ],
     },
 
-    // ЛЕЧЕНИЕ (будет продолжено в Part 2)
+    // ЛЕЧЕНИЕ (продолжение в Part 2)
     treatment: {
       generalMeasures: [
         {
@@ -647,7 +647,7 @@ export default function ACSPage() {
                   <select
                     value={selectedSpecialty}
                     onChange={(e) => setSelectedSpecialty(e.target.value)}
-                    className="rounded-full border border-[#d3cec4] bg-white px-4 py-3 md:py-1.5 text-sm text-[#3b342d] shadow-sm focus:outline-none focus:border-[#015d52] w-full lg:w-[230px] min-h-[44px]"
+                    className="rounded-full border border-[#d3cec4] bg-white px-4 h-12 min-h-[48px] text-base text-[#3b342d] shadow-sm focus:outline-none focus:border-[#015d52] w-full lg:w-[230px]"
                   >
                     {SPECIALTIES.map((spec) => (
                       <option key={spec} value={spec}>{spec}</option>
@@ -671,7 +671,7 @@ export default function ACSPage() {
                   <select
                     value={selectedNosology}
                     onChange={(e) => setSelectedNosology(e.target.value)}
-                    className="rounded-full border border-[#d3cec4] bg-white px-4 py-3 md:py-1.5 text-sm text-[#3b342d] shadow-sm focus:outline-none focus:border-[#015d52] w-full lg:w-[230px] min-h-[44px]"
+                    className="rounded-full border border-[#d3cec4] bg-white px-4 h-12 min-h-[48px] text-base text-[#3b342d] shadow-sm focus:outline-none focus:border-[#015d52] w-full lg:w-[230px]"
                   >
                     {Object.entries(groupedCardiologyNosologies).map(([groupName, items]) => (
                       <optgroup key={groupName} label={groupName}>
@@ -993,7 +993,7 @@ export default function ACSPage() {
                   </section>
                 </div>
               )}
-                            {/* ЛЕЧЕНИЕ */}
+                             {/* ЛЕЧЕНИЕ */}
               {selectedTab === 'treatment' && (
                 <div className="space-y-12">
                   {/* Общие мероприятия */}
@@ -1319,6 +1319,10 @@ export default function ACSPage() {
                 При принятии клинических решений всегда следуйте официальным руководствам и локальным протоколам вашего учреждения.
                 Авторы не несут ответственности за использование представленной информации в клинической практике.
               </p>
+
+              {/* ОЧЕНЬ БОЛЬШОЙ «АБЗАЦ» — визуальный зазор перед e-mail */}
+              <div className="h-[800px]" aria-hidden="true"></div>
+
               <p className="text-lg font-medium text-gray-900">support@medradix.info</p>
             </section>
           </div>
@@ -1327,3 +1331,4 @@ export default function ACSPage() {
     </main>
   );
 }
+   
