@@ -1,4 +1,4 @@
-// app/page.tsx - ИСПРАВЛЕНА ШАХМАТКА
+// app/page.tsx - ИСПРАВЛЕНА ШАХМАТКА, СВЕЧЕНИЕ ТОЛЬКО ПРИ HOVER
 'use client';
 
 import { useState } from 'react';
@@ -90,37 +90,43 @@ const SECTIONS: SectionConfig[] = [
   {
     id: 'news',
     title: 'Новое',
-    description: 'Обновления по версиям гайдлайнов, свежим исследованиям и материалам, появляющимся на сайте MedRadix. Новые материалы помечены янтарной линией, которая показывает добавления за последние 14 дней. Для раздела «Гайды» новости остаются в Новом до 60 дней.',
+    description:
+      'Обновления по версиям гайдлайнов, свежим исследованиям и материалам, появляющимся на сайте MedRadix. Новые материалы помечены янтарной линией, которая показывает добавления за последние 14 дней. Для раздела «Гайды» новости остаются в Новом до 60 дней.',
     href: '/news',
   },
   {
     id: 'guides',
     title: 'Гайды',
-    description: 'Европейские клинические рекомендации, сопоставленные с американскими гайдлайнами, с регулярным обновлением версий и ключевых изменений.',
+    description:
+      'Европейские клинические рекомендации, сопоставленные с американскими гайдлайнами, с регулярным обновлением версий и ключевых изменений.',
     href: '/guides',
   },
   {
     id: 'articles',
     title: 'Статьи',
-    description: 'Самые свежие исследования из ключевых медицинских журналов мира, краткие выводы, цифры и ссылки на оригиналы.',
+    description:
+      'Самые свежие исследования из ключевых медицинских журналов мира, краткие выводы, цифры и ссылки на оригиналы.',
     href: '/articles',
   },
   {
     id: 'experts',
     title: 'Голос эксперта',
-    description: 'Комментарии ведущих специалистов по ключевым исследованиям и рекомендациям, со ссылками на оригиналы.',
+    description:
+      'Комментарии ведущих специалистов по ключевым исследованиям и рекомендациям, со ссылками на оригиналы.',
     href: '/experts',
   },
   {
     id: 'courses',
     title: 'Курсы',
-    description: 'Собраны бесплатные российские и зарубежные программы, дающие международные баллы (CME/НМО).',
+    description:
+      'Собраны бесплатные российские и зарубежные программы, дающие международные баллы (CME/НМО).',
     href: '/courses',
   },
   {
     id: 'calculators',
     title: 'Калькуляторы',
-    description: 'Достаточно один раз ввести данные, чтобы получить параллельные расчёты по европейским и американским стандартам.',
+    description:
+      'Достаточно один раз ввести данные, чтобы получить параллельные расчёты по европейским и американским стандартам.',
     href: '/calculators',
   },
   {
@@ -132,29 +138,41 @@ const SECTIONS: SectionConfig[] = [
   {
     id: 'nurses',
     title: 'Медсестрам',
-    description: 'Раздел с редкими обучающими материалами, где можно получить бесплатные кредиты за прохождение.',
+    description:
+      'Раздел с редкими обучающими материалами, где можно получить бесплатные кредиты за прохождение.',
     href: '/nurses',
   },
   {
     id: 'folders',
     title: 'Папки',
-    description: 'Сохранение сертификатов и файлов в личном кабинете с автоматическим подсчётом баллов (CME/НМО).',
+    description:
+      'Сохранение сертификатов и файлов в личном кабинете с автоматическим подсчётом баллов (CME/НМО).',
     href: '/folders',
   },
 ];
 
 function getSectionIcon(id: SectionId) {
   switch (id) {
-    case 'news': return FileText;
-    case 'guides': return BookOpen;
-    case 'articles': return PenSquare;
-    case 'experts': return Mic;
-    case 'courses': return GraduationCap;
-    case 'calculators': return Calculator;
-    case 'drugs': return Pill;
-    case 'nurses': return Syringe;
-    case 'folders': return FolderOpen;
-    default: return FileText;
+    case 'news':
+      return FileText;
+    case 'guides':
+      return BookOpen;
+    case 'articles':
+      return PenSquare;
+    case 'experts':
+      return Mic;
+    case 'courses':
+      return GraduationCap;
+    case 'calculators':
+      return Calculator;
+    case 'drugs':
+      return Pill;
+    case 'nurses':
+      return Syringe;
+    case 'folders':
+      return FolderOpen;
+    default:
+      return FileText;
   }
 }
 
@@ -168,7 +186,6 @@ export default function HomePage() {
       <section className="border-b border-gray-200">
         <div className="max-w-[1360px] mx-auto px-4 pt-4 pb-4">
           <div className="flex flex-col lg:flex-row items-center gap-4 lg:gap-0">
-            
             {/* Чип - сверху на мобильных, слева на десктопе */}
             <div className="flex-1 flex justify-start order-2 lg:order-1 w-full lg:w-auto">
               <button className="px-5 py-1.5 text-xs font-medium rounded-full border border-[#b6b6c0] bg-white shadow-sm w-full lg:w-auto text-center">
@@ -198,7 +215,9 @@ export default function HomePage() {
                   className="rounded-full border border-[#d3cec4] bg-white px-4 py-1.5 text-sm text-[#3b342d] shadow-sm focus:outline-none focus:border-[#015d52] w-full lg:w-[190px]"
                 >
                   {SPECIALTIES.map((spec) => (
-                    <option key={spec} value={spec}>{spec}</option>
+                    <option key={spec} value={spec}>
+                      {spec}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -230,25 +249,32 @@ export default function HomePage() {
         </ul>
       </section>
 
-      {/* Шахматка разделов - ИСПРАВЛЕНА ЧЕРЕДОВАНИЕМ */}
+      {/* Шахматка разделов */}
       <section className="border-t border-gray-200 bg-[#f8f4ee]/80">
         <div className="max-w-[1360px] mx-auto px-4 py-12 lg:py-16 space-y-8 lg:space-y-10">
           {SECTIONS.map((section, index) => {
             const Icon = getSectionIcon(section.id);
             const isOdd = (index + 1) % 2 === 1;
             const isNews = section.id === 'news';
+
             const textColorTitle = isNews ? 'text-[#e68a00]' : 'text-[#3b2b22]';
-            const haloBase = isNews ? 'bg-[#f59e0b33]' : 'bg-[#015d5230]';
+            // БАЗА: без свечения, halo появляется только при hover
+            const haloHover = isNews
+              ? 'group-hover:bg-[#f59e0b33]'
+              : 'group-hover:bg-[#015d5230]';
             const circleBase = isNews ? 'bg-[#f59e0b]' : 'bg-[#015d52]';
 
             return (
               <a key={section.id} href={section.href} className="block group">
                 <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-10 rounded-3xl bg-white/80 px-6 lg:px-10 py-6 lg:py-8 shadow-[0_10px_25px_rgba(0,0,0,0.04)] transition-all duration-300 group-hover:shadow-[0_16px_40px_rgba(0,0,0,0.12)] group-hover:-translate-y-0.5">
-                  
-                  {/* Мобильная версия: всегда иконка сверху, текст снизу */}
+                  {/* Мобильная версия: иконка сверху */}
                   <div className="lg:hidden w-full text-center">
-                    <div className={`relative rounded-full p-3 ${haloBase} transition-all duration-300 group-hover:scale-110 group-hover:bg-opacity-70 mx-auto w-fit`}>
-                      <div className={`flex h-14 w-14 items-center justify-center rounded-full ${circleBase} text-white`}>
+                    <div
+                      className={`relative rounded-full p-3 bg-transparent transition-all duration-300 group-hover:scale-110 ${haloHover} mx-auto w-fit`}
+                    >
+                      <div
+                        className={`flex h-14 w-14 items-center justify-center rounded-full ${circleBase} text-white`}
+                      >
                         <Icon className="h-7 w-7" />
                       </div>
                     </div>
@@ -260,14 +286,18 @@ export default function HomePage() {
                     </p>
                   </div>
 
-                  {/* Десктоп версия: ЧЕРЕДУЮЩАЯСЯ ШАХМАТКА */}
+                  {/* Десктоп: шахматка */}
                   <div className="hidden lg:flex items-center gap-10 w-full">
                     {isOdd ? (
-                      // Нечетные: иконка СЛЕВА, текст СПРАВА
                       <>
+                        {/* Нечётные: иконка слева */}
                         <div className="flex-none flex justify-start">
-                          <div className={`relative rounded-full p-3 ${haloBase} transition-all duration-300 group-hover:scale-110 group-hover:bg-opacity-70`}>
-                            <div className={`flex h-16 w-16 items-center justify-center rounded-full ${circleBase} text-white`}>
+                          <div
+                            className={`relative rounded-full p-3 bg-transparent transition-all duration-300 group-hover:scale-110 ${haloHover}`}
+                          >
+                            <div
+                              className={`flex h-16 w-16 items-center justify-center rounded-full ${circleBase} text-white`}
+                            >
                               <Icon className="h-8 w-8" />
                             </div>
                           </div>
@@ -282,8 +312,8 @@ export default function HomePage() {
                         </div>
                       </>
                     ) : (
-                      // Четные: текст СЛЕВА, иконка СПРАВА
                       <>
+                        {/* Чётные: текст слева, иконка справа */}
                         <div className="flex-1 text-right">
                           <h3 className={`${textColorTitle} text-3xl font-semibold mb-3`}>
                             {section.title}
@@ -293,8 +323,12 @@ export default function HomePage() {
                           </p>
                         </div>
                         <div className="flex-none flex justify-end">
-                          <div className={`relative rounded-full p-3 ${haloBase} transition-all duration-300 group-hover:scale-110 group-hover:bg-opacity-70`}>
-                            <div className={`flex h-16 w-16 items-center justify-center rounded-full ${circleBase} text-white`}>
+                          <div
+                            className={`relative rounded-full p-3 bg-transparent transition-all duration-300 group-hover:scale-110 ${haloHover}`}
+                          >
+                            <div
+                              className={`flex h-16 w-16 items-center justify-center rounded-full ${circleBase} text-white`}
+                            >
                               <Icon className="h-8 w-8" />
                             </div>
                           </div>
@@ -309,7 +343,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CTA - АДАПТИВНЫЙ */}
+      {/* CTA */}
       <section className="border-t border-gray-200">
         <div className="max-w-[1360px] mx-auto px-4 py-12 lg:py-16 text-center">
           <button className="inline-flex items-center justify-center rounded-full bg-[#015d52] px-8 lg:px-10 py-3 text-base lg:text-lg font-semibold text-white shadow-md hover:bg-[#01463d] hover:shadow-lg transition-colors w-full lg:w-auto">
@@ -326,3 +360,4 @@ export default function HomePage() {
     </main>
   );
 }
+
