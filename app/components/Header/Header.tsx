@@ -3,38 +3,49 @@
 
 import { useState } from 'react';
 import { Search, User, Menu, X } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 const MENU_ITEMS = [
-  'Новое',
-  'Гайды',
-  'Статьи',
-  'Голос эксперта', 
-  'Курсы',
-  'Калькуляторы',
-  'Лекарства',
-  'Медсестрам',
+  { name: 'Новое', href: '/news' },
+  { name: 'Гайды', href: '/guides' },
+  { name: 'Статьи', href: '/articles' },
+  { name: 'Голос эксперта', href: '/experts' },
+  { name: 'Курсы', href: '/courses' },
+  { name: 'Калькуляторы', href: '/calculators' },
+  { name: 'Лекарства', href: '/drugs' },
+  { name: 'Медсестрам', href: '/nurses' },
 ];
 
 export default function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeLang, setActiveLang] = useState<'RU' | 'EN'>('RU');
-  const [activeMenuItem, setActiveMenuItem] = useState<string | null>(null);
+  const pathname = usePathname();
+
+  // Определяем активный раздел по текущему пути
+  const getActiveMenuItem = () => {
+    if (pathname === '/') return null;
+    const item = MENU_ITEMS.find(item => pathname.startsWith(item.href));
+    return item?.name || null;
+  };
+
+  const activeMenuItem = getActiveMenuItem();
 
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-gray-200">
       {/* Основная шапка */}
       <div className="max-w-[1360px] mx-auto px-4 py-3 flex items-center justify-between">
         
-        {/* Логотип */}
-        <div className="flex flex-col">
+        {/* Логотип - ссылка на главную */}
+        <Link href="/" className="flex flex-col hover:opacity-80 transition-opacity">
           <span className="text-2xl font-semibold text-[#2b2115]">
             MedRadix
           </span>
           <span className="text-xs text-[#7a6a55] italic mt-[-2px]">
             Scientia pro vita
           </span>
-        </div>
+        </Link>
 
         {/* Гамбургер для мобильных */}
         <button
@@ -48,31 +59,40 @@ export default function Header() {
         <nav className="hidden lg:flex flex-1 justify-center">
           <ul className="flex items-center space-x-7">
             {MENU_ITEMS.map((item) => {
-              const isActive = activeMenuItem === item;
-              const isNovoje = item === 'Новое';
+              const isActive = activeMenuItem === item.name;
+              const isNovoje = item.name === 'Новое';
 
               return (
-                <li key={item} className="relative group">
-                  <button
-                    type="button"
-                    onClick={() => setActiveMenuItem(item)}
-                    className={`inline-flex flex-col items-center font-medium transition-all duration-200 ${
+                <li key={item.name} className="relative group">
+                  <Link
+                    href={item.href}
+                    className={`inline-flex flex-col items-center font-medium transition-all duration-300 ${
                       isActive
-                        ? 'text-[20px] scale-105'
-                        : 'text-lg'
-                    } ${
-                      isNovoje
-                        ? 'text-[#e6a800]'
-                        : 'text-[#4b3b2f] hover:text-[#015d52]'
-                    }`}
+                        ? 'text-[22px] font-bold text-[#01463d] scale-110'
+                        : 'text-lg text-[#4b3b2f] hover:text-[#015d52]'
+                    } ${isNovoje && !isActive ? 'text-[#e6a800]' : ''}`}
                   >
-                    <span>{item}</span>
+                    {/* Эффект "под лупой" для активного элемента */}
+                    {isActive && (
+                      <div className="absolute inset-0 -z-10 flex items-center justify-center">
+                        <div className="absolute w-16 h-16 bg-[#015d52]/10 rounded-full blur-md scale-150" />
+                        <div className="absolute w-12 h-12 bg-[#015d52]/5 rounded-full blur-sm scale-125" />
+                      </div>
+                    )}
+                    
+                    <span className="relative z-10">{item.name}</span>
+                    
+                    {/* Подчеркивание */}
                     <span
-                      className={`mt-1 h-0.5 w-full origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ${
-                        isNovoje ? 'bg-[#facc15]' : 'bg-[#015d52]'
+                      className={`mt-1 h-0.5 w-full origin-left transition-all duration-300 ${
+                        isActive
+                          ? 'scale-x-100 bg-[#01463d]'
+                          : 'scale-x-0 group-hover:scale-x-100'
+                      } ${
+                        isNovoje && !isActive ? 'bg-[#facc15]' : 'bg-[#015d52]'
                       }`}
                     />
-                  </button>
+                  </Link>
                 </li>
               );
             })}
@@ -134,21 +154,24 @@ export default function Header() {
           <div className="max-w-[1360px] mx-auto px-4 py-4">
             <nav className="space-y-3">
               {MENU_ITEMS.map((item) => {
-                const isNovoje = item === 'Новое';
+                const isActive = activeMenuItem === item.name;
+                const isNovoje = item.name === 'Новое';
+                
                 return (
-                  <button
-                    key={item}
-                    type="button"
-                    className={`block w-full text-left py-3 px-4 text-lg font-medium ${
-                      isNovoje ? 'text-[#e6a800]' : 'text-[#4b3b2f]'
-                    } hover:bg-gray-50 rounded-lg border border-gray-100`}
-                    onClick={() => {
-                      setActiveMenuItem(item);
-                      setIsMobileMenuOpen(false);
-                    }}
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className={`block w-full text-left py-3 px-4 text-lg font-medium transition-all duration-200 ${
+                      isActive
+                        ? 'text-[20px] font-bold text-[#01463d] bg-[#015d52]/5 border-[#015d52]'
+                        : isNovoje 
+                          ? 'text-[#e6a800] hover:bg-[#facc15]/5'
+                          : 'text-[#4b3b2f] hover:bg-gray-50'
+                    } rounded-lg border`}
+                    onClick={() => setIsMobileMenuOpen(false)}
                   >
-                    {item}
-                  </button>
+                    {item.name}
+                  </Link>
                 );
               })}
             </nav>
@@ -173,4 +196,5 @@ export default function Header() {
     </header>
   );
 }
+
 
