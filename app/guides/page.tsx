@@ -46,7 +46,7 @@ const SPECIALTIES: string[] = [
   'Эндокринология',
 ];
 
-const CARDIOLOGY_NOSOLOGIES: string[] = [
+const CARDIOLOGY_NOSOLOGIES: Nosology[] = [
   { id: 'acs', label: 'Острый коронарный синдром (ОКС)' },
   { id: 'chronic-ihd', label: 'Хроническая ишемическая болезнь сердца' },
   { id: 'stable-angina', label: 'Стабильная стенокардия' },
