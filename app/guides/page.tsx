@@ -169,7 +169,8 @@ export default function ACSPage() {
     version: 'ESC 2023-2024',
     sources: {
       nsteacs: 'https://academic.oup.com/eurheartj/article/44/38/3720/7235365',
-      stemi: 'https://academic.oup.com/eurheartj/advance-article/doi/10.1093/eurheartj/ehae170/7649113',
+      stemi:
+        'https://academic.oup.com/eurheartj/advance-article/doi/10.1093/eurheartj/ehae170/7649113',
       us: '#',
       full: 'https://www.escardio.org/Guidelines/Clinical-Practice-Guidelines',
     },
@@ -244,7 +245,10 @@ export default function ACSPage() {
         nstemi: [
           {
             criteria: 'ST-депрессия',
-            details: ['≥0.5 мм в ≥2 смежных отведениях', 'Горизонтальная или косонисходящая'],
+            details: [
+              '≥0.5 мм в ≥2 смежных отведениях',
+              'Горизонтальная или косонисходящая',
+            ],
             class: 'I' as RecommendationClass,
             level: 'B' as EvidenceLevel,
             evidenceText:
@@ -252,7 +256,10 @@ export default function ACSPage() {
           },
           {
             criteria: 'Инверсия зубца T',
-            details: ['≥1 мм в отведениях с доминирующим R', 'Глубокая симметричная инверсия'],
+            details: [
+              '≥1 мм в отведениях с доминирующим R',
+              'Глубокая симметричная инверсия',
+            ],
             class: 'I' as RecommendationClass,
             level: 'B' as EvidenceLevel,
             evidenceText:
@@ -318,8 +325,18 @@ export default function ACSPage() {
             'Класс I - Рекомендуется/Показано; Уровень B - Одно РКИ или крупные нерандомизированные исследования',
         },
         hematics: {
-          parameters: ['Возраст', 'Уровень тропонина', 'ЭКГ изменения', 'Факторы риска', 'Повторяемость боли'],
-          scores: ['Очень низкий риск: 0-2 балла', 'Низкий риск: 3-5 баллов', 'Высокий риск: ≥6 баллов'],
+          parameters: [
+            'Возраст',
+            'Уровень тропонина',
+            'ЭКГ изменения',
+            'Факторы риска',
+            'Повторяемость боли',
+          ],
+          scores: [
+            'Очень низкий риск: 0-2 балла',
+            'Низкий риск: 3-5 баллов',
+            'Высокий риск: ≥6 баллов',
+          ],
           class: 'I' as RecommendationClass,
           level: 'B' as EvidenceLevel,
           evidenceText:
@@ -339,7 +356,12 @@ export default function ACSPage() {
         },
         {
           condition: 'ТЭЛА',
-          features: ['Внезапная одышка', 'Гипоксия', 'Правосторонняя перегрузка на ЭКГ', 'Повышение D-димера'],
+          features: [
+            'Внезапная одышка',
+            'Гипоксия',
+            'Правосторонняя перегрузка на ЭКГ',
+            'Повышение D-димера',
+          ],
         },
         {
           condition: 'Расслоение аорты',
@@ -369,7 +391,10 @@ export default function ACSPage() {
           measure: 'Обезболивание',
           indication: 'Боль умеренной-сильной интенсивности',
           dose: 'Морфин 2-4 мг в/в болюс + титрация; при непереносимости — фентанил 25-50 мкг в/в',
-          options: ['Морфин 2-4 мг в/в + метоклопрамид 10 мг', 'При непереносимости: фентанил 25-50 мкг'],
+          options: [
+            'Морфин 2-4 мг в/в + метоклопрамид 10 мг',
+            'При непереносимости: фентанил 25-50 мкг',
+          ],
           class: 'I' as RecommendationClass,
           level: 'C' as EvidenceLevel,
           evidenceText:
@@ -378,7 +403,11 @@ export default function ACSPage() {
         {
           measure: 'Нитроглицерин',
           indication: 'Персистирующая боль, СН, гипертензия',
-          contraindications: ['САД <90 мм рт.ст.', 'Прием ингибиторов ФДЭ-5', 'Выраженная брадикардия'],
+          contraindications: [
+            'САД <90 мм рт.ст.',
+            'Прием ингибиторов ФДЭ-5',
+            'Выраженная брадикардия',
+          ],
           dose: '0.3-0.6 мг сублингвально или 5-10 мкг/мин в/в',
           class: 'I' as RecommendationClass,
           level: 'C' as EvidenceLevel,
@@ -407,7 +436,11 @@ export default function ACSPage() {
               maintenance: '90 мг 2 раза/сут',
               duration: '12 месяцев',
               advantages: ['Быстрое начало действия', 'Обратимое связывание'],
-              disadvantages: ['Одышка (10-15%)', 'Кровотечения', 'Взаимодействие с сильными ингибиторами CYP3A4'],
+              disadvantages: [
+                'Одышка (10-15%)',
+                'Кровотечения',
+                'Взаимодействие с сильными ингибиторами CYP3A4',
+              ],
               class: 'I' as RecommendationClass,
               level: 'A' as EvidenceLevel,
               evidenceText:
@@ -481,7 +514,11 @@ export default function ACSPage() {
             method: 'Первичное ЧКВ',
             timing: 'FMC-to-device ≤120 мин, door-to-balloon ≤90 мин',
             indications: ['Всем пациентам с STEMI при доступности в сроки'],
-            results: ['Снижение смертности на 25-50%', 'Уменьшение размеров ИМ', 'Снижение частоты СН'],
+            results: [
+              'Снижение смертности на 25-50%',
+              'Уменьшение размеров ИМ',
+              'Снижение частоты СН',
+            ],
             class: 'I' as RecommendationClass,
             level: 'A' as EvidenceLevel,
             evidenceText:
@@ -523,7 +560,12 @@ export default function ACSPage() {
           },
           {
             strategy: 'Отсроченная инвазивная (25-72 ч)',
-            indications: ['Диабет', 'Почечная недостаточность', 'Снижение ФВ ЛЖ', 'Ранняя постинфарктная стенокардия'],
+            indications: [
+              'Диабет',
+              'Почечная недостаточность',
+              'Снижение ФВ ЛЖ',
+              'Ранняя постинфарктная стенокардия',
+            ],
             class: 'I' as RecommendationClass,
             level: 'A' as EvidenceLevel,
             evidenceText:
@@ -536,7 +578,12 @@ export default function ACSPage() {
         {
           drug: 'Бета-блокаторы',
           indication: 'Тахикардия, гипертензия, сохраненная функция ЛЖ',
-          contraindications: ['Острая декомпенсация СН', 'Выраженная брадикардия', 'АВ-блокада II–III ст.', 'Бронхоспазм'],
+          contraindications: [
+            'Острая декомпенсация СН',
+            'Выраженная брадикардия',
+            'АВ-блокада II–III ст.',
+            'Бронхоспазм',
+          ],
           options: ['Метопролол 25-50 мг 2 раза/сут', 'Бисопролол 2.5-10 мг/сут'],
           timing: 'В первые 24 часа при стабильном состоянии',
           class: 'I' as RecommendationClass,
@@ -664,7 +711,11 @@ export default function ACSPage() {
         {
           area: 'Курение',
           recommendation: 'Полное прекращение',
-          interventions: ['Консультирование', 'Никотин-заместительная терапия', 'Варениклин/бупропион'],
+          interventions: [
+            'Консультирование',
+            'Никотин-заместительная терапия',
+            'Варениклин/бупропион',
+          ],
           class: 'I' as RecommendationClass,
           level: 'B' as EvidenceLevel,
           evidenceText:
@@ -686,7 +737,8 @@ export default function ACSPage() {
         },
         {
           area: 'Физическая активность',
-          recommendation: '150 мин/неделю умеренной или 75 мин/неделю интенсивной нагрузки',
+          recommendation:
+            '150 мин/неделю умеренной или 75 мин/неделю интенсивной нагрузки',
           progression: 'Постепенное увеличение под контролем',
           class: 'I' as RecommendationClass,
           level: 'A' as EvidenceLevel,
@@ -698,7 +750,8 @@ export default function ACSPage() {
 
     // СРАВНЕНИЕ С US
     comparison: {
-      title: 'Сравнение Европейских (ESC 2023-2024) и Американских (ACC/AHA 2025) рекомендаций',
+      title:
+        'Сравнение Европейских (ESC 2023-2024) и Американских (ACC/AHA 2025) рекомендаций',
       keyDifferences: [
         {
           aspect: 'Дозировка аспирина',
@@ -829,10 +882,7 @@ export default function ACSPage() {
                       ([groupName, items]) => (
                         <optgroup key={groupName} label={groupName}>
                           {items.map((nosology) => (
-                            <option
-                              key={nosology.id}
-                              value={nosology.label}
-                            >
+                            <option key={nosology.id} value={nosology.label}>
                               {nosology.label}
                             </option>
                           ))}
@@ -855,7 +905,7 @@ export default function ACSPage() {
 
               {/* Специальность */}
               <div className="flex-1 flex justify-end order-3 w-full lg:w-auto">
-                <div className="flex flex-col items-end gap-1 w-full lg:w-auto">
+                <div className="flex flex-col items-end gap-1 w_full lg:w-auto">
                   <span className="text-[11px] uppercase tracking-[0.18em] text-[#9c978f] hidden lg:block">
                     Специальность
                   </span>
@@ -865,10 +915,7 @@ export default function ACSPage() {
                     className="rounded-full border border-[#d3cec4] bg-white px-4 py-1.5 text-sm text-[#3b342d] shadow-sm focus:outline-none focus:border-[#015d52] w-full lg:w-[230px]"
                   >
                     {SPECIALTIES.map((spec) => (
-                      <option
-                        key={spec}
-                        value={spec}
-                      >
+                      <option key={spec} value={spec}>
                         {spec}
                       </option>
                     ))}
@@ -908,8 +955,8 @@ export default function ACSPage() {
               </div>
 
               <p className="text-sm text-gray-600 max-w-2xl mx-auto">
-                Для медицинских специалистов. Обзор и интерпретация; не заменяет официальные
-                руководства. Следуйте локальным протоколам.
+                Для медицинских специалистов. Обзор и интерпретация; не заменяет
+                официальные руководства. Следуйте локальным протоколам.
               </p>
             </div>
           </div>
@@ -977,44 +1024,48 @@ export default function ACSPage() {
                     </h2>
 
                     <div className="space-y-6">
-                      {escGuideline.diagnosis.initialAssessment.map((step, index) => (
-                        <div
-                          key={index}
-                          className="bg-blue-50 rounded-xl p-6 border border-blue-200"
-                        >
-                          <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-4">
-                            <div>
-                              <h3 className="text-xl font-semibold text-gray-900">
-                                {step.step}
-                              </h3>
-                            </div>
-                            <div className="flex flex-col md:flex-row gap-3 md:items-center">
-                              <TimingBadge time={step.timing} />
-                              <RecommendationBadge
-                                rec={{
-                                  class: step.class,
-                                  level: step.level,
-                                  evidenceText: step.evidenceText,
-                                }}
-                              />
-                            </div>
-                          </div>
-                          <ul className="space-y-2">
-                            {step.actions.map((action, idx) => (
-                              <li
-                                key={idx}
-                                className="flex items-start gap-3"
-                              >
-                                <CheckCircle
-                                  size={18}
-                                  className="text-green-500 mt-0.5 flex-shrink-0"
+                      {escGuideline.diagnosis.initialAssessment.map(
+                        (step, index) => (
+                          <div
+                            key={index}
+                            className="bg-blue-50 rounded-xl p-6 border border-blue-200"
+                          >
+                            <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-4">
+                              <div>
+                                <h3 className="text-xl font-semibold text-gray-900">
+                                  {step.step}
+                                </h3>
+                              </div>
+                              <div className="flex flex-col md:flex-row gap-3 md:items-center">
+                                <TimingBadge time={step.timing} />
+                                <RecommendationBadge
+                                  rec={{
+                                    class: step.class,
+                                    level: step.level,
+                                    evidenceText: step.evidenceText,
+                                  }}
                                 />
-                                <span className="text-gray-700">{action}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      ))}
+                              </div>
+                            </div>
+                            <ul className="space-y-2">
+                              {step.actions.map((action, idx) => (
+                                <li
+                                  key={idx}
+                                  className="flex items-start gap-3"
+                                >
+                                  <CheckCircle
+                                    size={18}
+                                    className="text-green-500 mt-0.5 flex-shrink-0"
+                                  />
+                                  <span className="text-gray-700">
+                                    {action}
+                                  </span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )
+                      )}
                     </div>
                   </section>
 
@@ -1030,40 +1081,44 @@ export default function ACSPage() {
                         <h4 className="text-lg font-semibold text-red-800 mb-4">
                           STEMI критерии
                         </h4>
-                        {escGuideline.diagnosis.ecgCriteria.stemi.map((criteria, idx) => (
-                          <div
-                            key={idx}
-                            className="mb-6 last:mb-0"
-                          >
-                            <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 mb-3">
-                              <h5 className="font-semibold text-gray-900">
-                                {criteria.criteria}
-                              </h5>
-                              <RecommendationBadge
-                                rec={{
-                                  class: criteria.class,
-                                  level: criteria.level,
-                                  evidenceText: criteria.evidenceText,
-                                }}
-                              />
-                            </div>
-                            <ul className="text-sm text-gray-700 space-y-1">
-                              {criteria.details.map((detail, i) => (
-                                <li key={i}>• {detail}</li>
-                              ))}
-                            </ul>
-                            {criteria.examples && (
-                              <div className="mt-2">
-                                <p className="font-medium text-sm">Примеры:</p>
-                                <ul className="text-sm text-gray-600 space-y-1">
-                                  {criteria.examples.map((example, i) => (
-                                    <li key={i}>• {example}</li>
-                                  ))}
-                                </ul>
+                        {escGuideline.diagnosis.ecgCriteria.stemi.map(
+                          (criteria, idx) => (
+                            <div
+                              key={idx}
+                              className="mb-6 last:mb-0"
+                            >
+                              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 mb-3">
+                                <h5 className="font-semibold text-gray-900">
+                                  {criteria.criteria}
+                                </h5>
+                                <RecommendationBadge
+                                  rec={{
+                                    class: criteria.class,
+                                    level: criteria.level,
+                                    evidenceText: criteria.evidenceText,
+                                  }}
+                                />
                               </div>
-                            )}
-                          </div>
-                        ))}
+                              <ul className="text-sm text-gray-700 space-y-1">
+                                {criteria.details.map((detail, i) => (
+                                  <li key={i}>• {detail}</li>
+                                ))}
+                              </ul>
+                              {criteria.examples && (
+                                <div className="mt-2">
+                                  <p className="font-medium text-sm">
+                                    Примеры:
+                                  </p>
+                                  <ul className="text-sm text-gray-600 space-y-1">
+                                    {criteria.examples.map((example, i) => (
+                                      <li key={i}>• {example}</li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )}
+                            </div>
+                          )
+                        )}
                       </div>
 
                       {/* NSTEMI */}
@@ -1071,30 +1126,32 @@ export default function ACSPage() {
                         <h4 className="text-lg font-semibold text-orange-800 mb-4">
                           NSTEMI критерии
                         </h4>
-                        {escGuideline.diagnosis.ecgCriteria.nstemi.map((criteria, idx) => (
-                          <div
-                            key={idx}
-                            className="mb-6 last:mb-0"
-                          >
-                            <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 mb-3">
-                              <h5 className="font-semibold text-gray-900">
-                                {criteria.criteria}
-                              </h5>
-                              <RecommendationBadge
-                                rec={{
-                                  class: criteria.class,
-                                  level: criteria.level,
-                                  evidenceText: criteria.evidenceText,
-                                }}
-                              />
+                        {escGuideline.diagnosis.ecgCriteria.nstemi.map(
+                          (criteria, idx) => (
+                            <div
+                              key={idx}
+                              className="mb-6 last:mb-0"
+                            >
+                              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 mb-3">
+                                <h5 className="font-semibold text-gray-900">
+                                  {criteria.criteria}
+                                </h5>
+                                <RecommendationBadge
+                                  rec={{
+                                    class: criteria.class,
+                                    level: criteria.level,
+                                    evidenceText: criteria.evidenceText,
+                                  }}
+                                />
+                              </div>
+                              <ul className="text-sm text-gray-700 space-y-1">
+                                {criteria.details.map((detail, i) => (
+                                  <li key={i}>• {detail}</li>
+                                ))}
+                              </ul>
                             </div>
-                            <ul className="text-sm text-gray-700 space-y-1">
-                              {criteria.details.map((detail, i) => (
-                                <li key={i}>• {detail}</li>
-                              ))}
-                            </ul>
-                          </div>
-                        ))}
+                          )
+                        )}
                       </div>
                     </div>
                   </section>
@@ -1307,9 +1364,9 @@ export default function ACSPage() {
                       </a>
                     </div>
                     <p className="mt-2 text-xs text-gray-500">
-                      Переход выполняется в раздел «Калькуляторы». При отсутствии
-                      калькулятора на момент просмотра страница может быть
-                      недоступна.
+                      Переход выполняется в раздел «Калькуляторы». При
+                      отсутствии калькулятора на момент просмотра страница может
+                      быть недоступна.
                     </p>
                   </section>
                 </div>
@@ -1325,45 +1382,47 @@ export default function ACSPage() {
                     </h2>
 
                     <div className="grid md:grid-cols-2 gap-6">
-                      {escGuideline.treatment.generalMeasures.map((measure, idx) => (
-                        <div
-                          key={idx}
-                          className="bg-blue-50 rounded-xl p-6 border border-blue-200"
-                        >
-                          <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-4">
-                            <h3 className="text-xl font-semibold text-gray-900">
-                              {measure.measure}
-                            </h3>
-                            <RecommendationBadge
-                              rec={{
-                                class: measure.class,
-                                level: measure.level,
-                                evidenceText: measure.evidenceText,
-                              }}
-                            />
-                          </div>
-                          <p className="text-gray-700 mb-2">
-                            <strong>Показания:</strong> {measure.indication}
-                          </p>
-                          <p className="text-gray-700">
-                            <strong>Дозировка:</strong> {measure.dose}
-                          </p>
-                          {measure.contraindications && (
-                            <div className="mt-3">
-                              <p className="font-medium text-sm mb-1">
-                                Противопоказания:
-                              </p>
-                              <ul className="text-sm text-gray-700 space-y-1">
-                                {measure.contraindications.map(
-                                  (contra: string, i: number) => (
-                                    <li key={i}>• {contra}</li>
-                                  )
-                                )}
-                              </ul>
+                      {escGuideline.treatment.generalMeasures.map(
+                        (measure, idx) => (
+                          <div
+                            key={idx}
+                            className="bg-blue-50 rounded-xl p-6 border border-blue-200"
+                          >
+                            <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-4">
+                              <h3 className="text-xl font-semibold text-gray-900">
+                                {measure.measure}
+                              </h3>
+                              <RecommendationBadge
+                                rec={{
+                                  class: measure.class,
+                                  level: measure.level,
+                                  evidenceText: measure.evidenceText,
+                                }}
+                              />
                             </div>
-                          )}
-                        </div>
-                      ))}
+                            <p className="text-gray-700 mb-2">
+                              <strong>Показания:</strong> {measure.indication}
+                            </p>
+                            <p className="text-gray-700">
+                              <strong>Дозировка:</strong> {measure.dose}
+                            </p>
+                            {measure.contraindications && (
+                              <div className="mt-3">
+                                <p className="font-medium text-sm mb-1">
+                                  Противопоказания:
+                                </p>
+                                <ul className="text-sm text-gray-700 space-y-1">
+                                  {measure.contraindications.map(
+                                    (contra: string, i: number) => (
+                                      <li key={i}>• {contra}</li>
+                                    )
+                                  )}
+                                </ul>
+                              </div>
+                            )}
+                          </div>
+                        )
+                      )}
                     </div>
                   </section>
 
@@ -1383,7 +1442,8 @@ export default function ACSPage() {
                             </h3>
                             <p className="text-gray-600">
                               Нагрузка:{' '}
-                              {escGuideline.treatment.antiplateletTherapy[0].loading}{' '}
+                              {escGuideline.treatment.antiplateletTherapy[0]
+                                .loading}{' '}
                               • Поддержка:{' '}
                               {
                                 escGuideline.treatment.antiplateletTherapy[0]
@@ -1660,8 +1720,6 @@ export default function ACSPage() {
                             </div>
                             <p className="text-gray-700 mb-2">
                               <strong>Показания:</strong> {therapy.indication}
-                           <p className="text-gray-700 mb-2">
-                              <strong>Показания:</strong> {therapy.indication}
                             </p>
                             <p className="text-gray-700 mb-2">
                               <strong>Тайминг:</strong> {therapy.timing}
@@ -1707,8 +1765,8 @@ export default function ACSPage() {
                     </h3>
                     <p className="text-sm text-gray-600 mb-4">
                       Блок ориентирован на врачей, работающих в ОИТ, приёмных
-                      отделениях и инвазивных лабораториях. Может использоваться
-                      как чек-лист перед выпиской пациента.
+                      отделениях и инвазивных лабораториях. Может
+                      использоваться как чек-лист перед выпиской пациента.
                     </p>
                     <div className="space-y-4">
                       {escGuideline.treatment.commonPitfalls.map(
