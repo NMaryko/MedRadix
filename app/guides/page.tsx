@@ -325,7 +325,7 @@ export default function ACSPage() {
           dose: '2.5 мг п/к 1 раз/сут',
           indication: 'Предпочтительный антикоагулянт при NSTE-ACS без показаний к срочному ЧКВ',
           notes: 'Не применять при КК <30 мл/мин; при ЧКВ — дополнительно болюс НФГ',
-          class: 'I' as RecommendationClass',
+          class: 'I' as RecommendationClass,
           level: 'A' as EvidenceLevel,
           evidenceText: 'Класс I - Предпочтительный выбор при NSTE-ACS; Уровень A - Множественные РКИ или мета-анализы',
         },
