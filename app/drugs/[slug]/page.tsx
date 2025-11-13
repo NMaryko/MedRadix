@@ -1,62 +1,32 @@
-// app/drugs/[slug]/page.tsx - ПОЛНЫЙ РАБОЧИЙ КОД
+// app/drugs/[slug]/page.tsx - ИДЕАЛЬНАЯ СТРАНИЦА
 import { generateDrugSchema, type Drug } from '@/types/drug';
 import { mockDrugEnoxaparin } from '@/types/drug';
 
-// Генерируем метаданные для SEO
 export async function generateMetadata({ params }: { params: { slug: string } }) {
   const drug = await getDrugData(params.slug);
-  
   return {
     title: `${drug.genericName} - инструкция, применение, дозировка | MedRadix`,
-    description: drug.description || `Информация о препарате ${drug.genericName}. Торговые названия: ${drug.tradeNames.join(', ')}`,
-    keywords: [
-      drug.genericName,
-      ...drug.tradeNames,
-      ...drug.specialties,
-      'инструкция',
-      'применение',
-      'дозировка',
-      'показания'
-    ].join(', '),
-    openGraph: {
-      title: `${drug.genericName} - MedRadix`,
-      description: drug.description || `Информация о препарате ${drug.genericName}`,
-      type: 'article',
-      url: `https://medradix.info/drugs/${drug.slug}`
-    }
+    description: drug.description,
   };
 }
 
-// Функция получения данных препарата
 async function getDrugData(slug: string): Promise<Drug> {
-  // Пока используем mock данные
-  if (slug === 'enoxaparin') {
-    return mockDrugEnoxaparin;
-  }
-  
-  // Для других препаратов - возвращаем эноксапарин как заглушку
-  return {
-    ...mockDrugEnoxaparin,
-    genericName: 'Препарат не найден',
-    slug: slug
-  };
+  // Пока используем только эноксапарин
+  return mockDrugEnoxaparin;
 }
 
-// ОСНОВНОЙ КОМПОНЕНТ СТРАНИЦЫ
 export default async function DrugPage({ params }: { params: { slug: string } }) {
   const drug = await getDrugData(params.slug);
   const schemaData = generateDrugSchema(drug);
 
   return (
     <>
-      {/* JSON-LD разметка для поисковиков */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
       />
       
       <div className="container mx-auto px-4 py-8">
-        {/* Заголовок */}
         <header className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">{drug.genericName}</h1>
           {drug.tradeNames.length > 0 && (
@@ -70,10 +40,8 @@ export default async function DrugPage({ params }: { params: { slug: string } })
         </header>
 
         <section className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Основной контент */}
           <div className="lg:col-span-2 space-y-8">
             
-            {/* Описание */}
             {drug.description && (
               <div className="bg-white rounded-lg p-6 border border-gray-200">
                 <h2 className="text-xl font-semibold mb-4">Описание</h2>
@@ -81,7 +49,6 @@ export default async function DrugPage({ params }: { params: { slug: string } })
               </div>
             )}
 
-            {/* Показания */}
             <div className="bg-white rounded-lg p-6 border border-gray-200">
               <h2 className="text-xl font-semibold mb-4">Показания к применению</h2>
               <div className="space-y-4">
@@ -104,53 +71,23 @@ export default async function DrugPage({ params }: { params: { slug: string } })
               </div>
             </div>
 
-            {/* Дозирование */}
             <div className="bg-white rounded-lg p-6 border border-gray-200">
-              <h2 className="text-xl font-semibold mb-4">Дозирование и способ применения</h2>
-              
-              {/* Взрослые */}
-              <div className="mb-6">
-                <h3 className="text-lg font-medium mb-3 text-gray-900">Для взрослых</h3>
-                <div className="space-y-4">
-                  {drug.dosage.adults.map((regimen, index) => (
-                    <div key={index} className="bg-gray-50 p-4 rounded-lg">
-                      <h4 className="font-medium text-gray-900">{regimen.indication}</h4>
-                      <p className="text-gray-700 mt-1"><strong>Режим дозирования:</strong> {regimen.regimen}</p>
-                      {regimen.duration && <p className="text-gray-600"><strong>Длительность:</strong> {regimen.duration}</p>}
-                      {regimen.notes && <p className="text-sm text-gray-500 mt-2">{regimen.notes}</p>}
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Нарушение функции почек */}
-              {drug.dosage.renalImpairment.length > 0 && (
-                <div className="mb-6">
-                  <h3 className="text-lg font-medium mb-3 text-gray-900">Коррекция дозы при почечной недостаточности</h3>
-                  <div className="space-y-3">
-                    {drug.dosage.renalImpairment.map((adjustment, index) => (
-                      <div key={index} className="flex justify-between items-start">
-                        <span className="font-medium text-gray-700">{adjustment.condition}:</span>
-                        <span className="text-gray-600 text-right">{adjustment.adjustment}</span>
-                      </div>
-                    ))}
+              <h2 className="text-xl font-semibold mb-4">Дозирование</h2>
+              <div className="space-y-4">
+                {drug.dosage.adults.map((regimen, index) => (
+                  <div key={index} className="bg-gray-50 p-4 rounded-lg">
+                    <h4 className="font-medium text-gray-900">{regimen.indication}</h4>
+                    <p className="text-gray-700 mt-1"><strong>Режим:</strong> {regimen.regimen}</p>
+                    {regimen.duration && <p className="text-gray-600"><strong>Длительность:</strong> {regimen.duration}</p>}
+                    {regimen.notes && <p className="text-sm text-gray-500 mt-2">{regimen.notes}</p>}
                   </div>
-                </div>
-              )}
-
-              {/* Пожилые */}
-              {drug.dosage.elderly && (
-                <div>
-                  <h3 className="text-lg font-medium mb-3 text-gray-900">Особенности у пожилых пациентов</h3>
-                  <p className="text-gray-700">{drug.dosage.elderly}</p>
-                </div>
-              )}
+                ))}
+              </div>
             </div>
 
-            {/* Взаимодействия */}
             {drug.interactions.length > 0 && (
               <div className="bg-white rounded-lg p-6 border border-gray-200">
-                <h2 className="text-xl font-semibold mb-4">Лекарственные взаимодействия</h2>
+                <h2 className="text-xl font-semibold mb-4">Взаимодействия</h2>
                 <div className="space-y-4">
                   {drug.interactions.map((interaction, index) => (
                     <div key={index} className="border-l-4 border-amber-500 pl-4 py-2">
@@ -173,14 +110,11 @@ export default async function DrugPage({ params }: { params: { slug: string } })
               </div>
             )}
 
-            {/* Нежелательные явления */}
             <div className="bg-white rounded-lg p-6 border border-gray-200">
               <h2 className="text-xl font-semibold mb-4">Нежелательные явления</h2>
-              
-              {/* Частые */}
               {drug.adverseEffects.common.length > 0 && (
                 <div className="mb-6">
-                  <h3 className="text-lg font-medium mb-3 text-gray-900">Частые (≥1/100)</h3>
+                  <h3 className="text-lg font-medium mb-3 text-gray-900">Частые</h3>
                   <ul className="list-disc list-inside text-gray-700 space-y-1">
                     {drug.adverseEffects.common.map((effect, index) => (
                       <li key={index}>{effect}</li>
@@ -188,8 +122,6 @@ export default async function DrugPage({ params }: { params: { slug: string } })
                   </ul>
                 </div>
               )}
-
-              {/* Серьезные */}
               {drug.adverseEffects.serious.length > 0 && (
                 <div>
                   <h3 className="text-lg font-medium mb-3 text-gray-900 text-red-600">Серьезные</h3>
@@ -202,41 +134,36 @@ export default async function DrugPage({ params }: { params: { slug: string } })
               )}
             </div>
 
-            {/* Применение в гайдах */}
             <div className="bg-white rounded-lg p-6 border border-gray-200">
-              <h2 className="text-xl font-semibold mb-4">Применение в клинических рекомендациях</h2>
-              
-              {/* EU Guidelines */}
+              <h2 className="text-xl font-semibold mb-4">Клинические рекомендации</h2>
               {drug.guidelineUsage.eu.length > 0 && (
                 <div className="mb-6">
-                  <h3 className="text-lg font-medium mb-3 text-gray-900">Европейские рекомендации (ESC)</h3>
+                  <h3 className="text-lg font-medium mb-3 text-gray-900">Европейские рекомендации</h3>
                   <div className="space-y-3">
                     {drug.guidelineUsage.eu.map((guide, index) => (
                       <div key={index} className="border-l-4 border-green-500 pl-4 py-2">
                         <h4 className="font-medium text-gray-900">{guide.guideCode}</h4>
                         <p className="text-gray-600 text-sm">{guide.guideSection}</p>
                         <p className="text-gray-700 mt-1">{guide.indicationSummary}</p>
-                        <a href={guide.link} className="text-blue-600 hover:underline text-sm inline-block mt-2">
-                          Ссылка на гайд →
+                        <a href={guide.link} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline text-sm inline-block mt-2">
+                          📖 Открыть гайд
                         </a>
                       </div>
                     ))}
                   </div>
                 </div>
               )}
-
-              {/* US Guidelines */}
               {drug.guidelineUsage.us.length > 0 && (
                 <div>
-                  <h3 className="text-lg font-medium mb-3 text-gray-900">Американские рекомендации (ACC/AHA)</h3>
+                  <h3 className="text-lg font-medium mb-3 text-gray-900">Американские рекомендации</h3>
                   <div className="space-y-3">
                     {drug.guidelineUsage.us.map((guide, index) => (
                       <div key={index} className="border-l-4 border-purple-500 pl-4 py-2">
                         <h4 className="font-medium text-gray-900">{guide.guideCode}</h4>
                         <p className="text-gray-600 text-sm">{guide.guideSection}</p>
                         <p className="text-gray-700 mt-1">{guide.indicationSummary}</p>
-                        <a href={guide.link} className="text-blue-600 hover:underline text-sm inline-block mt-2">
-                          Ссылка на гайд →
+                        <a href={guide.link} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline text-sm inline-block mt-2">
+                          📖 Открыть гайд
                         </a>
                       </div>
                     ))}
@@ -246,9 +173,7 @@ export default async function DrugPage({ params }: { params: { slug: string } })
             </div>
           </div>
 
-          {/* Боковая панель */}
           <div className="space-y-6">
-            {/* Формы выпуска */}
             <div className="bg-white border border-gray-200 rounded-lg p-4">
               <h3 className="font-semibold mb-3">Формы выпуска</h3>
               <div className="space-y-3">
@@ -262,7 +187,6 @@ export default async function DrugPage({ params }: { params: { slug: string } })
               </div>
             </div>
 
-            {/* Противопоказания */}
             <div className="bg-white border border-gray-200 rounded-lg p-4">
               <h3 className="font-semibold mb-3">Противопоказания</h3>
               <div className="space-y-3">
@@ -285,7 +209,6 @@ export default async function DrugPage({ params }: { params: { slug: string } })
               </div>
             </div>
 
-            {/* Мониторинг */}
             {drug.monitoring && (
               <div className="bg-white border border-gray-200 rounded-lg p-4">
                 <h3 className="font-semibold mb-3">Мониторинг</h3>
@@ -310,7 +233,6 @@ export default async function DrugPage({ params }: { params: { slug: string } })
               </div>
             )}
 
-            {/* Беременность и лактация */}
             {drug.pregnancyLactation && (
               <div className="bg-white border border-gray-200 rounded-lg p-4">
                 <h3 className="font-semibold mb-3">Беременность и лактация</h3>
@@ -324,7 +246,6 @@ export default async function DrugPage({ params }: { params: { slug: string } })
               </div>
             )}
 
-            {/* Полезные советы */}
             {drug.pearls.length > 0 && (
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <h3 className="font-semibold mb-3 text-blue-900">Полезные советы</h3>
