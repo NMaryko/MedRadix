@@ -1421,7 +1421,7 @@ export default function ACSPage() {
                       <RecommendationBadge rec={{ class: 'I', level: 'A', evidenceText: 'Немедленное ЧКВ culprit‑only; норэпинефрин — прессор 1‑й линии' }} />
                       <p className="text-sm text-gray-700 mb-2 font-medium">Диагностика:</p>
                       <ul className="text-sm text-gray-700 space-y-1 mb-3">
-                        <li>• Систолическое АД < 90 мм рт.ст. >30 мин или необходимость вазопрессоров</li>
+                        <li>• Систолическое АД {'<'} 90 мм рт.ст. {'>'}30 мин или необходимость вазопрессоров</li>
                         <li>• Признаки гипоперфузии (олигурия, лактоацидоз, холодные кожные покровы)</li>
                       </ul>
                       <p className="text-sm text-gray-700 mb-2 font-medium">Алгоритм:</p>
