@@ -1609,8 +1609,14 @@ export default function ACSPage() {
                         <div key={idx} className="bg-purple-50 rounded-xl p-6 border border-purple-200">
                           <h4 className="text-lg font-semibold text-gray-900 mb-2"><Safe text={t.drug} /></h4>
                           <RecommendationBadge rec={{ class: t.class, level: t.level, evidenceText: t.evidenceText }} />
-                          <p className="text-gray-700 mt-3"><strong>Показания:</strong> <Safe text={t.indication} /></p>
-                          {t.timing && <p className="text-gray-700"><Safe text={`Тайминг: ${t.timing}`} />}</p>}
+                         <p className="text-gray-700 mt-3">
+  <strong>Показания:</strong> <Safe text={t.indication} />
+</p>
+                         {t.timing && (
+  <p className="text-gray-700">
+    <Safe text={`Тайминг: ${t.timing}`} />
+  </p>
+)}
                           {t.options && (
                             <div className="mt-2">
                               <p className="font-medium text-sm mb-1">Препараты:</p>
