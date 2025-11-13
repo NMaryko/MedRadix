@@ -1,4 +1,4 @@
-// app/lib/search.ts - ПОЛНЫЙ КОД
+// app/lib/search.ts - ИСПРАВЛЕННЫЙ КОД
 import { mockDrugsList } from '@/types/drug';
 
 export interface SearchResult {
@@ -11,25 +11,18 @@ export interface SearchResult {
   relevance: number;
 }
 
-// Вспомогательная функция для расчета релевантности
-function calculateRelevance(text: string, query: string, baseScore: number): number {
-  const lowerText = text.toLowerCase();
-  if (lowerText === query) return baseScore;
-  if (lowerText.startsWith(query)) return baseScore * 0.9;
-  if (lowerText.includes(query)) return baseScore * 0.7;
-  return baseScore * 0.3;
-}
-
-// Поиск по препаратам
-function searchInDrugs(query: string): SearchResult[] {
+export async function globalSearch(query: string): Promise<SearchResult[]> {
+  const results: SearchResult[] = [];
   const lowerQuery = query.toLowerCase().trim();
-  
-  return mockDrugsList
+
+  if (!lowerQuery) return [];
+
+  // 🔍 УПРОЩЕННЫЙ поиск по препаратам (без specialties)
+  const drugResults = mockDrugsList
     .filter(drug =>
       drug.genericName.toLowerCase().includes(lowerQuery) ||
       drug.tradeNames.some(name => name.toLowerCase().includes(lowerQuery)) ||
-      drug.therapeuticClass.toLowerCase().includes(lowerQuery) ||
-      (drug.specialties && drug.specialties.some(spec => spec.toLowerCase().includes(lowerQuery)))
+      drug.therapeuticClass.toLowerCase().includes(lowerQuery)
     )
     .map(drug => ({
       id: drug.id,
@@ -40,17 +33,7 @@ function searchInDrugs(query: string): SearchResult[] {
       category: 'Препараты',
       relevance: calculateRelevance(drug.genericName, lowerQuery, 100)
     }));
-}
 
-// Главная функция поиска
-export async function globalSearch(query: string): Promise<SearchResult[]> {
-  const results: SearchResult[] = [];
-  const lowerQuery = query.toLowerCase().trim();
-
-  if (!lowerQuery) return [];
-
-  // 🔍 Поиск по препаратам
-  const drugResults = searchInDrugs(lowerQuery);
   results.push(...drugResults);
 
   // 🔍 Заглушки для будущих разделов
@@ -90,6 +73,13 @@ export async function globalSearch(query: string): Promise<SearchResult[]> {
     });
   }
 
-  // 🔴 ВАЖНО: эта строка должна быть в конце!
   return results.sort((a, b) => b.relevance - a.relevance);
+}
+
+function calculateRelevance(text: string, query: string, baseScore: number): number {
+  const lowerText = text.toLowerCase();
+  if (lowerText === query) return baseScore;
+  if (lowerText.startsWith(query)) return baseScore * 0.9;
+  if (lowerText.includes(query)) return baseScore * 0.7;
+  return baseScore * 0.3;
 }
