@@ -130,7 +130,7 @@ export default function ACSPage() {
           actions: [
             'Характер боли: давящая, жгучая, за грудиной',
             'Иррадиация: левая рука, шея, челюсть, спина',
-            'Сопутствующие симптомы: одышка, тошнота, потливока',
+            'Сопутствующие симптомы: одышка, тошнота, потливость',
             'Длительность: >20 минут',
           ],
           timing: '10-20 мин',
@@ -987,25 +987,6 @@ export default function ACSPage() {
                   );
                 })}
               </div>
-
-              {/* Калькуляторы в левом меню для десктопа */}
-              <div className="mt-8">
-                <div className="text-sm font-semibold tracking-[0.16em] text-[#9c978f] uppercase mb-3">
-                  Калькуляторы 2 в 1
-                </div>
-                <div className="space-y-2">
-                  {calculators.map((calc, index) => (
-                    <a
-                      key={index}
-                      href={calc.link}
-                      className="w-full rounded-full border px-3 py-2 text-sm text-left font-medium transition bg-white text-[#1f2933] border-[#d3cec4] hover:ring-1 hover:ring-[#015d52] hover:shadow-[0_0_10px_#015D52] block"
-                    >
-                      <div className="font-semibold"><Safe text={calc.name} /></div>
-                      <div className="text-xs text-gray-600 mt-1 line-clamp-2"><Safe text={calc.description} /></div>
-                    </a>
-                  ))}
-                </div>
-              </div>
             </div>
           </aside>
 
@@ -1025,46 +1006,6 @@ export default function ACSPage() {
                 </button>
               ))}
             </div>
-
-            {/* Калькуляторы для мобильных устройств */}
-            <section className="lg:hidden mb-6">
-              <h3 className="text-2xl font-semibold text-gray-900 mb-3">Калькуляторы 2 в 1</h3>
-              <div className="grid gap-4">
-                {calculators.map((calc, index) => (
-                  <a key={index} href={calc.link} className="border border-blue-200 rounded-xl p-4 text-sm flex flex-col justify-between hover:bg-blue-50 transition">
-                    <div>
-                      <span className="font-semibold text-gray-900 mb-2 block"><Safe text={calc.name} /></span>
-                      <span className="text-gray-600 block mb-3"><Safe text={calc.description} /></span>
-                      <div className="grid grid-cols-2 gap-2 text-xs">
-                        <div className="bg-blue-50 p-2 rounded">
-                          <div className="font-medium text-blue-800">🇪🇺 EU</div>
-                          <ul className="text-gray-700 mt-1 space-y-1">
-                            {calc.euFeatures.map((feature, i) => (
-                              <li key={i} className="flex items-start">
-                                <span className="mr-1">•</span>
-                                <Safe text={feature} />
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                        <div className="bg-red-50 p-2 rounded">
-                          <div className="font-medium text-red-800">🇺🇸 US</div>
-                          <ul className="text-gray-700 mt-1 space-y-1">
-                            {calc.usFeatures.map((feature, i) => (
-                              <li key={i} className="flex items-start">
-                                <span className="mr-1">•</span>
-                                <Safe text={feature} />
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-                      <p className="text-xs text-gray-500 mt-3"><strong>Интерпретация:</strong> <Safe text={calc.interpretation} /></p>
-                    </div>
-                  </a>
-                ))}
-              </div>
-            </section>
 
             {/* Карточка гайда */}
             <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8 mb-8">
@@ -1272,6 +1213,46 @@ export default function ACSPage() {
                         <ul className="text-sm text-gray-700 space-y-1">
                           {escGuideline.diagnosis.riskStratification.hematics.scores.map((score, idx) => (<li key={idx}><Safe text={`• ${score}`} /></li>))}
                         </ul>
+                      </div>
+                    </div>
+
+                    {/* Калькуляторы 2 в 1 - размещены под стратификацией риска */}
+                    <div className="mt-8">
+                      <h3 className="text-2xl font-semibold text-gray-900 mb-6">Калькуляторы риска 2 в 1</h3>
+                      <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+                        {calculators.map((calc, index) => (
+                          <a key={index} href={calc.link} className="border border-blue-200 rounded-xl p-6 text-sm flex flex-col justify-between hover:bg-blue-50 transition group">
+                            <div>
+                              <span className="font-semibold text-gray-900 mb-2 block group-hover:text-blue-700"><Safe text={calc.name} /></span>
+                              <span className="text-gray-600 block mb-4"><Safe text={calc.description} /></span>
+                              <div className="space-y-3">
+                                <div className="bg-blue-50 p-3 rounded">
+                                  <div className="font-medium text-blue-800 text-xs mb-1">🇪🇺 Европейский подход</div>
+                                  <ul className="text-gray-700 text-xs space-y-1">
+                                    {calc.euFeatures.map((feature, i) => (
+                                      <li key={i} className="flex items-start">
+                                        <span className="mr-1">•</span>
+                                        <Safe text={feature} />
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                                <div className="bg-red-50 p-3 rounded">
+                                  <div className="font-medium text-red-800 text-xs mb-1">🇺🇸 Американский подход</div>
+                                  <ul className="text-gray-700 text-xs space-y-1">
+                                    {calc.usFeatures.map((feature, i) => (
+                                      <li key={i} className="flex items-start">
+                                        <span className="mr-1">•</span>
+                                        <Safe text={feature} />
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              </div>
+                              <p className="text-xs text-gray-500 mt-4"><strong>Интерпретация:</strong> <Safe text={calc.interpretation} /></p>
+                            </div>
+                          </a>
+                        ))}
                       </div>
                     </div>
                   </section>
