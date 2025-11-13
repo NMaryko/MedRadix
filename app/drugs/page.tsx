@@ -1,91 +1,62 @@
-// components/DrugPage.tsx
+'use client';
 
-import { Drug, generateDrugSchema } from '@/types/drug';
+import { useState, useMemo } from 'react';
+import Link from 'next/link';
+import { Drug, mockDrugEnoxaparin } from '../../types/drug';
 
-interface DrugPageProps {
-  drug: Drug;
-}
+const drugs: Drug[] = [mockDrugEnoxaparin];
 
-export default function DrugPage({ drug }: DrugPageProps) {
-  const schemaData = generateDrugSchema(drug);
+export default function DrugsPage() {
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredDrugs = useMemo(() => {
+    const term = searchTerm.toLowerCase().trim();
+    if (!term) return drugs;
+
+    return drugs.filter((drug) => {
+      const haystack = [
+        drug.genericName,
+        drug.tradeNames.join(' '),
+        drug.pharmacologicClass ?? '',
+        drug.therapeuticClass ?? '',
+        ...drug.indications.map((i) => i.title),
+      ]
+        .join(' ')
+        .toLowerCase();
+
+      return haystack.includes(term);
+    });
+  }, [searchTerm]);
 
   return (
-    <main
-      className="px-4 py-6 max-w-5xl mx-auto"
-      itemScope
-      itemType="https://schema.org/Drug"
-    >
-      {/* JSON-LD разметка для поисковиков */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
-      />
+    <main className="min-h-screen bg-[#fcfcee] py-8">
+      <div className="max-w-6xl mx-auto px-4">
+        <header className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            База препаратов
+          </h1>
+          <p className="text-gray-600 max-w-2xl">
+            Быстрый доступ к основным препаратам, применению и связи с клиническими
+            гайдами. Сейчас в базе один примерный препарат (эноксапарин).
+          </p>
+        </header>
 
-      {/* Основной контент для пользователя */}
-      <h1 className="text-2xl font-semibold mb-4" itemProp="name">
-        {drug.genericName}
-      </h1>
+        {/* Поисковая строка */}
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Поиск по названию, группе или показаниям
+          </label>
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Например: enoxaparin, антикоагулянт, ОКС…"
+            className="w-full rounded-full border border-gray-300 px-4 py-2 text-sm
+                       focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600
+                       bg-white/80"
+          />
+        </div>
 
-      {drug.tradeNames?.length > 0 && (
-        <p className="text-sm text-muted-foreground mb-2">
-          Торговые названия: {drug.tradeNames.join(', ')}
-        </p>
-      )}
-
-      {drug.description && (
-        <p className="mb-4" itemProp="description">
-          {drug.description}
-        </p>
-      )}
-
-      <section className="mb-4">
-        <h2 className="font-semibold mb-1">Формы выпуска</h2>
-        <ul>
-          {drug.forms.map((form) => (
-            <li
-              key={`${form.form}-${form.strength}`}
-              itemProp="dosageForm"
-            >
-              {form.form} — {form.strength} ({form.route})
-              {form.note ? ` — ${form.note}` : ''}
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section className="mb-4" itemProp="indication">
-        <h2 className="font-semibold mb-1">Показания</h2>
-        <ul className="list-disc pl-5">
-          {drug.indications.map((indication) => (
-            <li key={indication.title}>
-              <strong>{indication.title}</strong>: {indication.description}
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section className="mb-4" itemProp="contraindication">
-        <h2 className="font-semibold mb-1">Противопоказания</h2>
-        <p>
-          <strong>Абсолютные:</strong>{' '}
-          {drug.contraindications.absolute.join(', ')}
-        </p>
-        <p>
-          <strong>Относительные:</strong>{' '}
-          {drug.contraindications.relative.join(', ')}
-        </p>
-      </section>
-
-      <section className="mb-4">
-        <h2 className="font-semibold mb-1">Нежелательные явления</h2>
-        <p>
-          <strong>Частые:</strong> {drug.adverseEffects.common.join(', ')}
-        </p>
-        <p>
-          <strong>Серьёзные:</strong> {drug.adverseEffects.serious.join(', ')}
-        </p>
-      </section>
-    </main>
-  );
-}
-
+        {/* Результаты */}
+        {filteredDrugs.length === 0 ? (
+          <p className="text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3
