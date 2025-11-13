@@ -19,7 +19,7 @@ import {
 
 // ===== Универсальный безопасный рендер текста с < и > =====
 const Safe = ({ text }: { text: string }) => (
-  <>{text.replaceAll('<', '\u003C').replaceAll('>', '\u003E')}</>
+  <>{text ? text.replaceAll('<', '\u003C').replaceAll('>', '\u003E') : ''}</>
 );
 
 // ===== Типы =====
@@ -1610,7 +1610,7 @@ export default function ACSPage() {
                           <h4 className="text-lg font-semibold text-gray-900 mb-2"><Safe text={t.drug} /></h4>
                           <RecommendationBadge rec={{ class: t.class, level: t.level, evidenceText: t.evidenceText }} />
                           <p className="text-gray-700 mt-3"><strong>Показания:</strong> <Safe text={t.indication} /></p>
-                          {t.timing && <p className="text-gray-700"><strong>Тайминг:</strong> <Safe text={t.timing} /></p>}
+                          {t.timing && <p className="text-gray-700"><Safe text={`Тайминг: ${t.timing}`} />}</p>}
                           {t.options && (
                             <div className="mt-2">
                               <p className="font-medium text-sm mb-1">Препараты:</p>
@@ -1645,7 +1645,7 @@ export default function ACSPage() {
                               <div><span className="font-medium">Старт:</span><span className="text-gray-700 ml-2"><Safe text={med.start} /></span></div>
                               <div><span className="font-medium">Цель:</span><span className="text-gray-700 ml-2"><Safe text={med.target} /></span></div>
                               <div><span className="font-medium">Мониторинг:</span><span className="text-gray-700 ml-2"><Safe text={med.monitoring} /></span></div>
-                              <div><span className="font-medium">Тайминг титрации:</span><span className="text-gray-700 ml-2"><Safe text={med.timing} /></span></div>
+                              <div><span className="font-medium">Тайминг титрации:</span><span className="text-gray-700 ml-2"><Safe text={med.timing || 'Не указано'} /></span></div>
                               {med.contraindications && (
                                 <div><span className="font-medium">Противопоказания:</span><span className="text-gray-700 ml-2"><Safe text={med.contraindications} /></span></div>
                               )}
