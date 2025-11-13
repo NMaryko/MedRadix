@@ -335,3 +335,27 @@ export const mockDrugEnoxaparin: Drug = {
   published: true,
   verified: true
 };
+// === MOCK DATA FOR DRUGS LIST ===
+export const mockDrugsList: Pick<Drug, 'id' | 'slug' | 'genericName' | 'tradeNames' | 'therapeuticClass'>[] = [
+  {
+    id: "enoxaparin",
+    slug: "enoxaparin",
+    genericName: "Enoxaparin",
+    tradeNames: ["Клексан", "Эниксум", "Гемапаксан"],
+    therapeuticClass: "Антикоагулянт"
+  },
+  {
+    id: "aspirin",
+    slug: "aspirin", 
+    genericName: "Acetylsalicylic Acid",
+    tradeNames: ["Аспирин", "Тромбо АСС", "КардиАСК"],
+    therapeuticClass: "Антиагрегант"
+  },
+  {
+    id: "atorvastatin",
+    slug: "atorvastatin",
+    genericName: "Atorvastatin",
+    tradeNames: ["Липримар", "Аторис", "Торвакард"],
+    therapeuticClass: "Статин"
+  }
+];
