@@ -1,375 +1,157 @@
-// types/drug.ts
+'use client';
 
-// --- Применение в гайдах (одна запись) ---
-export interface GuidelineUsageEntry {
-  guideCode: string;          // «ESC ACS 2023»
-  guideSection: string;       // «Раздел 7.2 – Антикоагулянтная терапия»
-  indicationSummary: string;  // Кратко: как используется препарат
-  link: string;               // Ссылка на гайд
-}
+import { useMemo, useState } from 'react';
+import { Search, Pill, AlertCircle } from 'lucide-react';
 
-// --- Применение в гайдах (EU / US) ---
-export interface GuidelineUsage {
-  eu: GuidelineUsageEntry[];
-  us: GuidelineUsageEntry[];
-}
-
-// --- Основной тип лекарства (МНН) ---
-export interface Drug {
-  // Идентификация
-  genericName: string;      // МНН
-  slug: string;             // для URL, например "enoxaparin"
-  tradeNames: string[];     // торговые названия
-  atcCode?: string;
-  pharmacologicClass?: string;
-  therapeuticClass?: string;
-  specialties: string[];    // например ["Кардиология", "Хирургия"]
-
-  // Показания
-  indications: {
-    title: string;
-    description: string;
-    classOfRecommendation?: string; // "I", "IIa" и т.п.
-    levelOfEvidence?: string;       // "A", "B", "C"
-  }[];
-
-  // Формы выпуска
-  forms: {
-    form: string;      // "Раствор для инъекций"
-    strength: string;  // "40 мг/0,4 мл"
-    route: string;     // "п/к"
-    note?: string;
-  }[];
-
-  // Дозирование
-  dosage: {
-    adults: {
-      indication: string;
-      regimen: string;
-      maxDailyDose?: string;
-      notes?: string;
-    }[];
-    renalImpairment: {
-      range: string;        // "КК 15–30 мл/мин"
-      adjustment: string;   // как корректировать
-    }[];
-    hepaticImpairment: {
-      severity: string;     // "Тяжёлая печёночная недостаточность"
-      adjustment: string;
-    }[];
-    pediatrics: {
-      ageGroup: string;     // "Дети", "Подростки"
-      regimen: string;
-      notes?: string;
-    }[];
-    elderly?: string;       // особенности у пожилых
-  };
-
-  // Противопоказания
-  contraindications: {
-    absolute: string[];
-    relative: string[];
-  };
-
-  // Взаимодействия
-  interactions: {
-    drug: string;    // препарат/класс
-    effect: string;  // что происходит
-    action: string;  // что делать
-  }[];
-
-  // Нежелательные явления
-  adverseEffects: {
-    common: string[];
-    serious: string[];
-  };
-
-  // Мониторинг
-  monitoring: {
-    before: string[];  // до начала
-    during: string[];  // во время
-    after: string[];   // долгосрочно
-  };
-
-  // Беременность/лактация
-  pregnancyLactation: {
-    pregnancy: string;
-    lactation: string;
-  };
-
-  // Администрирование / передозировка / «фишки»
-  administration?: string;
-  overdose?: string;
-  pearls: string[];
-
-  // Применение в гайдах (EU / US)
-  guidelineUsage: GuidelineUsage;
-
-  // Служебное
-  updatedAt: string; // ISO-дата
-}
-
-// --- Эталонный пример препарата (эноксапарин) ---
-// ВАЖНО: дозировки/формулировки – пример структуры, не инструкция к применению.
-// Перед реальным использованием всё сверять с актуальными гайдами и инструкцией.
-
-export const mockDrugEnoxaparin: Drug = {
-  // Идентификация
-  genericName: "Enoxaparin",
-  slug: "enoxaparin",
-  tradeNames: ["Клексан", "Эниксум", "Гемапаксан"],
-  atcCode: "B01AB05",
-  pharmacologicClass: "Низкомолекулярный гепарин",
-  therapeuticClass: "Антикоагулянт",
-  specialties: ["Кардиология", "Ангиохирургия", "Терапия", "Реаниматология"],
-
-  // Показания
-  indications: [
-    {
-      title: "Острый коронарный синдром без подъёма ST (NSTE-ACS)",
-      description:
-        "Антикоагулянтная терапия у пациентов с нестабильной стенокардией и NSTEMI в составе комбинированного лечения.",
-      classOfRecommendation: "I",
-      levelOfEvidence: "A",
-    },
-    {
-      title: "Профилактика венозных тромбоэмболических осложнений при хирургических вмешательствах",
-      description:
-        "Профилактика ВТЭО у взрослых пациентов при высоком и умеренном риске тромбоза в периоперационном периоде.",
-      classOfRecommendation: "I",
-      levelOfEvidence: "A",
-    },
-    {
-      title: "Лечение тромбоза глубоких вен и тромбоэмболии лёгочной артерии",
-      description:
-        "Начальная антикоагулянтная терапия при ТГВ и ТЭЛА с последующим переходом на пероральные антикоагулянты.",
-      classOfRecommendation: "I",
-      levelOfEvidence: "A",
-    },
-  ],
-
-  // Формы выпуска
-  forms: [
-    {
-      form: "Раствор для инъекций в предварительно заполненных шприцах",
-      strength: "20 мг/0,2 мл",
-      route: "п/к",
-      note: "Профилактика у пациентов с низкой массой тела.",
-    },
-    {
-      form: "Раствор для инъекций в предварительно заполненных шприцах",
-      strength: "40 мг/0,4 мл",
-      route: "п/к",
-      note: "Стандартная профилактика ВТЭО у хирургических пациентов.",
-    },
-    {
-      form: "Раствор для инъекций в предварительно заполненных шприцах",
-      strength: "60 мг/0,6 мл",
-      route: "п/к",
-      note: "Лечебные дозы (≈ 1 мг/кг).",
-    },
-    {
-      form: "Раствор для инъекций в предварительно заполненных шприцах",
-      strength: "80 мг/0,8 мл",
-      route: "п/к",
-      note: "Лечебные дозы у пациентов с более высокой массой тела.",
-    },
-  ],
-
-  // Дозирование
-  dosage: {
-    adults: [
-      {
-        indication: "NSTE-ACS (нестабильная стенокардия, NSTEMI)",
-        regimen:
-          "1 мг/кг п/к каждые 12 часов в сочетании с антитромбоцитарной терапией. " +
-          "Продолжительность обычно 2–8 дней или до реваскуляризации.",
-        maxDailyDose: "как правило, не более 100 мг 2 раза в сутки",
-        notes:
-          "Не вводить в/м. Коррекция при почечной недостаточности и у пациентов с высоким риском кровотечения.",
-      },
-      {
-        indication: "Профилактика ВТЭО при ортопедических вмешательствах высокого риска",
-        regimen:
-          "40 мг п/к 1 раз в сутки, начиная за 12 часов до операции или через 6–12 часов после неё при условии надёжного гемостаза. " +
-          "Обычно 10–14 дней, при высоком риске до 35 дней.",
-        maxDailyDose: "40 мг",
-        notes: "Оценивать риск кровотечения и функцию почек.",
-      },
-      {
-        indication: "Лечение ТГВ и/или ТЭЛА",
-        regimen:
-          "1 мг/кг п/к каждые 12 часов или 1,5 мг/кг п/к 1 раз в сутки " +
-          "с последующим переходом на пероральные антикоагулянты.",
-        maxDailyDose: "зависит от массы тела; обычно не более 150 мг/сут",
-        notes:
-          "Выбор режима (2 раза/сут или 1 раз/сут) зависит от клинической ситуации и риска кровотечения.",
-      },
-    ],
-    renalImpairment: [
-      {
-        range: "КК ≥ 30 мл/мин",
-        adjustment:
-          "Как правило, стандартные режимы дозирования, с клиническим мониторингом.",
-      },
-      {
-        range: "КК 15–30 мл/мин",
-        adjustment:
-          "Рассмотреть снижение дозы (например, 1 мг/кг 1 раз в сутки в лечебных режимах), " +
-          "требуется тщательное наблюдение.",
-      },
-      {
-        range: "КК < 15 мл/мин",
-        adjustment:
-          "Обычно не рекомендуется, либо только при индивидуальной оценке в специализированном центре.",
-      },
-    ],
-    hepaticImpairment: [
-      {
-        severity: "Тяжёлая печёночная недостаточность",
-        adjustment:
-          "Данные ограничены, повышен риск кровотечения. Использование только после индивидуальной оценки риска/пользы.",
-      },
-    ],
-    pediatrics: [
-      {
-        ageGroup: "Дети и подростки",
-        regimen:
-          "Использование по индивидуальным схемам (мг/кг) в специализированных центрах.",
-        notes:
-          "Требуется участие детского специалиста и, при необходимости, мониторинг анти-Xa активности.",
-      },
-    ],
-    elderly:
-      "У пожилых (особенно >75 лет) выше риск кровотечения: требуется контроль функции почек, массы тела и тщательное наблюдение.",
-  },
-
-  // Противопоказания
-  contraindications: {
-    absolute: [
-      "Активное клинически значимое кровотечение",
-      "Подозрение на внутричерепное кровоизлияние",
-      "Гепарин-индуцированная тромбоцитопения (ГИТ) в анамнезе",
-      "Выраженная неконтролируемая тромбоцитопения",
-    ],
-    relative: [
-      "Недавние операции с высоким риском кровотечения",
-      "Тяжёлые нарушения коагуляции",
-      "Тяжёлая печёночная недостаточность",
-      "Сочетание с другими антикоагулянтами/антитромбоцитарными средствами",
-    ],
-  },
-
-  // Взаимодействия
-  interactions: [
-    {
-      drug: "Ингибиторы P2Y12, ацетилсалициловая кислота, НПВП",
-      effect: "Повышение риска кровотечения.",
-      action:
-        "Назначать вместе только при наличии показаний, внимательно мониторировать признаки кровотечения.",
-    },
-    {
-      drug: "Другие парентеральные антикоагулянты",
-      effect: "Суммирование антикоагулянтного эффекта.",
-      action: "Избегать одновременного применения, аккуратный переход между препаратами.",
-    },
-    {
-      drug: "Пероральные антикоагулянты (антагонисты витамина К, НОАК)",
-      effect: "Повышение риска кровотечения в период перекрытия.",
-      action:
-        "Следовать стандартным схемам перехода (bridging) с учётом МНО/клиренса, контролировать гемостаз.",
-    },
-  ],
-
-  // Нежелательные явления
-  adverseEffects: {
-    common: [
-      "Кровотечения лёгкой и средней степени",
-      "Гематомы в месте инъекции",
-      "Умеренная тромбоцитопения",
-      "Повышение трансаминаз",
-    ],
-    serious: [
-      "Массивные кровотечения (ЖКТ, внутричерепные и др.)",
-      "Гепарин-индуцированная тромбоцитопения с тромбозами",
-      "Спинальные/эпидуральные гематомы при нейроаксиальной анестезии",
-    ],
-  },
-
-  // Мониторинг
-  monitoring: {
-    before: [
-      "Оценка риска тромбоза и кровотечения",
-      "ОАК (Hb, тромбоциты)",
-      "Креатинин и расчёт клиренса креатинина",
-      "Оценка функции печени",
-    ],
-    during: [
-      "Клинический контроль кровотечений (кожа, ЖКТ, мочевыделительная система)",
-      "Контроль Hb и тромбоцитов при длительной терапии",
-      "Контроль функции почек у пациентов группы риска",
-    ],
-    after: [
-      "Оценка необходимости продолжения антикоагулянтной терапии (переход на пероральные препараты)",
-      "Контроль поздних кровотечений и гематом",
-    ],
-  },
-
-  // Беременность/лактация
-  pregnancyLactation: {
-    pregnancy:
-      "НМГ часто рассматриваются как предпочтительные антикоагулянты при необходимости антикоагуляции во время беременности, но применение требует индивидуальной оценки.",
-    lactation:
-      "Выделение в грудное молоко минимальное; многие руководства допускают применение при ГВ с осторожностью.",
-  },
-
-  // Администрирование / передозировка / «фишки»
-  administration:
-    "Вводится только п/к (передне/заднебоковая поверхность брюшной стенки). Не удалять воздушный пузырёк из шприца, не массировать место инъекции.",
-  overdose:
-    "При значимом кровотечении возможно применение протамина сульфата для частичной нейтрализации эффекта, далее — симптоматическая терапия.",
-  pearls: [
-    "Не вводить эноксапарин внутримышечно.",
-    "Всегда учитывать функцию почек и возраст при выборе дозы.",
-    "Фиксировать время последней дозы перед нейроаксиальной анестезией/удалением катетера.",
-  ],
-
-  // Применение в клинических рекомендациях (EU / US)
-  guidelineUsage: {
-    eu: [
-      {
-        guideCode: "ESC NSTE-ACS 2020",
-        guideSection: "Раздел 7 – Антикоагулянтная терапия при NSTE-ACS",
-        indicationSummary:
-          "Один из препаратов выбора для парентеральной антикоагуляции при NSTE-ACS в сочетании с антитромбоцитарной терапией, при отсутствии противопоказаний.",
-        link: "https://www.escardio.org", // сюда потом можно поставить точную ссылку на документ
-      },
-      {
-        guideCode: "ESC VTE 2021",
-        guideSection: "Лечение острого ТГВ/ТЭЛА",
-        indicationSummary:
-          "Рассматривается как стандартная начальная терапия ТГВ/ТЭЛА с последующим переходом на пероральные антикоагулянты.",
-        link: "https://www.escardio.org/Guidelines",
-      },
-    ],
-    us: [
-      {
-        guideCode: "ACC/AHA NSTE-ACS",
-        guideSection: "Anticoagulant Therapy in NSTE-ACS",
-        indicationSummary:
-          "Один из предпочтительных вариантов антикоагуляции у пациентов с NSTE-ACS в рамках комбинированной терапии.",
-        link: "https://www.acc.org/guidelines",
-      },
-      {
-        guideCode: "CHEST VTE Guidelines",
-        guideSection: "Initial parenteral anticoagulation",
-        indicationSummary:
-          "Включён как вариант начальной парентеральной терапии при ТГВ/ТЭЛА.",
-        link: "https://journal.chestnet.org/",
-      },
-    ],
-  },
-
-  // Служебное
-  updatedAt: "2025-11-13T00:00:00.000Z",
+type Drug = {
+  id: string;
+  name: string;
+  generic?: string;
+  group: string;
+  indications: string;
+  guideSection?: string;
 };
+
+const DRUGS: Drug[] = [
+  {
+    id: 'aspirin',
+    name: 'Ацетилсалициловая кислота (Аспирин)',
+    generic: 'Acetylsalicylic acid',
+    group: 'Антитромбоцитарные средства',
+    indications: 'ОКС, вторичная профилактика ИМ и ишемического инсульта, стабильная ИБС',
+    guideSection: 'ОКС • Антитромбоцитарная терапия',
+  },
+  {
+    id: 'ticagrelor',
+    name: 'Тикагрелор',
+    generic: 'Ticagrelor',
+    group: 'P2Y12-ингибиторы',
+    indications: 'ОКС с и без подъёма ST, после ЧКВ в составе ДАТТ',
+    guideSection: 'ОКС • P2Y12 ингибиторы',
+  },
+  {
+    id: 'prasugrel',
+    name: 'Прасугрел',
+    generic: 'Prasugrel',
+    group: 'P2Y12-ингибиторы',
+    indications: 'ОКС при планируемом/выполненном ЧКВ (без инсульта/ТИА в анамнезе)',
+    guideSection: 'ОКС • P2Y12 ингибиторы',
+  },
+  {
+    id: 'clopidogrel',
+    name: 'Клопидогрел',
+    generic: 'Clopidogrel',
+    group: 'P2Y12-ингибиторы',
+    indications: 'Альтернатива при высоком риске кровотечения или непереносимости тикагрелора/прасугрела',
+    guideSection: 'ОКС • P2Y12 ингибиторы / деэскалация',
+  },
+];
+
+export default function DrugsPage() {
+  const [search, setSearch] = useState('');
+
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return DRUGS;
+    return DRUGS.filter((d) =>
+      [d.name, d.generic, d.group, d.indications, d.guideSection]
+        .filter(Boolean)
+        .some((field) => field!.toLowerCase().includes(q))
+    );
+  }, [search]);
+
+  return (
+    <main className="min-h-screen bg-[#fcfcee] py-8">
+      <div className="max-w-6xl mx-auto px-4">
+        {/* Заголовок */}
+        <header className="mb-8 border-b border-gray-200 pb-4">
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
+            База препаратов
+          </h1>
+          <p className="text-sm text-gray-600 max-w-2xl">
+            Быстрый доступ к основным препаратам, связанным с клиническими гайдами
+            MedRadix. Здесь только структура; детальные инструкции — в соответствующих
+            разделах гайдов.
+          </p>
+        </header>
+
+        {/* Поиск */}
+        <section className="mb-6">
+          <label className="block text-xs font-semibold tracking-[0.18em] text-[#9c978f] uppercase mb-2">
+            Поиск по названию, группе или показаниям
+          </label>
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Например: тикагрелор, антитромбоцитарные, ОКС..."
+              className="w-full rounded-full border border-[#d3cec4] bg-white pl-10 pr-4 h-11 text-sm text-[#3b342d] shadow-sm focus:outline-none focus:ring-1 focus:ring-[#015d52]"
+            />
+          </div>
+        </section>
+
+        {/* Результаты */}
+        <section>
+          {filtered.length === 0 ? (
+            <div className="flex items-center gap-3 bg-yellow-50 border border-yellow-200 rounded-xl px-4 py-3 text-sm text-gray-700">
+              <AlertCircle className="text-yellow-500" size={18} />
+              <span>По текущему запросу препаратов не найдено. Измените критерии поиска.</span>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 gap-4">
+              {filtered.map((drug) => (
+                <article
+                  key={drug.id}
+                  className="bg-white rounded-xl border border-gray-200 shadow-sm p-4 flex flex-col gap-2"
+                >
+                  <div className="flex items-start gap-2">
+                    <Pill className="text-[#015d52] mt-1" size={18} />
+                    <div>
+                      <h2 className="font-semibold text-gray-900 text-sm md:text-base">
+                        {drug.name}
+                      </h2>
+                      {drug.generic && (
+                        <p className="text-xs text-gray-500 italic">
+                          {drug.generic}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="text-xs text-gray-700">
+                    <span className="font-semibold">Группа: </span>
+                    <span>{drug.group}</span>
+                  </div>
+
+                  <div className="text-xs text-gray-700">
+                    <span className="font-semibold">Основные показания: </span>
+                    <span>{drug.indications}</span>
+                  </div>
+
+                  {drug.guideSection && (
+                    <div className="mt-1">
+                      <span className="inline-flex items-center rounded-full bg-emerald-50 border border-emerald-200 px-3 py-1 text-[11px] font-medium text-emerald-800">
+                        Связан с разделом гайда: {drug.guideSection}
+                      </span>
+                    </div>
+                  )}
+                </article>
+              ))}
+            </div>
+          )}
+        </section>
+
+        {/* Дисклеймер */}
+        <section className="mt-10 border-t border-gray-200 pt-4">
+          <p className="text-xs text-gray-500">
+            Таблица носит обзорный характер и не заменяет официальные инструкции по
+            применению препаратов и локальные протоколы. Для выбора дозировок и схем
+            терапии всегда используйте полный текст гайдов и утверждённые документы.
+          </p>
+        </section>
+      </div>
+    </main>
+  );
+}
