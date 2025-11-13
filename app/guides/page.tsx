@@ -1,10 +1,3 @@
-// app/guides/acs/page.tsx — ОКС (финал «код-окс»)
-// 'use client' + Next.js 16. Без framer-motion. Ничего НЕ сокращаем.
-// Изменения: порядок/размеры селектов по платформам, центрирование текста в select (специальность),
-// бейджи перенесены ниже заголовков карточек, калькуляторы закреплены под разделами,
-// добавлен раздел "Осложнения" и блок по МИНОКА (добавлены, ничего существующее не трогаем),
-// все строки с < и > безопасно рендерятся через <Safe text="..."/> — контент буквально сохранён.
-
 'use client';
 
 import { useState } from 'react';
@@ -96,7 +89,7 @@ export default function ACSPage() {
   const [selectedTab, setSelectedTab] = useState<'diagnosis' | 'treatment' | 'complications' | 'prevention' | 'comparison'>('diagnosis');
   const [selectedSpecialty, setSelectedSpecialty] = useState('Кардиология');
   const [selectedNosology, setSelectedNosology] = useState('Острый коронарный синдром (ОКС)');
-  const [isIntroOpen, setIsIntroOpen] = useState(true); // Аккордеон «Краткая ориентация (ОКС)»
+  const [isIntroOpen, setIsIntroOpen] = useState(true);
 
   // Группировка нозологий
   const groupedCardiologyNosologies = CARDIOLOGY_NOSOLOGIES.reduce<Record<string, Nosology[]>>((acc, item) => {
@@ -105,7 +98,7 @@ export default function ACSPage() {
     return acc;
   }, {});
 
-  // ====== ДАННЫЕ ГАЙДА (весь ваш контент сохранён; ниже — только добавления и безопасный рендер через <Safe>) ======
+  // ====== ДАННЫЕ ГАЙДА ======
   const escGuideline = {
     title: 'Острый коронарный синдром',
     version: 'ESC 2023-2024',
@@ -116,7 +109,7 @@ export default function ACSPage() {
       full: 'https://www.escardio.org/Guidelines/Clinical-Practice-Guidelines',
     },
 
-    // ===== Диагностика (ваш исходный массив полностью сохранён) + МИНОКА (добавлено) =====
+    // ===== Диагностика =====
     diagnosis: {
       initialAssessment: [
         {
@@ -241,7 +234,6 @@ export default function ACSPage() {
         { condition: 'Расслоение аорты', features: ['Мигрирующая боль', 'Асимметрия АД', 'Расширение средостения на рентгене', 'Неврологическая симптоматика'] },
       ],
 
-      // ====== МИНОКА (добавлено, без сокращения имеющегося) ======
       minoca: {
         title: 'МИНОКА (инфаркт миокарда при необструктивных коронарных артериях)',
         points: [
@@ -259,7 +251,6 @@ export default function ACSPage() {
         ],
       },
 
-      // ====== ДОБАВЛЕНО: Расширенная дифференциальная диагностика ======
       expandedDifferential: [
         {
           category: 'Кардиальные не-ИБС',
@@ -292,7 +283,7 @@ export default function ACSPage() {
       ],
     },
 
-    // ===== ЛЕЧЕНИЕ (исходный контент сохранён) =====
+    // ===== ЛЕЧЕНИЕ =====
     treatment: {
       generalMeasures: [
         {
@@ -546,7 +537,6 @@ export default function ACSPage() {
         },
       ],
 
-      // ====== ДОБАВЛЕНО: Алгоритмы выбора терапии ======
       selectionAlgorithms: {
         p2y12Selection: {
           title: 'Алгоритм выбора P2Y12 ингибитора при ОКС',
@@ -592,7 +582,6 @@ export default function ACSPage() {
         }
       },
 
-      // ====== ДОБАВЛЕНО: Алгоритмы титрации терапии ======
       titrationGuidance: {
         title: 'Алгоритмы титрации терапии перед выпиской',
         medications: [
@@ -618,7 +607,7 @@ export default function ACSPage() {
       }
     },
 
-    // ===== Вторичная профилактика (как было) =====
+    // ===== Вторичная профилактика =====
     secondaryPrevention: {
       duration: 'Пожизненно после ОКС',
       medications: [
@@ -668,7 +657,7 @@ export default function ACSPage() {
       ],
     },
 
-    // ===== Сравнение (как было) =====
+    // ===== Сравнение =====
     comparison: {
       title: 'Сравнение Европейских (ESC 2023-2024) и Американских (ACC/AHA 2025) рекомендаций',
       keyDifferences: [
@@ -717,7 +706,7 @@ export default function ACSPage() {
       ],
     },
 
-    // ====== ДОБАВЛЕНО: Расширенные осложнения ======
+    // ====== Осложнения ======
     complications: {
       title: 'Осложнения ОКС: диагностика и ведение',
       sections: [
@@ -821,7 +810,7 @@ export default function ACSPage() {
       ]
     },
 
-    // ====== ДОБАВЛЕНО: Улучшенные калькуляторы ======
+    // ====== Улучшенные калькуляторы ======
     enhancedCalculators: {
       title: 'Калькуляторы и шкалы риска',
       groups: [
@@ -838,7 +827,7 @@ export default function ACSPage() {
             },
             {
               name: 'TIMI для NSTEMI',
-              purpose: '14-дневный риск смерти/ИМ/срочная реваскуляризация',
+              purpose: '14-дневный риск смерти/ИМ/срочная реваскулизация',
               useCase: 'Быстрая стратификация в приемном отделении',
               interpretation: '≥3 баллов → высокий риск',
               link: '/calculators/timi-acs'
@@ -874,7 +863,7 @@ export default function ACSPage() {
       ]
     },
 
-    // ====== ДОБАВЛЕНО: Экстренные протоколы ======
+    // ====== Экстренные протоколы ======
     emergencyProtocols: {
       title: 'Экстренные протоколы (шпаргалка)',
       protocols: [
@@ -917,7 +906,7 @@ export default function ACSPage() {
     }
   };
 
-  // ===== UI-кусочки =====
+  // ===== UI-компоненты =====
   const RecommendationBadge = ({ rec }: { rec: Recommendation }) => {
     const cls: RecommendationClass = rec.class ?? 'I';
     const lvl: EvidenceLevel = rec.level ?? 'A';
@@ -952,12 +941,15 @@ export default function ACSPage() {
     </div>
   );
 
-  const handleSaveSection = () => {};
+  const handleSaveSection = () => {
+    // Логика сохранения раздела
+    console.log('Сохранение раздела:', selectedTab);
+  };
 
   const sections = [
     { id: 'diagnosis' as const, label: 'Диагностика' },
     { id: 'treatment' as const, label: 'Лечение' },
-    { id: 'complications' as const, label: 'Осложнения' }, // добавлено
+    { id: 'complications' as const, label: 'Осложнения' },
     { id: 'prevention' as const, label: 'Профилактика' },
     { id: 'comparison' as const, label: 'Сравнение' },
   ];
@@ -969,10 +961,8 @@ export default function ACSPage() {
         {/* Заголовок и фильтры */}
         <section className="border-b border-gray-200 mb-8">
           <div className="max-w-[1800px] mx-auto px-4 pt-4 pb-4">
-            {/* Desktop: [Нозология | Заголовок | Специальность]
-                Mobile: [Специальность] -> [Нозология] -> [Заголовок] */}
             <div className="flex flex-col lg:grid lg:grid-cols-3 lg:items-center gap-4">
-              {/* Mobile-first: Специальность (идёт первой), на desktop — справа */}
+              {/* Специальность */}
               <div className="order-1 lg:order-3 lg:justify-self-end w-full lg:w-auto">
                 <div className="flex flex-col items-start lg:items-end gap-1 w-full lg:w-auto">
                   <span className="text-[11px] uppercase tracking-[0.18em] text-[#9c978f] hidden lg:block">Специальность</span>
@@ -988,26 +978,26 @@ export default function ACSPage() {
                 </div>
               </div>
 
-              {/* Заголовок — по центру, на мобиле идёт третьим */}
+              {/* Заголовок */}
               <div className="order-3 lg:order-2 text-center">
                 <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
                   <Safe text={escGuideline.title} />
                 </h1>
               </div>
 
-              {/* Нозология: на desktop — слева */}
+              {/* Нозология */}
               <div className="order-2 lg:order-1 lg:justify-self-start w-full lg:w-auto">
                 <div className="flex flex-col gap-1 w-full lg:w-auto">
                   <span className="text-[11px] uppercase tracking-[0.18em] text-[#9c978f] hidden lg:block">Нозология</span>
                   <select
                     value={selectedNosology}
                     onChange={(e) => setSelectedNosology(e.target.value)}
-                    className="rounded-full border border-[#d3cec4] bg-white px-4 h-12 min-h-[48px] text-base text-[#3b342d] shadow-sm focus:outline-none focus:border-[#015d52] w-full lg:w-[320px] lg:h-10 lg:min-h-0"
+                    className="rounded-full border border-[#d3cec4] bg-white px-4 h-12 min-h-[48px] text-base text-[#3b342d] shadow-sm focus:outline-none focus:border-[#015d52] w-full lg:w-[320px] lg:h-10 lg:min-h-0 text-center"
                   >
                     {Object.entries(groupedCardiologyNosologies).map(([groupName, items]) => (
                       <optgroup key={groupName} label={groupName}>
                         {items.map((nosology) => (
-                          <option key={nosology.id} value={nosology.label}>{nosology.label}</option>
+                          <option key={nosology.id} value={nosology.label} className="text-center">{nosology.label}</option>
                         ))}
                       </optgroup>
                     ))}
@@ -1084,7 +1074,7 @@ export default function ACSPage() {
               ))}
             </div>
 
-            {/* Калькуляторы — всегда под чипами, как просили */}
+            {/* Калькуляторы — всегда под чипами */}
             <section className="mb-6">
               <h3 className="text-2xl font-semibold text-gray-900 mb-3">Калькуляторы риска (быстрый переход)</h3>
               <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -1356,7 +1346,7 @@ export default function ACSPage() {
                     </div>
                   </section>
 
-                  {/* МИНОКА (вкладка Диагностика) */}
+                  {/* МИНОКА */}
                   <section>
                     <h3 className="text-2xl font-semibold text-gray-900 mb-4">МИНОКА: диагностика и тактика</h3>
                     <div className="bg-sky-50 rounded-xl p-6 border border-sky-200">
@@ -1609,14 +1599,14 @@ export default function ACSPage() {
                         <div key={idx} className="bg-purple-50 rounded-xl p-6 border border-purple-200">
                           <h4 className="text-lg font-semibold text-gray-900 mb-2"><Safe text={t.drug} /></h4>
                           <RecommendationBadge rec={{ class: t.class, level: t.level, evidenceText: t.evidenceText }} />
-                         <p className="text-gray-700 mt-3">
-  <strong>Показания:</strong> <Safe text={t.indication} />
-</p>
-                         {t.timing && (
-  <p className="text-gray-700">
-    <Safe text={`Тайминг: ${t.timing}`} />
-  </p>
-)}
+                          <p className="text-gray-700 mt-3">
+                            <strong>Показания:</strong> <Safe text={t.indication} />
+                          </p>
+                          {t.timing && (
+                            <p className="text-gray-700">
+                              <Safe text={`Тайминг: ${t.timing}`} />
+                            </p>
+                          )}
                           {t.options && (
                             <div className="mt-2">
                               <p className="font-medium text-sm mb-1">Препараты:</p>
@@ -1685,7 +1675,7 @@ export default function ACSPage() {
                 </div>
               )}
 
-              {/* Осложнения — добавлено, стилистика белая карточка + мягкие подложки */}
+              {/* Осложнения */}
               {selectedTab === 'complications' && (
                 <div className="space-y-10">
                   <h2 className="text-3xl font-bold text-gray-900">Осложнения ОКС: диагностика и ведение</h2>
