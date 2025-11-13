@@ -1,18 +1,20 @@
 // app/components/Header.tsx
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Search, User, Menu, X } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 const MENU_ITEMS = [
-  'Новое',
-  'Гайды',
-  'Статьи',
-  'Голос эксперта', 
-  'Курсы',
-  'Калькуляторы',
-  'Лекарства',
-  'Медсестрам',
+  { name: 'Новое', href: '/news' },
+  { name: 'Гайды', href: '/guides' },
+  { name: 'Статьи', href: '/articles' },
+  { name: 'Голос эксперта', href: '/experts' },
+  { name: 'Курсы', href: '/courses' },
+  { name: 'Калькуляторы', href: '/calculators' },
+  { name: 'Лекарства', href: '/drugs' },
+  { name: 'Медсестрам', href: '/nurses' },
 ];
 
 export default function Header() {
@@ -20,21 +22,38 @@ export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeLang, setActiveLang] = useState<'RU' | 'EN'>('RU');
   const [activeMenuItem, setActiveMenuItem] = useState<string | null>(null);
+  const pathname = usePathname();
+
+  // Определяем активный раздел по текущему пути
+  useEffect(() => {
+    if (pathname === '/') {
+      setActiveMenuItem(null);
+      return;
+    }
+
+    // Ищем активный раздел
+    const activeItem = MENU_ITEMS.find(item => {
+      if (item.href === '/') return false;
+      return pathname.startsWith(item.href);
+    });
+
+    setActiveMenuItem(activeItem?.name || null);
+  }, [pathname]);
 
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-gray-200">
       {/* Основная шапка */}
       <div className="max-w-[1360px] mx-auto px-4 py-3 flex items-center justify-between">
         
-        {/* Логотип */}
-        <div className="flex flex-col">
+        {/* Логотип - ссылка на главную */}
+        <Link href="/" className="flex flex-col hover:opacity-80 transition-opacity">
           <span className="text-2xl font-semibold text-[#2b2115]">
             MedRadix
           </span>
           <span className="text-xs text-[#7a6a55] italic mt-[-2px]">
             Scientia pro vita
           </span>
-        </div>
+        </Link>
 
         {/* Гамбургер для мобильных */}
         <button
@@ -46,33 +65,38 @@ export default function Header() {
 
         {/* Меню (центр) - скрыто на мобильных */}
         <nav className="hidden lg:flex flex-1 justify-center">
-          <ul className="flex items-center space-x-7">
+          <ul className="flex items-center space-x-8">
             {MENU_ITEMS.map((item) => {
-              const isActive = activeMenuItem === item;
-              const isNovoje = item === 'Новое';
+              const isActive = activeMenuItem === item.name;
+              const isNovoje = item.name === 'Новое';
 
               return (
-                <li key={item} className="relative group">
-                  <button
-                    type="button"
-                    onClick={() => setActiveMenuItem(item)}
-                    className={`inline-flex flex-col items-center font-medium transition-all duration-200 ${
-                      isActive
-                        ? 'text-[20px] scale-105'
-                        : 'text-lg'
-                    } ${
-                      isNovoje
-                        ? 'text-[#e6a800]'
-                        : 'text-[#4b3b2f] hover:text-[#015d52]'
+                <li key={item.name} className="relative group">
+                  <Link
+                    href={item.href}
+                    className={`inline-flex flex-col items-center transition-all duration-300 ${
+                      isActive && !isNovoje
+                        ? 'text-[26px] font-semibold text-[#01463d] leading-none'
+                        : isActive && isNovoje
+                        ? 'text-[26px] font-semibold text-[#e6a800] leading-none'
+                        : isNovoje
+                        ? 'text-[18px] font-medium text-[#e6a800]'
+                        : 'text-[18px] font-medium text-[#4b3b2f] hover:text-[#015d52]'
                     }`}
                   >
-                    <span>{item}</span>
+                    <span className="relative z-10">{item.name}</span>
+                    
+                    {/* Подчеркивание */}
                     <span
-                      className={`mt-1 h-0.5 w-full origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ${
+                      className={`mt-1 h-0.5 w-full origin-left transition-all duration-300 ${
+                        isActive
+                          ? 'scale-x-100'
+                          : 'scale-x-0 group-hover:scale-x-100'
+                      } ${
                         isNovoje ? 'bg-[#facc15]' : 'bg-[#015d52]'
                       }`}
                     />
-                  </button>
+                  </Link>
                 </li>
               );
             })}
@@ -134,21 +158,26 @@ export default function Header() {
           <div className="max-w-[1360px] mx-auto px-4 py-4">
             <nav className="space-y-3">
               {MENU_ITEMS.map((item) => {
-                const isNovoje = item === 'Новое';
+                const isActive = activeMenuItem === item.name;
+                const isNovoje = item.name === 'Новое';
+                
                 return (
-                  <button
-                    key={item}
-                    type="button"
-                    className={`block w-full text-left py-3 px-4 text-lg font-medium ${
-                      isNovoje ? 'text-[#e6a800]' : 'text-[#4b3b2f]'
-                    } hover:bg-gray-50 rounded-lg border border-gray-100`}
-                    onClick={() => {
-                      setActiveMenuItem(item);
-                      setIsMobileMenuOpen(false);
-                    }}
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className={`block w-full text-left py-3 px-4 transition-all duration-200 ${
+                      isActive && !isNovoje
+                        ? 'text-[22px] font-semibold text-[#01463d]'
+                        : isActive && isNovoje
+                        ? 'text-[22px] font-semibold text-[#e6a800]'
+                        : isNovoje
+                        ? 'text-[#e6a800] hover:bg-[#facc15]/5'
+                        : 'text-[18px] text-[#4b3b2f] hover:bg-gray-50'
+                    } rounded-lg border border-gray-100`}
+                    onClick={() => setIsMobileMenuOpen(false)}
                   >
-                    {item}
-                  </button>
+                    {item.name}
+                  </Link>
                 );
               })}
             </nav>
