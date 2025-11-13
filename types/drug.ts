@@ -267,3 +267,71 @@ export function generateDrugMetaTags(drug: Drug) {
     }
   };
 }
+// === MOCK DATA ===
+// Временные данные для разработки
+
+export const mockDrugEnoxaparin: Drug = {
+  id: "enoxaparin",
+  genericName: "Enoxaparin",
+  slug: "enoxaparin", 
+  tradeNames: ["Клексан", "Эниксум", "Гемапаксан"],
+  atcCode: "B01AB05",
+  pharmacologicClass: "Низкомолекулярный гепарин",
+  therapeuticClass: "Антикоагулянт",
+  specialties: ["Кардиология", "Ангиохирургия", "Терапия", "Реаниматология"],
+  manufacturer: "Разные производители (Sanofi и др.)",
+  description: "Низкомолекулярный гепарин для профилактики и лечения тромбоэмболических осложнений.",
+  
+  // Обязательные поля
+  indications: [
+    {
+      title: "Острый коронарный синдром без подъёма ST (NSTE-ACS)",
+      description: "Антикоагулянтная терапия у пациентов с нестабильной стенокардией и NSTEMI",
+      classOfRecommendation: "I",
+      levelOfEvidence: "A"
+    }
+  ],
+  forms: [
+    {
+      form: "Раствор для инъекций",
+      strength: "40 мг/0,4 мл", 
+      route: "п/к"
+    }
+  ],
+  dosage: {
+    adults: [
+      {
+        indication: "NSTE-ACS",
+        regimen: "1 мг/кг п/к каждые 12 часов"
+      }
+    ],
+    renalImpairment: [],
+    hepaticImpairment: [], 
+    pediatrics: []
+  },
+  contraindications: {
+    absolute: ["Активное кровотечение"],
+    relative: []
+  },
+  interactions: [],
+  adverseEffects: {
+    common: [],
+    serious: []
+  },
+  monitoring: {
+    laboratory: [],
+    clinical: []
+  },
+  pregnancyLactation: {
+    pregnancy: "",
+    lactation: ""
+  },
+  pearls: [],
+  guidelineUsage: {
+    eu: [],
+    us: []
+  },
+  updatedAt: new Date().toISOString(),
+  published: true,
+  verified: true
+};
