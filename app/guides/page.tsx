@@ -130,7 +130,7 @@ export default function ACSPage() {
           actions: [
             'Характер боли: давящая, жгучая, за грудиной',
             'Иррадиация: левая рука, шея, челюсть, спина',
-            'Сопутствующие симптомы: одышка, тошнота, потливость',
+            'Сопутствующие симптомы: одышка, тошнота, потливока',
             'Длительность: >20 минут',
           ],
           timing: '10-20 мин',
@@ -346,7 +346,7 @@ export default function ACSPage() {
               advantages: ['Мощный эффект', 'Меньше одышки'],
               disadvantages: ['Противопоказан при инсульте/ТИА', 'Больше кровотечений'],
               class: 'I' as RecommendationClass,
-              level: 'B' as EvidenceLevel,
+              level: 'B' as RecommendationClass,
               evidenceText: 'Класс I - Рекомендуется/Показано; Уровень B - Одно РКИ или крупные нерандомизированные исследования',
             },
             {
@@ -808,101 +808,6 @@ export default function ACSPage() {
           evidenceText: 'Персонализированная коррекция терапии снижает риск осложнений'
         }
       ]
-    },
-
-    // ====== Улучшенные калькуляторы ======
-    enhancedCalculators: {
-      title: 'Калькуляторы и шкалы риска',
-      groups: [
-        {
-          groupName: 'Острая фаза',
-          calculators: [
-            {
-              name: 'GRACE 2.0',
-              purpose: 'Госпитальная и 6-месячная смертность',
-              useCase: 'При поступлении, решение об инвазивной тактике',
-              parameters: ['Возраст', 'ЧСС', 'САД', 'Креатинин', 'СН', 'ЭКГ', 'Тропонин'],
-              interpretation: '>140 баллов → срочная инвазивная стратегия',
-              link: '/calculators/grace'
-            },
-            {
-              name: 'TIMI для NSTEMI',
-              purpose: '14-дневный риск смерти/ИМ/срочная реваскулизация',
-              useCase: 'Быстрая стратификация в приемном отделении',
-              interpretation: '≥3 баллов → высокий риск',
-              link: '/calculators/timi-acs'
-            },
-            {
-              name: 'HEART / ED risk',
-              purpose: 'Быстрая оценка краткосрочного риска MACE',
-              useCase: 'Приёмное отделение, дифференциальная диагностика',
-              interpretation: '≥4 баллов → госпитализация и наблюдение',
-              link: '/calculators/heart'
-            }
-          ]
-        },
-        {
-          groupName: 'Долгосрочный прогноз и безопасность',
-          calculators: [
-            {
-              name: 'PRECISE-DAPT',
-              purpose: 'Риск кровотечения при ДАТТ',
-              useCase: 'Выбор продолжительности ДАТТ',
-              interpretation: '≥25 → рассмотреть короткую ДАТТ (3-6 мес)',
-              link: '/calculators/precise-dapt'
-            },
-            {
-              name: 'ARC-HBR',
-              purpose: 'Определение высокого риска кровотечений',
-              useCase: 'Индивидуализация антитромботической терапии',
-              interpretation: '≥1 большого или 2 малых критерия → высокий риск',
-              link: '/calculators/arc-hbr'
-            }
-          ]
-        }
-      ]
-    },
-
-    // ====== Экстренные протоколы ======
-    emergencyProtocols: {
-      title: 'Экстренные протоколы (шпаргалка)',
-      protocols: [
-        {
-          situation: 'STEMI: догоспитальный этап',
-          actions: [
-            'ЭКГ за 10 мин → телемедицина',
-            'Аспирин 250-500 мг в/в (разжевать)',
-            'Тикагрелор 180 мг или Прасугрел 60 мг',
-            'Решение: primary PCI vs фибринолиз'
-          ],
-          timing: 'FMC-to-balloon ≤90 мин, FMC-to-needle ≤10 мин',
-          class: 'I' as RecommendationClass,
-          level: 'A' as EvidenceLevel
-        },
-        {
-          situation: 'NSTEMI высокого риска',
-          actions: [
-            'ДАТТ: Аспирин + P2Y12 ингибитор',
-            'Антикоагулянт (фондапаринукс/эноксапарин)',
-            'Инвазивная стратегия <24 ч'
-          ],
-          criteria: 'GRACE >140, динамика ЭКГ, рецидивирующая боль',
-          class: 'I' as RecommendationClass,
-          level: 'A' as EvidenceLevel
-        },
-        {
-          situation: 'Кардиогенный шок',
-          actions: [
-            'Немедленная реваскуляризация',
-            'Норэпинефрин для поддержки АД',
-            'Рассмотреть механическую поддержку',
-            'Коррекция ацидоза, электролитов'
-          ],
-          timing: 'Решение за 15-30 минут',
-          class: 'I' as RecommendationClass,
-          level: 'B' as EvidenceLevel
-        }
-      ]
     }
   };
 
@@ -954,6 +859,34 @@ export default function ACSPage() {
     { id: 'comparison' as const, label: 'Сравнение' },
   ];
 
+  // ===== Калькуляторы 2 в 1 =====
+  const calculators = [
+    {
+      name: 'GRACE/TIMI-like EU',
+      description: 'Европейская и американская модификация оценки риска госпитальной и 6-месячной смертности в одном калькуляторе',
+      euFeatures: ['GRACE 2.0: госпитальная и 6-месячная смертность', 'Параметры: возраст, ЧСС, САД, креатинин, СН, ЭКГ, тропонин'],
+      usFeatures: ['TIMI Risk Score для NSTEMI', '14-дневный риск смерти/ИМ/срочная реваскуляризация'],
+      interpretation: '>140 баллов (GRACE) или ≥3 баллов (TIMI) → высокий риск, срочная инвазивная стратегия',
+      link: '/calculators/grace-timi-eu'
+    },
+    {
+      name: 'HEART/ED risk',
+      description: 'Быстрая оценка краткосрочного риска MACE в приемном отделении, включающая европейский HEART и международный EDACS',
+      euFeatures: ['HEART Score: 0-10 баллов', 'Параметры: анамнез, ЭКГ, возраст, факторы риска, тропонин'],
+      usFeatures: ['EDACS (Emergency Department Assessment of Chest Pain Score)', 'Быстрая стратификация в течение 2 часов'],
+      interpretation: '≥4 баллов (HEART) → госпитализация и наблюдение; низкий риск по EDACS → возможна ранняя выписка',
+      link: '/calculators/heart-ed-risk'
+    },
+    {
+      name: 'TIMI для NSTE-ACS/US',
+      description: 'Стратификация риска осложнений и отдаленного прогноза у пациентов с NSTE-ACS (ESC+ACC/AHA подходы)',
+      euFeatures: ['ESC 2023: GRACE 2.0 для долгосрочного прогноза', 'Фокусировка на 6-месячной смертности'],
+      usFeatures: ['ACC/AHA 2025: TIMI Risk Score + дополнительные параметры', 'Интеграция с PRECISE-DAPT для оценки кровотечений'],
+      interpretation: 'Комбинированная оценка ишемического и геморрагического риска для персонализации ДАТТ',
+      link: '/calculators/timi-nstemi-us'
+    }
+  ];
+
   // ===== РЕНДЕР =====
   return (
     <main className="min-h-screen bg-[#fcfcee] py-8">
@@ -972,7 +905,7 @@ export default function ACSPage() {
                     className="rounded-full border border-[#d3cec4] bg-white px-4 h-12 min-h-[48px] text-base text-[#3b342d] shadow-sm focus:outline-none focus:border-[#015d52] w-full lg:w-[230px] text-center lg:h-10 lg:min-h-0"
                   >
                     {SPECIALTIES.map((spec) => (
-                      <option key={spec} value={spec}>{spec}</option>
+                      <option key={spec} value={spec} className="text-center">{spec}</option>
                     ))}
                   </select>
                 </div>
@@ -1054,6 +987,25 @@ export default function ACSPage() {
                   );
                 })}
               </div>
+
+              {/* Калькуляторы в левом меню для десктопа */}
+              <div className="mt-8">
+                <div className="text-sm font-semibold tracking-[0.16em] text-[#9c978f] uppercase mb-3">
+                  Калькуляторы 2 в 1
+                </div>
+                <div className="space-y-2">
+                  {calculators.map((calc, index) => (
+                    <a
+                      key={index}
+                      href={calc.link}
+                      className="w-full rounded-full border px-3 py-2 text-sm text-left font-medium transition bg-white text-[#1f2933] border-[#d3cec4] hover:ring-1 hover:ring-[#015d52] hover:shadow-[0_0_10px_#015D52] block"
+                    >
+                      <div className="font-semibold"><Safe text={calc.name} /></div>
+                      <div className="text-xs text-gray-600 mt-1 line-clamp-2"><Safe text={calc.description} /></div>
+                    </a>
+                  ))}
+                </div>
+              </div>
             </div>
           </aside>
 
@@ -1074,19 +1026,43 @@ export default function ACSPage() {
               ))}
             </div>
 
-            {/* Калькуляторы — всегда под чипами */}
-            <section className="mb-6">
-              <h3 className="text-2xl font-semibold text-gray-900 mb-3">Калькуляторы риска (быстрый переход)</h3>
-              <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
-                {escGuideline.enhancedCalculators.groups.flatMap(group => 
-                  group.calculators.map(calc => (
-                    <a key={calc.name} href={calc.link} className="border border-blue-200 rounded-xl px-4 py-3 text-sm flex flex-col justify-between hover:bg-blue-50 transition">
-                      <span className="font-semibold text-gray-900 mb-1"><Safe text={calc.name} /></span>
-                      <span className="text-gray-600"><Safe text={calc.purpose} /></span>
-                      <span className="text-xs text-gray-500 mt-2"><Safe text={`Использование: ${calc.useCase}`} /></span>
-                    </a>
-                  ))
-                )}
+            {/* Калькуляторы для мобильных устройств */}
+            <section className="lg:hidden mb-6">
+              <h3 className="text-2xl font-semibold text-gray-900 mb-3">Калькуляторы 2 в 1</h3>
+              <div className="grid gap-4">
+                {calculators.map((calc, index) => (
+                  <a key={index} href={calc.link} className="border border-blue-200 rounded-xl p-4 text-sm flex flex-col justify-between hover:bg-blue-50 transition">
+                    <div>
+                      <span className="font-semibold text-gray-900 mb-2 block"><Safe text={calc.name} /></span>
+                      <span className="text-gray-600 block mb-3"><Safe text={calc.description} /></span>
+                      <div className="grid grid-cols-2 gap-2 text-xs">
+                        <div className="bg-blue-50 p-2 rounded">
+                          <div className="font-medium text-blue-800">🇪🇺 EU</div>
+                          <ul className="text-gray-700 mt-1 space-y-1">
+                            {calc.euFeatures.map((feature, i) => (
+                              <li key={i} className="flex items-start">
+                                <span className="mr-1">•</span>
+                                <Safe text={feature} />
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                        <div className="bg-red-50 p-2 rounded">
+                          <div className="font-medium text-red-800">🇺🇸 US</div>
+                          <ul className="text-gray-700 mt-1 space-y-1">
+                            {calc.usFeatures.map((feature, i) => (
+                              <li key={i} className="flex items-start">
+                                <span className="mr-1">•</span>
+                                <Safe text={feature} />
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-3"><strong>Интерпретация:</strong> <Safe text={calc.interpretation} /></p>
+                    </div>
+                  </a>
+                ))}
               </div>
             </section>
 
@@ -1374,31 +1350,6 @@ export default function ACSPage() {
               {/* Лечение */}
               {selectedTab === 'treatment' && (
                 <div className="space-y-12">
-                  {/* Экстренные протоколы */}
-                  <section>
-                    <h2 className="text-3xl font-bold text-gray-900 mb-6">Экстренные протоколы (шпаргалка)</h2>
-                    <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
-                      {escGuideline.emergencyProtocols.protocols.map((protocol, idx) => (
-                        <div key={idx} className="bg-red-50 rounded-xl p-6 border border-red-200">
-                          <h3 className="text-xl font-semibold text-red-800 mb-3"><Safe text={protocol.situation} /></h3>
-                          <RecommendationBadge rec={{ class: protocol.class, level: protocol.level }} />
-                          <div className="mt-4">
-                            <p className="font-medium mb-2">Действия:</p>
-                            <ul className="text-sm text-gray-700 space-y-1">
-                              {protocol.actions.map((action, i) => (<li key={i}><Safe text={`• ${action}`} /></li>))}
-                            </ul>
-                            {protocol.timing && (
-                              <p className="text-sm text-gray-700 mt-3"><strong>Тайминг:</strong> <Safe text={protocol.timing} /></p>
-                            )}
-                            {protocol.criteria && (
-                              <p className="text-sm text-gray-700 mt-2"><strong>Критерии:</strong> <Safe text={protocol.criteria} /></p>
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </section>
-
                   {/* Общие мероприятия */}
                   <section>
                     <h2 className="text-3xl font-bold text-gray-900 mb-6">Общие мероприятия</h2>
@@ -1474,62 +1425,6 @@ export default function ACSPage() {
                             </div>
                           ))}
                         </div>
-                      </div>
-                    </div>
-
-                    {/* Алгоритм выбора P2Y12 ингибитора */}
-                    <div className="mt-8 bg-yellow-50 rounded-xl p-6 border border-yellow-200">
-                      <h3 className="text-xl font-semibold text-gray-900 mb-4">Алгоритм выбора P2Y12 ингибитора при ОКС</h3>
-                      <RecommendationBadge rec={{ 
-                        class: escGuideline.treatment.selectionAlgorithms.p2y12Selection.class,
-                        level: escGuideline.treatment.selectionAlgorithms.p2y12Selection.level,
-                        evidenceText: escGuideline.treatment.selectionAlgorithms.p2y12Selection.evidenceText
-                      }} />
-                      <div className="bg-white rounded-lg p-4 mt-4 border border-yellow-100">
-                        <div className="space-y-4">
-                          <div className="flex items-start gap-3">
-                            <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">1</div>
-                            <div>
-                              <p className="font-medium">Высокий риск кровотечения? (ARC-HBR)</p>
-                              <p className="text-sm text-gray-700 mt-1">ДА → <strong>Клопидогрел 600 мг нагрузка → 75 мг/сут</strong></p>
-                              <p className="text-sm text-gray-700">НЕТ → перейти к шагу 2</p>
-                            </div>
-                          </div>
-                          <div className="flex items-start gap-3">
-                            <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">2</div>
-                            <div>
-                              <p className="font-medium">Планируется ЧКВ?</p>
-                              <p className="text-sm text-gray-700 mt-1">ДА → <strong>Прасугрел 60 мг → 10 мг/сут (5 мг при {'<'}60 кг)</strong></p>
-                              <p className="text-sm text-gray-700">НЕТ → <strong>Тикагрелор 180 мг → 90 мг 2×/сут</strong></p>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="mt-4">
-                          <p className="font-medium text-sm mb-2">Примечания:</p>
-                          <ul className="text-sm text-gray-700 space-y-1">
-                            {escGuideline.treatment.selectionAlgorithms.p2y12Selection.notes.map((note, i) => (
-                              <li key={i}><Safe text={`• ${note}`} /></li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Алгоритм деэскалации ДАТТ */}
-                    <div className="mt-8 bg-purple-50 rounded-xl p-6 border border-purple-200">
-                      <h3 className="text-xl font-semibold text-gray-900 mb-4">Стратегии деэскалации ДАТТ после ЧКВ</h3>
-                      <div className="grid md:grid-cols-2 gap-6">
-                        {escGuideline.treatment.selectionAlgorithms.deescalationAlgorithm.options.map((option, idx) => (
-                          <div key={idx} className="bg-white rounded-lg p-4 border border-purple-100">
-                            <h4 className="font-semibold text-gray-900 mb-2"><Safe text={option.strategy} /></h4>
-                            <RecommendationBadge rec={{ class: option.class, level: option.level, evidenceText: option.evidenceText }} />
-                            <p className="text-sm text-gray-700 mt-3"><strong>Критерии:</strong></p>
-                            <ul className="text-sm text-gray-700 space-y-1">
-                              {option.criteria.map((criterion, i) => (<li key={i}><Safe text={`• ${criterion}`} /></li>))}
-                            </ul>
-                            <p className="text-sm text-gray-700 mt-2"><strong>Режим:</strong> <Safe text={option.regimen} /></p>
-                          </div>
-                        ))}
                       </div>
                     </div>
                   </section>
@@ -1628,30 +1523,6 @@ export default function ACSPage() {
                     </div>
                   </section>
 
-                  {/* Алгоритмы титрации терапии */}
-                  <section>
-                    <h3 className="text-2xl font-semibold text-gray-900 mb-6">Алгоритмы титрации терапии перед выпиской</h3>
-                    <div className="bg-green-50 rounded-xl p-6 border border-green-200">
-                      <div className="grid md:grid-cols-2 gap-6">
-                        {escGuideline.treatment.titrationGuidance.medications.map((med, idx) => (
-                          <div key={idx} className="bg-white rounded-lg p-4 border border-green-100">
-                            <h4 className="font-semibold text-gray-900 mb-2"><Safe text={med.drug} /></h4>
-                            <RecommendationBadge rec={{ class: med.class, level: med.level }} />
-                            <div className="space-y-2 mt-3">
-                              <div><span className="font-medium">Старт:</span><span className="text-gray-700 ml-2"><Safe text={med.start} /></span></div>
-                              <div><span className="font-medium">Цель:</span><span className="text-gray-700 ml-2"><Safe text={med.target} /></span></div>
-                              <div><span className="font-medium">Мониторинг:</span><span className="text-gray-700 ml-2"><Safe text={med.monitoring} /></span></div>
-                              <div><span className="font-medium">Тайминг титрации:</span><span className="text-gray-700 ml-2"><Safe text={med.timing || 'Не указано'} /></span></div>
-                              {med.contraindications && (
-                                <div><span className="font-medium">Противопоказания:</span><span className="text-gray-700 ml-2"><Safe text={med.contraindications} /></span></div>
-                              )}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </section>
-
                   {/* Частые ошибки */}
                   <section>
                     <h3 className="text-2xl font-semibold text-gray-900 mb-4">Частые ошибки и подводные камни</h3>
@@ -1703,41 +1574,6 @@ export default function ACSPage() {
                       </div>
                     </section>
                   ))}
-
-                  {/* Дополнительный блок: Алгоритм ведения кардиогенного шока */}
-                  <section className="bg-white rounded-2xl p-6 border border-gray-200">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">Расширенный алгоритм кардиогенного шока</h3>
-                    <RecommendationBadge rec={{ class: 'I', level: 'B', evidenceText: 'Структурированный подход улучшает выживаемость' }} />
-                    
-                    <div className="bg-red-50 border border-red-200 rounded-xl p-4 mt-4">
-                      <div className="space-y-4">
-                        <div>
-                          <p className="font-medium text-sm mb-1">Шаг 1: Быстрая диагностика (0-15 мин)</p>
-                          <ul className="text-sm text-gray-700 space-y-1">
-                            <li><Safe text="• ЭхоКГ у постели больного: ФВ ЛЖ, механические осложнения" /></li>
-                            <li><Safe text="• Инвазивный мониторинг АД (артериальная линия)" /></li>
-                            <li><Safe text="• Лактат крови, ScvO₂ при наличии" /></li>
-                          </ul>
-                        </div>
-                        <div>
-                          <p className="font-medium text-sm mb-1">Шаг 2: Выбор механической поддержки (15-30 мин)</p>
-                          <ul className="text-sm text-gray-700 space-y-1">
-                            <li><Safe text="• IABP: минимальная эффективность, рассматривать при рефрактерной ишемии" /></li>
-                            <li><Safe text="• ECMO: рефрактерный шок, возможность оксигенации" /></li>
-                            <li><Safe text="• Impella/V-A ECMO: в зависимости от центра и опыта" /></li>
-                          </ul>
-                        </div>
-                        <div>
-                          <p className="font-medium text-sm mb-1">Шаг 3: Мультидисциплинарное решение (30-60 мин)</p>
-                          <ul className="text-sm text-gray-700 space-y-1">
-                            <li><Safe text="• Консилиум: кардиохирург, интервенционный кардиолог, реаниматолог" /></li>
-                            <li><Safe text="• Решение о хирургическом лечении механических осложнений" /></li>
-                            <li><Safe text="• План дальнейшего ведения и мониторинга" /></li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </section>
                 </div>
               )}
 
@@ -1837,7 +1673,7 @@ export default function ACSPage() {
             </section>
 
             {/* Footer */}
-            <section className="border-t border-gray-200 mt-12 pt-8 text-center">
+            <section className="border-t border-gray-200 mt-12 pt-8 text-center w-full">
               <p className="text-sm text-gray-600 mb-6 max-w-4xl mx-auto">
                 Данное руководство представляет собой обзор и интерпретацию клинических рекомендаций для медицинских специалистов.
                 Информация носит исключительно образовательный характер и не заменяет профессиональное медицинское заключение.
@@ -1845,10 +1681,10 @@ export default function ACSPage() {
                 Авторы не несут ответственности за использование представленной информации в клинической практике.
               </p>
 
-              {/* Визуальный зазор 150px перед e-mail */}
-              <div className="h-[150px]" aria-hidden="true"></div>
-
-              <p className="text-lg font-medium text-gray-900">support@medradix.info</p>
+              {/* Визуальный зазор и email по центру экрана */}
+              <div className="h-[150px] flex items-center justify-center w-full">
+                <p className="text-lg font-medium text-gray-900">support@medradix.info</p>
+              </div>
             </section>
           </div>
         </div>
