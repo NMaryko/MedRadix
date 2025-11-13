@@ -431,7 +431,7 @@ export default function ACSPage() {
             evidenceText: 'Класс I - Рекомендуется/Показано; Уровень A - Множественные РКИ или мета-анализы',
           },
         ],
-      ],
+      },
 
       adjunctiveTherapy: [
         {
