@@ -129,7 +129,7 @@ export default function ACSPage() {
           step: 'Клиническая оценка',
           actions: [
             'Характер боли: давящая, жгучая, за грудиной',
-            'Иррадиация: левая рука, шея, челюсть, спина',
+            'Ирдиация: левая рука, шея, челюсть, спина',
             'Сопутствующие симптомы: одышка, тошнота, потливость',
             'Длительность: >20 минут',
           ],
@@ -633,7 +633,7 @@ export default function ACSPage() {
         {
           area: 'Курение',
           recommendation: 'Полное прекращение',
-          interventions: ['Консультирование', 'Никотин-заместительная терапия', 'Варениклин/бупропион'],
+          interventions: ['Консультирование', 'Никотин-заместительная терапии', 'Варениклин/бупропион'],
           class: 'I' as RecommendationClass,
           level: 'B' as EvidenceLevel,
           evidenceText: 'Класс I - Рекомендуется/Показано; Уровень B - Одно РКИ или крупные нерандомизированные исследования',
@@ -881,7 +881,7 @@ export default function ACSPage() {
       name: 'TIMI для NSTE-ACS/US',
       description: 'Стратификация риска осложнений и отдаленного прогноза у пациентов с NSTE-ACS (ESC+ACC/AHA подходы)',
       euFeatures: ['ESC 2023: GRACE 2.0 для долгосрочного прогноза', 'Фокусировка на 6-месячной смертности'],
-      usFeatures: ['ACC/AHA 2025: TIMI Risk Score + дополнительные параметры', 'Интеграция с PRECISE-DAPT для оценки кровотечений'],
+      usFeatures: ['ACC/AHA 2025: TIMI Risk Score + дополнительные параметers', 'Интеграция с PRECISE-DAPT для оценки кровотечений'],
       interpretation: 'Комбинированная оценка ишемического и геморрагического риска для персонализации ДАТТ',
       link: '/calculators/timi-nstemi-us'
     }
@@ -1663,7 +1663,7 @@ export default function ACSPage() {
               </p>
 
               {/* Визуальный зазор и email по центру экрана */}
-              <div className="h-[150px] flex items-center justify-center w-full">
+              <div className="h-[150px] flex items-center justify-center w-screen -mx-4">
                 <p className="text-lg font-medium text-gray-900">support@medradix.info</p>
               </div>
             </section>
