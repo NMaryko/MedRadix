@@ -1,5 +1,4 @@
-// app/guides/acs/page.tsx — ОКС (финал «код-окс», правки мобильных фильтров и большого абзаца)
-// 'use client' + Next.js. Без framer-motion. Селекты: большие тач-таргеты, мобильный порядок.
+// app/guides/acs/page.tsx — ОКС (финал «код-окс», правки мобильных фильтров, центр текста в селектах, уменьшение селектов на десктопе, добавлен раздел «Осложнения»)
 
 'use client';
 
@@ -89,7 +88,7 @@ const CARDIOLOGY_NOSOLOGIES: Nosology[] = [
 ];
 
 export default function ACSPage() {
-  const [selectedTab, setSelectedTab] = useState<'diagnosis' | 'treatment' | 'prevention' | 'comparison'>('diagnosis');
+  const [selectedTab, setSelectedTab] = useState<'diagnosis' | 'treatment' | 'complications' | 'prevention' | 'comparison'>('diagnosis');
   const [selectedSpecialty, setSelectedSpecialty] = useState('Кардиология');
   const [selectedNosology, setSelectedNosology] = useState('Острый коронарный синдром (ОКС)');
   const [isIntroOpen, setIsIntroOpen] = useState(true); // Аккордеон «Краткая ориентация (ОКС)»
@@ -99,7 +98,7 @@ export default function ACSPage() {
     if (!acc[item.group]) acc[item.group] = [];
     acc[item.group].push(item);
     return acc;
-  }, {} as Record<string, Nosology[]>);
+  }, {});
 
   // Данные
   const escGuideline = {
@@ -348,6 +347,7 @@ export default function ACSPage() {
           evidenceText: 'Класс I - Рекомендуется/Показано; Уровень B - Одно РКИ или крупные нерандомизированные исследования',
         },
       ],
+
       reperfusion: {
         stemi: [
           {
@@ -400,6 +400,7 @@ export default function ACSPage() {
           },
         ],
       },
+
       adjunctiveTherapy: [
         {
           drug: 'Бета-блокаторы',
@@ -491,6 +492,132 @@ export default function ACSPage() {
       ],
     },
 
+    // Осложнения (НОВЫЙ РАЗДЕЛ)
+    complications: [
+      {
+        id: 'cardiogenic-shock',
+        title: 'Кардиогенный шок',
+        redFlags: ['Гипотензия (САД <90 мм рт.ст.)', 'Признаки гипоперфузии', 'Лактат >2 ммоль/л'],
+        first15: [
+          'ABCDE + мониторинг',
+          'О₂ при SatO₂ <90%',
+          'Норэпинефрин как вазопрессор первой линии',
+          'Добутамин при низком сердечном индексе',
+          'Немедленный вызов ЧКВ-команды / рассмотреть МУП (Impella/VA-ECMO)',
+        ],
+        diagnostics: ['Эхо-КГ для исключения механических осложнений', 'Газообмен/лактат', 'Повторная ЭКГ/тропонин', 'Профиль гемодинамики'],
+        stabilization: ['Ранняя реваскуляризация', 'Оптимизация пред- и постнагрузки', 'Управление вентиляцией/седацией по показаниям'],
+        escalation: ['Кардиохирург при механических осложнениях', 'МУП при рефрактерном шоке'],
+        antithrombotics: ['Продолжить антитромботики согласно стратегии, оценить риск кровотечений', 'Корректировать дозы при ХБП'],
+        notes: ['Избегать допамина из-за аритмогенности'],
+      },
+      {
+        id: 'mechanical',
+        title: 'Механические осложнения ИМ',
+        redFlags: ['Внезапная гипотензия', 'Новый грубый систолический шум', 'Тампонада/электромеханическая диссоциация'],
+        first15: ['Эхо-КГ у постели', 'Гемодинамическая поддержка', 'Немедленная консультация кардиохирурга'],
+        diagnostics: ['Эхо-КГ', 'КТ при необходимости', 'Лабораторные показатели гемолиза/перфузии'],
+        stabilization: ['Вазопрессоры/инотропы', 'Временная МУП как мост'],
+        escalation: ['Экстренная операция (разрыв МЖП/папиллярной мышцы/свободной стенки)'],
+        antithrombotics: ['Индивидуализация с учётом риска кровотечения и планируемой операции'],
+        notes: ['Высокая летальность без немедленной хирургии'],
+      },
+      {
+        id: 'rv-mi',
+        title: 'Правожелудочковый инфаркт',
+        redFlags: ['Гипотензия при нижнем ИМ', 'Повышение давления в яремных венах', 'Чистые лёгкие'],
+        first15: ['Осторожные болюсы кристаллоидов', 'Избегать нитратов/диуретиков при гипотензии', 'Добутамин при низком СИ'],
+        diagnostics: ['Отведения V3R–V4R', 'Эхо-КГ (функция ПЖ)'],
+        stabilization: ['Оптимизация преднагрузки', 'Инотропная поддержка по показаниям'],
+        escalation: ['ЧКВ правой коронарной артерии', 'МУП при рефрактерности'],
+        antithrombotics: ['Стандарт ОКС с учётом гемодинамики'],
+        notes: ['Нитраты могут усугубить гипотензию'],
+      },
+      {
+        id: 'arrhythmias',
+        title: 'Жизнеопасные аритмии',
+        redFlags: ['VT/VF', 'Высокие АВ-блокады', 'Электрическая нестабильность'],
+        first15: ['Дефибрилляция при VF/pVT', 'Амиодарон/лидокаин по протоколу', 'Транскутанная/временная ЭКС при выраженной брадикардии'],
+        diagnostics: ['Повторная ЭКГ', 'Электролиты', 'Оценка ишемии/реперфузии'],
+        stabilization: ['Коррекция электролитов', 'Антиишемическая терапия'],
+        escalation: ['ИКД по показаниям', 'ЭП-исследование при рецидивах'],
+        antithrombotics: ['Без изменений, если нет кровотечения'],
+        notes: ['Стремиться к скорейшей реперфузии при ишемическом генезе'],
+      },
+      {
+        id: 'no-reflow',
+        title: 'No-reflow / slow-flow при ЧКВ',
+        redFlags: ['TIMI <3 после стентирования', 'Гипоперфузия миокарда'],
+        first15: ['Интракоронарно аденозин/верапамил/нитраты', 'Оптимизация антикоагуляции'],
+        diagnostics: ['Оценка тромботической нагрузки', 'IVUS/OCT по ситуации'],
+        stabilization: ['Механическая аспирация тромба при необходимости'],
+        escalation: ['Повторная дилатация/стентирование при показаниях'],
+        antithrombotics: ['Адекватная антикоагуляция, возможна эскалация антиагрегантов'],
+        notes: ['Профилактика: мягкая техника, адекватные дозы антикоагулянтов'],
+      },
+      {
+        id: 'bleeding-hit',
+        title: 'Кровотечения / ГИТ',
+        redFlags: ['BARC 3–5', 'Падение Hb >3 г/дл', 'Падение тромбоцитов >50% (подозрение на ГИТ)'],
+        first15: ['Локальный гемостаз', 'Оценка степени по BARC', 'Протамин при НФГ', 'Пересмотр ДАТТ/АК'],
+        diagnostics: ['ОАК, коагулограмма', 'Иммунологические тесты при подозрении на ГИТ'],
+        stabilization: ['ИПП, переливание по показаниям', 'Терапия по источнику кровотечения'],
+        escalation: ['Эндоскопия/интервенция/хирургия при необходимости'],
+        antithrombotics: ['Деэскалация/временная отмена при тяжёлом кровотечении, альтернативная АК при ГИТ'],
+        notes: ['Возобновление ДАТТ — после контроля кровотечения, индивидуально'],
+      },
+      {
+        id: 'aki-contrast',
+        title: 'Острое повреждение почек (контраст/гипоперфузия)',
+        redFlags: ['Рост креатинина ≥26.5 мкмоль/л за 48ч или ≥1.5× от исходного', 'Олигоанурия'],
+        first15: ['Оценка объёмного статуса', 'Отмена нефротоксичных препаратов', 'Гидратация, если нет перегрузки'],
+        diagnostics: ['Ежедневный креатинин/электролиты', 'УЗИ почек по показаниям'],
+        stabilization: ['Минимизировать контраст', 'Корректировать дозы лекарств'],
+        escalation: ['Нефролог, заместительная почечная терапия при показаниях'],
+        antithrombotics: ['Коррекция доз АК/антитромботиков по КК'],
+        notes: ['Ранняя профилактика лучше лечения'],
+      },
+      {
+        id: 'glycemia',
+        title: 'Нарушения гликемии при ОКС',
+        redFlags: ['Гипо- или тяжёлая гипергликемия', 'Кетоацидоз'],
+        first15: ['Капиллярная глюкоза', 'Инсулиновая коррекция по протоколу'],
+        diagnostics: ['Глюкоза, HbA1c', 'Кетоны/КЩС при необходимости'],
+        stabilization: ['Целевой диапазон гликемии по локальным протоколам', 'Избегать гипогликемий'],
+        escalation: ['Эндокринолог при нестабильности'],
+        antithrombotics: ['Без изменений, если нет иных ограничений'],
+        notes: ['СД — модификатор риска, важна приверженность'],
+      },
+      {
+        id: 'minoca-scad-spasm',
+        title: 'MINOCA / SCAD / спазм',
+        redFlags: ['Клиника ИМ при нормальных/почти нормальных коронариях', 'Молодые женщины (SCAD)'],
+        first15: ['Исключить альтернативы: миокардит, ТЭЛА, ТАКО-ЦУБО', 'Рассмотреть КТ-КАГ, IVUS/OCT'],
+        diagnostics: ['КардиомРТ (миокардит/инфаркт)', 'Функциональные тесты на спазм', 'Визуализация расслаивания (SCAD)'],
+        stabilization: ['По фенотипу: при спазме — нитраты/БКК; при SCAD — консервативная тактика чаще предпочтительна'],
+        escalation: ['ЧКВ/хирургия при продолжающейся ишемии/угрозе'],
+        antithrombotics: ['Индивидуализация: при спазме — стандарт ОКС; при SCAD — избегать агрессивных вмешательств'],
+        notes: ['MINOCA — синдром, сначала верифицировать причину'],
+      },
+      {
+        id: 'comorbidity',
+        title: 'Сопутствующие состояния и особые группы',
+        redFlags: ['ХБП, ХОБЛ/астма, пожилые/хрупкие, беременность, антикоагуляция/антитромбоцитарная терапия'],
+        first15: ['Уточнить фоновые препараты и функции органов', 'Пересчитать дозы по КК/массе/возрасту'],
+        diagnostics: ['Целенаправленные анализы/визуализация по коморбидности', 'Лекарственные взаимодействия'],
+        stabilization: [
+          'ХБП: корректировать дозы АК/контраст; избегать нефротоксинов',
+          'ХОБЛ/астма: бета-блокаторы — преимущественно селективные, титровать',
+          'Пожилые/хрупкие: начальные дозы ниже, упор на безопасность',
+          'Беременность: выбор антиагрегантов/АК по триместру и риску',
+        ],
+        escalation: ['Профильные консультации (нефролог, пульмонолог, акушер-гинеколог)'],
+        antithrombotics: ['Персонализировать длительность ДАТТ/АК с учётом HBR (ARC-HBR, PRECISE-DAPT)'],
+        notes: ['Баланс ишемического и геморрагического риска — ключевой'],
+      },
+    ],
+
+    // Вторичная профилактика
     secondaryPrevention: {
       duration: 'Пожизненно после ОКС',
       medications: [
@@ -596,19 +723,28 @@ export default function ACSPage() {
     return (
       <div className="flex flex-col gap-1 text-sm min-w-[170px]">
         <div className="flex items-center gap-2 flex-wrap">
-          <span className={`px-2 py-1 rounded border ${
-            cls === 'I' ? 'bg-green-100 text-green-800 border-green-300'
-            : cls === 'IIa' ? 'bg-yellow-100 text-yellow-800 border-yellow-300'
-            : cls === 'IIb' ? 'bg-blue-100 text-blue-800 border-blue-300'
-            : 'bg-red-100 text-red-800 border-red-300'
-          }`}>
+          <span
+            className={`px-2 py-1 rounded border ${
+              cls === 'I'
+                ? 'bg-green-100 text-green-800 border-green-300'
+                : cls === 'IIa'
+                ? 'bg-yellow-100 text-yellow-800 border-yellow-300'
+                : cls === 'IIb'
+                ? 'bg-blue-100 text-blue-800 border-blue-300'
+                : 'bg-red-100 text-red-800 border-red-300'
+            }`}
+          >
             Класс {cls}
           </span>
-          <span className={`px-2 py-1 rounded border ${
-            lvl === 'A' ? 'bg-green-100 text-green-800 border-green-300'
-            : lvl === 'B' ? 'bg-yellow-100 text-yellow-800 border-yellow-300'
-            : 'bg-red-100 text-red-800 border-red-300'
-          }`}>
+          <span
+            className={`px-2 py-1 rounded border ${
+              lvl === 'A'
+                ? 'bg-green-100 text-green-800 border-green-300'
+                : lvl === 'B'
+                ? 'bg-yellow-100 text-yellow-800 border-yellow-300'
+                : 'bg-red-100 text-red-800 border-red-300'
+            }`}
+          >
             Уровень {lvl}
           </span>
         </div>
@@ -626,28 +762,40 @@ export default function ACSPage() {
 
   const handleSaveSection = () => {};
 
+  // Вкладки: добавили «Осложнения» перед «Профилактика»
   const sections = [
     { id: 'diagnosis' as const, label: 'Диагностика' },
     { id: 'treatment' as const, label: 'Лечение' },
+    { id: 'complications' as const, label: 'Осложнения' }, // NEW
     { id: 'prevention' as const, label: 'Профилактика' },
     { id: 'comparison' as const, label: 'Сравнение' },
   ];
 
   return (
     <main className="min-h-screen bg-[#fcfcee] py-8">
+      {/* Центрирование текста в <select> для кроссбраузерности */}
+      <style>{`
+        select.text-center { text-align: center; text-align-last: center; }
+        @supports not (text-align-last: center) {
+          select.text-center option { text-align: center; }
+        }
+      `}</style>
+
       <div className="max-w-[1800px] mx-auto px-4">
         {/* Заголовок и фильтры */}
         <section className="border-b border-gray-200 mb-8">
           <div className="max-w-[1800px] mx-auto px-4 pt-4 pb-4">
             <div className="flex flex-col lg:flex-row items-center gap-4 lg:gap-0">
-              {/* Специальность (на мобилке первой; на десктопе справа) */}
+              {/* Специальность (на мобилке идёт первой) */}
               <div className="flex-1 flex justify-start order-1 w-full lg:w-auto lg:order-3 lg:justify-end">
                 <div className="flex flex-col items-start lg:items-end gap-1 w-full lg:w-auto">
                   <span className="text-[11px] uppercase tracking-[0.18em] text-[#9c978f] hidden lg:block">Специальность</span>
                   <select
                     value={selectedSpecialty}
                     onChange={(e) => setSelectedSpecialty(e.target.value)}
-                    className="rounded-full border border-[#d3cec4] bg-white px-4 h-14 min-h-[56px] text-base text-[#3b342d] shadow-sm focus:outline-none focus:border-[#015d52] w-full lg:w-[230px] lg:h-12 lg:min-h-[48px]"
+                    className="text-center rounded-full border border-[#d3cec4] bg-white px-4
+                               h-12 min-h-[48px] w-full shadow-sm focus:outline-none focus:border-[#015d52]
+                               lg:h-10 lg:min-h-0 lg:w-[200px]"  // компактнее на десктопе, крупно на мобиле
                   >
                     {SPECIALTIES.map((spec) => (
                       <option key={spec} value={spec}>{spec}</option>
@@ -656,14 +804,16 @@ export default function ACSPage() {
                 </div>
               </div>
 
-              {/* Нозология (на мобилке второй; на десктопе слева) */}
+              {/* Нозология (на мобилке идёт второй) */}
               <div className="flex-1 flex justify-end order-2 w-full lg:w-auto lg:order-1 lg:justify-start">
                 <div className="flex flex-col gap-1 w-full lg:w-auto">
                   <span className="text-[11px] uppercase tracking-[0.18em] text-[#9c978f] hidden lg:block">Нозология</span>
                   <select
                     value={selectedNosology}
                     onChange={(e) => setSelectedNosology(e.target.value)}
-                    className="rounded-full border border-[#d3cec4] bg-white px-4 h-14 min-h-[56px] text-base text-[#3b342d] shadow-sm focus:outline-none focus:border-[#015d52] w-full lg:w-[230px] lg:h-12 lg:min-h-[48px]"
+                    className="text-center rounded-full border border-[#d3cec4] bg-white px-4
+                               h-12 min-h-[48px] w-full shadow-sm focus:outline-none focus:border-[#015d52]
+                               lg:h-10 lg:min-h-0 lg:w-[200px]"  // компактнее на десктопе, крупно на мобиле
                   >
                     {Object.entries(groupedCardiologyNosologies).map(([groupName, items]) => (
                       <optgroup key={groupName} label={groupName}>
@@ -676,12 +826,11 @@ export default function ACSPage() {
                 </div>
               </div>
 
-              {/* Заголовок (на мобилке — после обоих фильтров; десктоп — по центру) */}
+              {/* Заголовок — на мобиле идёт третьим (после двух селектов) */}
               <div className="flex-shrink-0 text-center order-3 lg:order-2">
                 <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
                   {escGuideline.title}
                 </h1>
-                {/* Удалён служебный подзаголовок */}
               </div>
             </div>
 
@@ -800,7 +949,7 @@ export default function ACSPage() {
                               <tr>
                                 <td className="p-2 font-medium">Нестабильная стенокардия</td>
                                 <td className="p-2">Клиника ишемии без ↑тропонина</td>
-                                <td className="п-2">Риск-стратификация, антиангинальная/антитромботическая терапия</td>
+                                <td className="p-2">Риск-стратификация, антиангинальная/антитромботическая терапия</td>
                               </tr>
                             </tbody>
                           </table>
@@ -1211,6 +1360,30 @@ export default function ACSPage() {
                 </div>
               )}
 
+              {/* ОСЛОЖНЕНИЯ — НОВАЯ ВКЛАДКА */}
+              {selectedTab === 'complications' && (
+                <section className="space-y-8">
+                  <h2 className="text-3xl font-bold text-gray-900 mb-2">Осложнения ОКС: диагностика и тактика</h2>
+                  <p className="text-sm text-gray-600 mb-6">Карточки для быстрого ориентирования: «красные флаги», первые 15 минут, подтверждение диагноза, стабилизация, эскалация, антитромботическая терапия и примечания.</p>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    {escGuideline.complications.map((c: any) => (
+                      <article key={c.id} className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+                        <h3 className="text-xl font-semibold mb-4 text-gray-900">{c.title}</h3>
+                        <ul className="text-sm text-gray-700 space-y-1 mb-4">
+                          {c.redFlags?.length ? <li><b>Красные флаги:</b> {c.redFlags.join('; ')}</li> : null}
+                          {c.first15?.length ? <li><b>Первые 15 минут:</b> {c.first15.join('; ')}</li> : null}
+                          {c.diagnostics?.length ? <li><b>Диагностика:</b> {c.diagnostics.join('; ')}</li> : null}
+                          {c.stabilization?.length ? <li><b>Стабилизация:</b> {c.stabilization.join('; ')}</li> : null}
+                          {c.escalation?.length ? <li><b>Эскалация:</b> {c.escalation.join('; ')}</li> : null}
+                          {c.antithrombotics?.length ? <li><b>Антитромботики:</b> {c.antithrombotics.join('; ')}</li> : null}
+                        </ul>
+                        {c.notes?.length ? <p className="text-xs text-gray-600">{c.notes.join(' • ')}</p> : null}
+                      </article>
+                    ))}
+                  </div>
+                </section>
+              )}
+
               {/* ПРОФИЛАКТИКА */}
               {selectedTab === 'prevention' && (
                 <div className="space-y-8">
@@ -1219,17 +1392,17 @@ export default function ACSPage() {
                   <section className="bg-blue-50 rounded-xl p-6 border border-blue-200">
                     <h3 className="text-xl font-semibold text-gray-900 mb-4">Медикаментозная терапия</h3>
                     <div className="space-y-4">
-                      {escGuideline.secondaryPrevention.medications.map((e: any, idx: number) => (
+                      {escGuideline.secondaryPrevention.medications.map((med: any, idx: number) => (
                         <div key={idx} className="bg-white rounded-lg p-4 border border-blue-100">
                           <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-2">
-                            <h4 className="font-semibold text-gray-900">{e.drug}</h4>
-                            <RecommendationBadge rec={{ class: e.class, level: e.level, evidenceText: e.evidenceText }} />
+                            <h4 className="font-semibold text-gray-900">{med.drug}</h4>
+                            <RecommendationBadge rec={{ class: med.class, level: med.level, evidenceText: med.evidenceText }} />
                           </div>
-                          {e.duration && (<p className="text-sm text-gray-700 mb-1">Длительность: <span className="font-medium">{e.duration}</span></p>)}
-                          {e.target && (<p className="text-sm text-gray-700 mb-1">Цель: <span className="font-medium">{e.target}</span></p>)}
-                          {e.monitoring && (<p className="text-sm text-gray-700 mb-1">Мониторинг: <span className="font-medium">{e.monitoring}</span></p>)}
-                          {e.deescalation && (<ul className="text-sm text-gray-700 space-y-1 mt-2">{e.deescalation.map((item: string, i: number) => (<li key={i}>• {item}</li>))}</ul>)}
-                          {e.escalation && (<ul className="text-sm text-gray-700 space-y-1 mt-2">{e.escalation.map((item: string, i: number) => (<li key={i}>• {item}</li>))}</ul>)}
+                          {med.duration && (<p className="text-sm text-gray-700 mb-1">Длительность: <span className="font-medium">{med.duration}</span></p>)}
+                          {med.target && (<p className="text-sm text-gray-700 mb-1">Цель: <span className="font-medium">{med.target}</span></p>)}
+                          {med.monitoring && (<p className="text-sm text-gray-700 mb-1">Мониторинг: <span className="font-medium">{med.monitoring}</span></p>)}
+                          {med.deescalation && (<ul className="text-sm text-gray-700 space-y-1 mt-2">{med.deescalation.map((item: string, i: number) => (<li key={i}>• {item}</li>))}</ul>)}
+                          {med.escalation && (<ul className="text-sm text-gray-700 space-y-1 mt-2">{med.escalation.map((item: string, i: number) => (<li key={i}>• {item}</li>))}</ul>)}
                         </div>
                       ))}
                     </div>
