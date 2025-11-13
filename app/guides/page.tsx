@@ -1074,7 +1074,14 @@ export default function ACSPage() {
                                       <p className="text-sm text-gray-700">Доза: {t.dose}</p>
                                       {t.note && <p className="text-xs text-gray-600 mt-1">{t.note}</p>}
                                     </div>
-                                    <RecommendationBadge rec={{ class: t.class, level: t.level, evidenceText: t.evidenceText }} />
+                                   <RecommendationBadge
+  rec={{
+    class: t.class,
+    level: t.level,
+    ...( 'evidenceText' in t && t.evidenceText ? { evidenceText: t.evidenceText } : {} ),
+  }}
+/>
+
                                   </div>
                                 </div>
                               ))}
