@@ -2,39 +2,22 @@
 import { generateDrugSchema, type Drug } from '@/types/drug';
 import { mockDrugEnoxaparin } from '@/types/drug';
 
-// Генерируем метаданные для SEO
+// Простые метаданные
 export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const drug = await getDrugData(params.slug); // Ваша функция получения данных
-  
   return {
-    title: `${drug.genericName} - инструкция, применение, дозировка | MedRadix`,
-    description: drug.description || `Информация о препарате ${drug.genericName}. Торговые названия: ${drug.tradeNames.join(', ')}`,
-    keywords: [
-      drug.genericName,
-      ...drug.tradeNames,
-      'инструкция',
-      'применение',
-      'дозировка',
-      'показания'
-    ].join(', '),
-    openGraph: {
-      title: `${drug.genericName} - MedRadix`,
-      description: drug.description || `Информация о препарате ${drug.genericName}`,
-      type: 'article',
-      url: `https://medradix.info/drugs/${drug.slug}`
-    }
+    title: `${mockDrugEnoxaparin.genericName} - инструкция | MedRadix`,
+    description: mockDrugEnoxaparin.description,
   };
 }
 
-// Временная функция получения данных (замените на реальную БД/API)
+// Простая функция получения данных
 async function getDrugData(slug: string): Promise<Drug> {
-  // Пока используем mock данные
   if (slug === 'enoxaparin') {
     return mockDrugEnoxaparin;
   }
   
-  // Для других препаратов - заглушка
-  throw new Error('Препарат не найден');
+  // Если препарат не найден - возвращаем эноксапарин как заглушку
+  return mockDrugEnoxaparin;
 }
 
 export default async function DrugPage({ params }: { params: { slug: string } }) {
@@ -43,7 +26,7 @@ export default async function DrugPage({ params }: { params: { slug: string } })
 
   return (
     <>
-      {/* JSON-LD разметка для поисковиков */}
+      {/* JSON-LD разметка */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
