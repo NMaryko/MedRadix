@@ -966,11 +966,12 @@ export default function ACSPage() {
                                 </li>
                               ))}
                             </ul>
-                            {c.examples && (
+                            {/* ПРИМЕРЫ — НОВЫЙ БЛОК (ОСТАВИТЬ) */}
+{'examples' in c && Array.isArray((c as any).examples) && (c as any).examples.length > 0 && (
   <div className="mt-2">
     <p className="font-medium text-sm">Примеры:</p>
     <ul className="text-sm text-gray-600 space-y-1">
-      {c.examples.map((ex: string, i: number) => (
+      {(c as any).examples.map((ex: string, i: number) => (
         <li key={i}>• <Safe text={ex} /></li>
       ))}
     </ul>
