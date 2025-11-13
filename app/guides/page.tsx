@@ -682,7 +682,13 @@ export default function ACSPage() {
                       <div>
                         <h3 className="text-xl font-semibold text-gray-900 mb-4">P2Y12 ингибиторы — выбор</h3>
                         <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
-                          {(escGuideline.treatment.antiplateletTherapy[1].options).map((drug:any,idx:number)=>(
+                       {('options' in escGuideline.treatment.antiplateletTherapy[1] &&
+  Array.isArray(escGuideline.treatment.antiplateletTherapy[1].options) &&
+  escGuideline.treatment.antiplateletTherapy[1].options.map((drug: any, idx: number) => (
+    // ... ваш JSX карточки препарата ...
+  ))
+)}
+
                             <div key={idx} className="bg-white rounded-xl p-6 border-2 border-blue-200 shadow-sm">
                               <div className="flex flex-wrap md:flex-nowrap md:items-start md:justify-between gap-4 mb-4">
                                 <h4 className="text-lg font-semibold text-gray-900">{drug.name}</h4>
