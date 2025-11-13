@@ -370,6 +370,3 @@ export const mockDrugEnoxaparin: Drug = {
     ],
   },
 
-  // Служебное
-  updatedAt: "2025-11-13T00:00:00.000Z",
-};
