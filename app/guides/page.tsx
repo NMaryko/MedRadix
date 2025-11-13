@@ -667,7 +667,14 @@ export default function ACSPage() {
                           <div><h3 className="text-xl font-semibold text-gray-900">Аспирин</h3>
                             <p className="text-gray-600">Нагрузка: {escGuideline.treatment.antiplateletTherapy[0].loading} • Поддержка: {escGuideline.treatment.antiplateletTherapy[0].maintenance}</p>
                           </div>
-                          <RecommendationBadge rec={{ class: escGuideline.treatment.antiplateletTherapy[0].class, level: escGuideline.treatment.antiplateletTherapy[0].level, evidenceText: escGuideline.treatment.antiplateletTherapy[0].evidenceText }} />
+                          <RecommendationBadge
+  rec={{
+    class: (escGuideline.treatment.antiplateletTherapy[0] as any).class ?? ('I' as RecommendationClass),
+    level: (escGuideline.treatment.antiplateletTherapy[0] as any).level ?? ('A' as EvidenceLevel),
+    evidenceText: (escGuideline.treatment.antiplateletTherapy[0] as any).evidenceText ?? ''
+  }}
+/>
+
                         </div>
                         <p className="text-gray-700">{escGuideline.treatment.antiplateletTherapy[0].notes}</p>
                       </div>
