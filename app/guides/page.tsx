@@ -1384,7 +1384,7 @@ export default function ACSPage() {
                       <RecommendationBadge rec={{ class: 'IIa', level: 'B', evidenceText: 'Фармакологическая поддержка при персистирующей no‑reflow' }} />
                       <p className="text-sm text-gray-700 mb-2 font-medium">Диагностика:</p>
                       <ul className="text-sm text-gray-700 space-y-1 mb-3">
-                        <li>• TIMI < 3, низкий миокардиальный blush grade, персистирующая ишемия после стентирования</li>
+                        <li>• TIMI {'<'} 3, низкий миокардиальный blush grade, персистирующая ишемия после стентирования</li>
                       </ul>
                       <p className="text-sm text-gray-700 mb-2 font-medium">Алгоритм лечения:</p>
                       <ul className="text-sm text-gray-700 space-y-1">
