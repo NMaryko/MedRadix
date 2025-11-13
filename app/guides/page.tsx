@@ -967,17 +967,15 @@ export default function ACSPage() {
                               ))}
                             </ul>
                             {c.examples && (
-                              <div className="mt-2">
-                                <p className="font-medium text-sm">Примеры:</p>
-                                <ul className="text-sm text-gray-600 space-y-1">
-                                  {c.examples.map((ex, i) => (
-                                    <li key={i}>
-                                      <Safe text={`• ${ex}`} />
-                                    </li>
-                                  ))}
-                                </ul>
-                              </div>
-                            )}
+  <div className="mt-2">
+    <p className="font-medium text-sm">Примеры:</p>
+    <ul className="text-sm text-gray-600 space-y-1">
+      {c.examples.map((ex: string, i: number) => (
+        <li key={i}>• <Safe text={ex} /></li>
+      ))}
+    </ul>
+  </div>
+)}
                           </div>
                         ))}
                       </div>
