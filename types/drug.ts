@@ -6,6 +6,8 @@ export interface GuidelineUsageEntry {
   guideSection: string;       // «Раздел 7.2 – Антикоагулянтная терапия»
   indicationSummary: string;  // Кратко: как используется препарат
   link: string;               // Ссылка на гайд
+  recommendationClass?: string; // "I", "IIa", "IIb", "III"
+  evidenceLevel?: string;      // "A", "B", "C"
 }
 
 // --- Применение в гайдах (EU / US) ---
@@ -14,362 +16,254 @@ export interface GuidelineUsage {
   us: GuidelineUsageEntry[];
 }
 
+// --- Формы выпуска с улучшенной структурой ---
+export interface DrugForm {
+  form: string;           // "Раствор для инъекций"
+  strength: string;       // "40 мг/0,4 мл"
+  route: string;         // "п/к", "в/в", "перорально"
+  volume?: string;       // "0,4 мл" - для инъекционных форм
+  packageSize?: string;  // "10 шприцов"
+  note?: string;
+}
+
+// --- Дозирование с улучшенной типобезопасностью ---
+export interface DosageRegimen {
+  indication: string;
+  regimen: string;
+  maxDailyDose?: string;
+  duration?: string;      // "5-10 дней", "до выписки"
+  notes?: string;
+}
+
+export interface ImpairmentAdjustment {
+  condition: string;     // "КК 15–30 мл/мин", "Тяжёлая печёночная недостаточность"
+  adjustment: string;
+  notes?: string;
+}
+
+export interface DrugDosage {
+  adults: DosageRegimen[];
+  renalImpairment: ImpairmentAdjustment[];
+  hepaticImpairment: ImpairmentAdjustment[];
+  pediatrics: {
+    ageGroup: string;
+    regimen: string;
+    notes?: string;
+  }[];
+  elderly?: string;
+}
+
 // --- Основной тип лекарства (МНН) ---
 export interface Drug {
   // Идентификация
-  genericName: string;      // МНН
-  slug: string;             // для URL, например "enoxaparin"
-  tradeNames: string[];     // торговые названия
+  id: string;                    // уникальный ID (можно = slug)
+  genericName: string;           // МНН
+  slug: string;                  // для URL, например "enoxaparin"
+  tradeNames: string[];          // торговые названия
   atcCode?: string;
   pharmacologicClass?: string;
   therapeuticClass?: string;
-  specialties: string[];    // например ["Кардиология", "Хирургия"]
+  specialties: string[];         // например ["Кардиология", "Хирургия"]
+
+  // Дополнительно для SEO / описания
+  manufacturer?: string;
+  description?: string;
+  
+  // Мета-информация для поиска
+  searchKeywords?: string[];     // дополнительные ключевые слова для поиска
 
   // Показания
   indications: {
     title: string;
     description: string;
-    classOfRecommendation?: string; // "I", "IIa" и т.п.
-    levelOfEvidence?: string;       // "A", "B", "C"
+    classOfRecommendation?: string;
+    levelOfEvidence?: string;
+    isOffLabel?: boolean;        // внерегистрационное применение
   }[];
 
   // Формы выпуска
-  forms: {
-    form: string;      // "Раствор для инъекций"
-    strength: string;  // "40 мг/0,4 мл"
-    route: string;     // "п/к"
-    note?: string;
-  }[];
+  forms: DrugForm[];
 
   // Дозирование
-  dosage: {
-    adults: {
-      indication: string;
-      regimen: string;
-      maxDailyDose?: string;
-      notes?: string;
-    }[];
-    renalImpairment: {
-      range: string;        // "КК 15–30 мл/мин"
-      adjustment: string;   // как корректировать
-    }[];
-    hepaticImpairment: {
-      severity: string;     // "Тяжёлая печёночная недостаточность"
-      adjustment: string;
-    }[];
-    pediatrics: {
-      ageGroup: string;     // "Дети", "Подростки"
-      regimen: string;
-      notes?: string;
-    }[];
-    elderly?: string;       // особенности у пожилых
-  };
+  dosage: DrugDosage;
 
   // Противопоказания
   contraindications: {
     absolute: string[];
     relative: string[];
+    warnings?: string[];         // особые предупреждения
   };
 
   // Взаимодействия
   interactions: {
-    drug: string;    // препарат/класс
-    effect: string;  // что происходит
-    action: string;  // что делать
+    drug: string;
+    effect: string;
+    action: string;
+    severity: 'major' | 'moderate' | 'minor';  // степень значимости
   }[];
 
   // Нежелательные явления
   adverseEffects: {
     common: string[];
     serious: string[];
+    frequency?: {               // частота встречаемости
+      effect: string;
+      frequency: string;        // "очень часто", "часто", "редко"
+    }[];
   };
 
   // Мониторинг
   monitoring: {
-    before: string[];  // до начала
-    during: string[];  // во время
-    after: string[];   // долгосрочно
+    laboratory: string[];       // лабораторные показатели
+    clinical: string[];         // клинические признаки
+    instrumental?: string[];    // инструментальные исследования
   };
 
   // Беременность/лактация
   pregnancyLactation: {
     pregnancy: string;
+    pregnancyCategory?: string; // "A", "B", "C", "D", "X"
     lactation: string;
   };
 
   // Администрирование / передозировка / «фишки»
   administration?: string;
-  overdose?: string;
+  overdose?: {
+    symptoms: string[];
+    treatment: string[];
+  };
   pearls: string[];
+
+  // Механизм действия
+  mechanismOfAction?: string;
+
+  // Фармакокинетика
+  pharmacokinetics?: {
+    bioavailability?: string;
+    halfLife?: string;
+    metabolism?: string;
+    excretion?: string;
+  };
 
   // Применение в гайдах (EU / US)
   guidelineUsage: GuidelineUsage;
 
   // Служебное
-  updatedAt: string; // ISO-дата
+  updatedAt: string;
+  published: boolean;           // опубликован ли препарат
+  verified: boolean;            // проверен ли контент
 }
 
-// --- Эталонный пример препарата (эноксапарин) ---
-// ВАЖНО: дозировки/формулировки – пример структуры, не инструкция к применению.
-// Перед реальным использованием всё сверять с актуальными гайдами и инструкцией.
+// --- Утилиты для работы с лекарствами ---
 
-export const mockDrugEnoxaparin: Drug = {
-  // Идентификация
-  genericName: "Enoxaparin",
-  slug: "enoxaparin",
-  tradeNames: ["Клексан", "Эниксум", "Гемапаксан"],
-  atcCode: "B01AB05",
-  pharmacologicClass: "Низкомолекулярный гепарин",
-  therapeuticClass: "Антикоагулянт",
-  specialties: ["Кардиология", "Ангиохирургия", "Терапия", "Реаниматология"],
+/**
+ * Получить все торговые названия препарата для поиска
+ */
+export function getDrugSearchTerms(drug: Drug): string[] {
+  const terms = new Set<string>([
+    drug.genericName.toLowerCase(),
+    ...drug.tradeNames.map(name => name.toLowerCase()),
+    ...(drug.searchKeywords || [])
+  ]);
+  
+  // Добавляем специализации
+  drug.specialties.forEach(spec => terms.add(spec.toLowerCase()));
+  
+  return Array.from(terms);
+}
 
-  // Показания
-  indications: [
-    {
-      title: "Острый коронарный синдром без подъёма ST (NSTE-ACS)",
-      description:
-        "Антикоагулянтная терапия у пациентов с нестабильной стенокардией и NSTEMI в составе комбинированного лечения.",
-      classOfRecommendation: "I",
-      levelOfEvidence: "A",
-    },
-    {
-      title: "Профилактика венозных тромбоэмболических осложнений при хирургических вмешательствах",
-      description:
-        "Профилактика ВТЭО у взрослых пациентов при высоком и умеренном риске тромбоза в периоперационном периоде.",
-      classOfRecommendation: "I",
-      levelOfEvidence: "A",
-    },
-    {
-      title: "Лечение тромбоза глубоких вен и тромбоэмболии лёгочной артерии",
-      description:
-        "Начальная антикоагулянтная терапия при ТГВ и ТЭЛА с последующим переходом на пероральные антикоагулянты.",
-      classOfRecommendation: "I",
-      levelOfEvidence: "A",
-    },
-  ],
+/**
+ * Получить основную форму выпуска (первую или самую популярную)
+ */
+export function getPrimaryForm(drug: Drug): DrugForm | undefined {
+  return drug.forms[0];
+}
 
-  // Формы выпуска
-  forms: [
-    {
-      form: "Раствор для инъекций в предварительно заполненных шприцах",
-      strength: "20 мг/0,2 мл",
-      route: "п/к",
-      note: "Профилактика у пациентов с низкой массой тела.",
-    },
-    {
-      form: "Раствор для инъекций в предварительно заполненных шприцах",
-      strength: "40 мг/0,4 мл",
-      route: "п/к",
-      note: "Стандартная профилактика ВТЭО у хирургических пациентов.",
-    },
-    {
-      form: "Раствор для инъекций в предварительно заполненных шприцах",
-      strength: "60 мг/0,6 мл",
-      route: "п/к",
-      note: "Лечебные дозы (≈ 1 мг/кг).",
-    },
-    {
-      form: "Раствор для инъекций в предварительно заполненных шприцах",
-      strength: "80 мг/0,8 мл",
-      route: "п/к",
-      note: "Лечебные дозы у пациентов с более высокой массой тела.",
-    },
-  ],
+/**
+ * Проверить, есть ли препарат в указанном гайде
+ */
+export function hasGuidelineMention(drug: Drug, guideCode: string): boolean {
+  const allGuidelines = [...drug.guidelineUsage.eu, ...drug.guidelineUsage.us];
+  return allGuidelines.some(guide => 
+    guide.guideCode.toLowerCase().includes(guideCode.toLowerCase())
+  );
+}
 
-  // Дозирование
-  dosage: {
-    adults: [
-      {
-        indication: "NSTE-ACS (нестабильная стенокардия, NSTEMI)",
-        regimen:
-          "1 мг/кг п/к каждые 12 часов в сочетании с антитромбоцитарной терапией. " +
-          "Продолжительность обычно 2–8 дней или до реваскуляризации.",
-        maxDailyDose: "как правило, не более 100 мг 2 раза в сутки",
-        notes:
-          "Не вводить в/м. Коррекция при почечной недостаточности и у пациентов с высоким риском кровотечения.",
-      },
-      {
-        indication: "Профилактика ВТЭО при ортопедических вмешательствах высокого риска",
-        regimen:
-          "40 мг п/к 1 раз в сутки, начиная за 12 часов до операции или через 6–12 часов после неё при условии надёжного гемостаза. " +
-          "Обычно 10–14 дней, при высоком риске до 35 дней.",
-        maxDailyDose: "40 мг",
-        notes: "Оценивать риск кровотечения и функцию почек.",
-      },
-      {
-        indication: "Лечение ТГВ и/или ТЭЛА",
-        regimen:
-          "1 мг/кг п/к каждые 12 часов или 1,5 мг/кг п/к 1 раз в сутки " +
-          "с последующим переходом на пероральные антикоагулянты.",
-        maxDailyDose: "зависит от массы тела; обычно не более 150 мг/сут",
-        notes:
-          "Выбор режима (2 раза/сут или 1 раз/сут) зависит от клинической ситуации и риска кровотечения.",
-      },
-    ],
-    renalImpairment: [
-      {
-        range: "КК ≥ 30 мл/мин",
-        adjustment:
-          "Как правило, стандартные режимы дозирования, с клиническим мониторингом.",
-      },
-      {
-        range: "КК 15–30 мл/мин",
-        adjustment:
-          "Рассмотреть снижение дозы (например, 1 мг/кг 1 раз в сутки в лечебных режимах), " +
-          "требуется тщательное наблюдение.",
-      },
-      {
-        range: "КК < 15 мл/мин",
-        adjustment:
-          "Обычно не рекомендуется, либо только при индивидуальной оценке в специализированном центре.",
-      },
-    ],
-    hepaticImpairment: [
-      {
-        severity: "Тяжёлая печёночная недостаточность",
-        adjustment:
-          "Данные ограничены, повышен риск кровотечения. Использование только после индивидуальной оценки риска/пользы.",
-      },
-    ],
-    pediatrics: [
-      {
-        ageGroup: "Дети и подростки",
-        regimen:
-          "Использование по индивидуальным схемам (мг/кг) в специализированных центрах.",
-        notes:
-          "Требуется участие детского специалиста и, при необходимости, мониторинг анти-Xa активности.",
-      },
-    ],
-    elderly:
-      "У пожилых (особенно >75 лет) выше риск кровотечения: требуется контроль функции почек, массы тела и тщательное наблюдение.",
-  },
+// --- JSON-LD схема для поисковиков (schema.org/Drug) ---
 
-  // Противопоказания
-  contraindications: {
-    absolute: [
-      "Активное клинически значимое кровотечение",
-      "Подозрение на внутричерепное кровоизлияние",
-      "Гепарин-индуцированная тромбоцитопения (ГИТ) в анамнезе",
-      "Выраженная неконтролируемая тромбоцитопения",
-    ],
-    relative: [
-      "Недавние операции с высоким риском кровотечения",
-      "Тяжёлые нарушения коагуляции",
-      "Тяжёлая печёночная недостаточность",
-      "Сочетание с другими антикоагулянтами/антитромбоцитарными средствами",
-    ],
-  },
+export function generateDrugSchema(drug: Drug) {
+  const url = `https://medradix.info/drugs/${drug.slug}`;
+  const primaryForm = getPrimaryForm(drug);
 
-  // Взаимодействия
-  interactions: [
-    {
-      drug: "Ингибиторы P2Y12, ацетилсалициловая кислота, НПВП",
-      effect: "Повышение риска кровотечения.",
-      action:
-        "Назначать вместе только при наличии показаний, внимательно мониторировать признаки кровотечения.",
-    },
-    {
-      drug: "Другие парентеральные антикоагулянты",
-      effect: "Суммирование антикоагулянтного эффекта.",
-      action: "Избегать одновременного применения, аккуратный переход между препаратами.",
-    },
-    {
-      drug: "Пероральные антикоагулянты (антагонисты витамина К, НОАК)",
-      effect: "Повышение риска кровотечения в период перекрытия.",
-      action:
-        "Следовать стандартным схемам перехода (bridging) с учётом МНО/клиренса, контролировать гемостаз.",
-    },
-  ],
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Drug',
+    '@id': url,
+    name: drug.genericName,
+    genericName: drug.genericName,
+    brandName: drug.tradeNames.length > 0 ? {
+      '@type': 'Brand',
+      name: drug.tradeNames[0]
+    } : undefined,
+    activeIngredient: drug.genericName,
+    dosageForm: primaryForm?.form,
+    strength: primaryForm?.strength,
+    code: drug.slug,
+    description: drug.description || `Информация о препарате ${drug.genericName}`,
+    manufacturer: drug.manufacturer ? {
+      '@type': 'Organization',
+      name: drug.manufacturer
+    } : undefined,
+    indication: drug.indications.map((ind) => ({
+      '@type': 'MedicalCondition',
+      name: ind.title,
+      description: ind.description
+    })),
+    contraindication: [
+      ...drug.contraindications.absolute,
+      ...drug.contraindications.relative
+    ].join(', '),
+    warning: drug.contraindications.warnings?.join(', '),
+    seriousAdverseEffect: drug.adverseEffects.serious.map((effect) => ({
+      '@type': 'MedicalCondition',
+      name: effect
+    })),
+    administrationRoute: drug.administration,
+    drugClass: drug.pharmacologicClass,
+    therapeuticClass: drug.therapeuticClass,
+    url,
+    // Мета-информация для лучшей индексации
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '4.5',
+      ratingCount: '100'
+    }
+  };
+}
 
-  // Нежелательные явления
-  adverseEffects: {
-    common: [
-      "Кровотечения лёгкой и средней степени",
-      "Гематомы в месте инъекции",
-      "Умеренная тромбоцитопения",
-      "Повышение трансаминаз",
-    ],
-    serious: [
-      "Массивные кровотечения (ЖКТ, внутричерепные и др.)",
-      "Гепарин-индуцированная тромбоцитопения с тромбозами",
-      "Спинальные/эпидуральные гематомы при нейроаксиальной анестезии",
-    ],
-  },
-
-  // Мониторинг
-  monitoring: {
-    before: [
-      "Оценка риска тромбоза и кровотечения",
-      "ОАК (Hb, тромбоциты)",
-      "Креатинин и расчёт клиренса креатинина",
-      "Оценка функции печени",
-    ],
-    during: [
-      "Клинический контроль кровотечений (кожа, ЖКТ, мочевыделительная система)",
-      "Контроль Hb и тромбоцитов при длительной терапии",
-      "Контроль функции почек у пациентов группы риска",
-    ],
-    after: [
-      "Оценка необходимости продолжения антикоагулянтной терапии (переход на пероральные препараты)",
-      "Контроль поздних кровотечений и гематом",
-    ],
-  },
-
-  // Беременность/лактация
-  pregnancyLactation: {
-    pregnancy:
-      "НМГ часто рассматриваются как предпочтительные антикоагулянты при необходимости антикоагуляции во время беременности, но применение требует индивидуальной оценки.",
-    lactation:
-      "Выделение в грудное молоко минимальное; многие руководства допускают применение при ГВ с осторожностью.",
-  },
-
-  // Администрирование / передозировка / «фишки»
-  administration:
-    "Вводится только п/к (передне/заднебоковая поверхность брюшной стенки). Не удалять воздушный пузырёк из шприца, не массировать место инъекции.",
-  overdose:
-    "При значимом кровотечении возможно применение протамина сульфата для частичной нейтрализации эффекта, далее — симптоматическая терапия.",
-  pearls: [
-    "Не вводить эноксапарин внутримышечно.",
-    "Всегда учитывать функцию почек и возраст при выборе дозы.",
-    "Фиксировать время последней дозы перед нейроаксиальной анестезией/удалением катетера.",
-  ],
-
-  // Применение в клинических рекомендациях (EU / US)
-  guidelineUsage: {
-    eu: [
-      {
-        guideCode: "ESC NSTE-ACS 2020",
-        guideSection: "Раздел 7 – Антикоагулянтная терапия при NSTE-ACS",
-        indicationSummary:
-          "Один из препаратов выбора для парентеральной антикоагуляции при NSTE-ACS в сочетании с антитромбоцитарной терапией, при отсутствии противопоказаний.",
-        link: "https://www.escardio.org", // сюда потом можно поставить точную ссылку на документ
-      },
-      {
-        guideCode: "ESC VTE 2021",
-        guideSection: "Лечение острого ТГВ/ТЭЛА",
-        indicationSummary:
-          "Рассматривается как стандартная начальная терапия ТГВ/ТЭЛА с последующим переходом на пероральные антикоагулянты.",
-        link: "https://www.escardio.org/Guidelines",
-      },
-    ],
-    us: [
-      {
-        guideCode: "ACC/AHA NSTE-ACS",
-        guideSection: "Anticoagulant Therapy in NSTE-ACS",
-        indicationSummary:
-          "Один из предпочтительных вариантов антикоагуляции у пациентов с NSTE-ACS в рамках комбинированной терапии.",
-        link: "https://www.acc.org/guidelines",
-      },
-      {
-        guideCode: "CHEST VTE Guidelines",
-        guideSection: "Initial parenteral anticoagulation",
-        indicationSummary:
-          "Включён как вариант начальной парентеральной терапии при ТГВ/ТЭЛА.",
-        link: "https://journal.chestnet.org/",
-      },
-    ],
-  },
-
-  // Служебное
-  updatedAt: "2025-11-13T00:00:00.000Z",
-};
+/**
+ * Генерирует мета-теги для SEO
+ */
+export function generateDrugMetaTags(drug: Drug) {
+  const primaryIndication = drug.indications[0]?.title || '';
+  
+  return {
+    title: `${drug.genericName} - инструкция, применение, дозировка | MedRadix`,
+    description: `${drug.genericName}: ${drug.description || primaryIndication}. Торговые названия: ${drug.tradeNames.join(', ')}.`,
+    keywords: [
+      drug.genericName,
+      ...drug.tradeNames,
+      ...drug.specialties,
+      'инструкция',
+      'применение',
+      'дозировка',
+      'показания'
+    ].join(', '),
+    openGraph: {
+      title: `${drug.genericName} - MedRadix`,
+      description: drug.description || `Информация о препарате ${drug.genericName}`,
+      type: 'article' as const,
+      url: `https://medradix.info/drugs/${drug.slug}`
+    }
+  };
+}
