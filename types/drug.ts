@@ -237,7 +237,7 @@ export const mockDrugEnoxaparin: Drug = {
   slug: "enoxaparin",
   tradeNames: ["Клексан", "Эниксум", "Гемапаксан"],
   atcCode: "B01AB05",
-  pharmacologicClass: "Антикоагулянт прямого действия (низкомолекулярный гепарин)",
+  pharmacologicClass: "Антикоагулянт прямого действия -низкомолекулярный гепарин",
   therapeuticClass: "Антитромботическое средство, антикоагулянт",
   specialties: ["Кардиология", "Ангиохирургия", "Терапия", "Реаниматология"],
   manufacturer: "Санофи",
