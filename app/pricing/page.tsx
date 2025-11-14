@@ -54,7 +54,7 @@ export default function PricingPage() {
               className={`flex-1 px-4 py-3 text-sm md:text-base rounded-full transition ${
                 audience === 'doctors'
                   ? 'bg-[#015D52] text-white'
-                  : 'text-[#5E3830]'
+                  : 'bg-[#fcfcee] text-[#5E3830]'
               }`}
             >
               Врач
@@ -65,7 +65,7 @@ export default function PricingPage() {
               className={`flex-1 px-4 py-3 text-sm md:text-base rounded-full transition ${
                 audience === 'nurses'
                   ? 'bg-[#015D52] text-white'
-                  : 'text-[#5E3830]'
+                  : 'bg-[#fcfcee] text-[#5E3830]'
               }`}
             >
               Медсестрам
@@ -150,8 +150,6 @@ export default function PricingPage() {
     </main>
   );
 }
-
-
 
 
 
