@@ -51,9 +51,9 @@ export default function PricingPage() {
             <button
               type="button"
               onClick={() => setAudience('doctors')}
-              className={`flex-1 px-4 py-2 text-sm md:text-base rounded-full transition ${
+              className={`flex-1 px-4 py-3 text-sm md:text-base rounded-full transition ${
                 audience === 'doctors'
-                  ? 'bg-[#003747] text-white'
+                  ? 'bg-[#015D52] text-white'
                   : 'text-gray-700'
               }`}
             >
@@ -62,9 +62,9 @@ export default function PricingPage() {
             <button
               type="button"
               onClick={() => setAudience('nurses')}
-              className={`flex-1 px-4 py-2 text-sm md:text-base rounded-full transition ${
+              className={`flex-1 px-4 py-3 text-sm md:text-base rounded-full transition ${
                 audience === 'nurses'
-                  ? 'bg-[#003747] text-white'
+                  ? 'bg-[#015D52] text-white'
                   : 'text-gray-700'
               }`}
             >
@@ -142,7 +142,7 @@ export default function PricingPage() {
           здравоохранения вашей страны.
         </p>
 
-        {/* Email поддержки — шрифт чуть больше */}
+        {/* Email поддержки */}
         <p className="mt-36 text-center text-base text-[#4b3b2f]">
           support@medradix.info
         </p>
@@ -150,6 +150,5 @@ export default function PricingPage() {
     </main>
   );
 }
-
 
 
