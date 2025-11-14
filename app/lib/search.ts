@@ -17,18 +17,19 @@ export async function globalSearch(query: string): Promise<SearchResult[]> {
 
   if (!lowerQuery) return [];
 
-  // 🔍 Поиск по препаратам (названия, класс, описание + полный текст объекта)
+  // 🔍 Поиск по препаратам (названия, класс, описание + весь объект)
   const drugResults = mockDrugsList
     .filter(drug => {
       const description = (drug as any).description as string | undefined;
-      const haystack = JSON.stringify(drug).toLowerCase(); // весь объект препарата в текст
+      // Весь объект препарата превращаем в строку — здесь окажется и ваше "Описание..."
+      const haystack = JSON.stringify(drug).toLowerCase();
 
       return (
         drug.genericName.toLowerCase().includes(lowerQuery) ||
         drug.tradeNames.some(name => name.toLowerCase().includes(lowerQuery)) ||
         drug.therapeuticClass.toLowerCase().includes(lowerQuery) ||
         (description && description.toLowerCase().includes(lowerQuery)) ||
-        haystack.includes(lowerQuery) // доп. поиск по любым строковым полям
+        haystack.includes(lowerQuery) // 👈 добиваемся нахождения "гепарин" где бы он ни был в объекте
       );
     })
     .map(drug => ({
