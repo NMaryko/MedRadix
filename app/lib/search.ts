@@ -17,16 +17,18 @@ export async function globalSearch(query: string): Promise<SearchResult[]> {
 
   if (!lowerQuery) return [];
 
-  // 🔍 Поиск по препаратам (добавили описание)
+  // 🔍 Поиск по препаратам (названия, класс, описание + полный текст объекта)
   const drugResults = mockDrugsList
     .filter(drug => {
       const description = (drug as any).description as string | undefined;
+      const haystack = JSON.stringify(drug).toLowerCase(); // весь объект препарата в текст
 
       return (
         drug.genericName.toLowerCase().includes(lowerQuery) ||
         drug.tradeNames.some(name => name.toLowerCase().includes(lowerQuery)) ||
         drug.therapeuticClass.toLowerCase().includes(lowerQuery) ||
-        (description && description.toLowerCase().includes(lowerQuery))
+        (description && description.toLowerCase().includes(lowerQuery)) ||
+        haystack.includes(lowerQuery) // доп. поиск по любым строковым полям
       );
     })
     .map(drug => ({
@@ -88,3 +90,4 @@ function calculateRelevance(text: string, query: string, baseScore: number): num
   if (lowerText.includes(query)) return baseScore * 0.7;
   return baseScore * 0.3;
 }
+
