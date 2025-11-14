@@ -356,6 +356,21 @@ export default function HomePage() {
           <p className="mt-4 text-sm lg:text-base text-[#4b3b2f]">
             для врачей — от $12/мес, для медсестер — от $7/мес
           </p>
+         <section className="mt-16 border-t border-slate-200 pt-8 text-sm text-slate-700">
+  <h2 className="text-base font-semibold text-slate-900 mb-2">
+    Scientia pro vita — знания во благо жизни
+  </h2>
+  <p className="mb-2">
+    MedRadix — международная образовательная медицинская платформа для врачей
+    и среднего медперсонала. Мы объединяем клинические гайдлайны EU и US,
+    практические алгоритмы, калькуляторы риска, базу препаратов и подборку
+    онлайн-курсов с баллами непрерывного медицинского образования.
+  </p>
+  <p>
+    Наша цель — помочь вам принимать обоснованные клинические решения быстрее и
+    увереннее, прямо в реальной практике.
+  </p>
+</section>
           <p className="mt-6 lg:mt-10 text-sm lg:text-base text-[#4b3b2f]">
             support@medradix.info
           </p>
