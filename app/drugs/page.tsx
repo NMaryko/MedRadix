@@ -47,7 +47,8 @@ export default function DrugsPage() {
                 outline-none shadow-none
                 transition-all duration-300
                 focus:border-[#015d52]
-                focus:shadow-[0_0_0_2px_rgba(1,93,82,0.35)]
+                hover:shadow-[0_0_0_2px_rgba(255,255,255,0.6)]
+                focus:shadow-[0_0_0_2px_rgba(255,255,255,0.85)]
               "
               style={{ borderWidth: '1.5px' }}
             />
@@ -236,3 +237,4 @@ export default function DrugsPage() {
     </div>
   );
 }
+
