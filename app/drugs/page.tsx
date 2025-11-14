@@ -44,11 +44,13 @@ export default function DrugsPage() {
                 border border-[#015d52] rounded-2xl
                 bg-white/80 backdrop-blur-sm
                 text-brown-900
-                outline-none shadow-none
+                outline-none
                 transition-all duration-300
-                focus:border-[#015d52]
-                hover:shadow-[0_0_0_2px_rgba(255,255,255,0.6)]
-                focus:shadow-[0_0_0_2px_rgba(255,255,255,0.85)]
+                shadow-sm
+                hover:bg-white
+                focus:bg-white
+                hover:shadow-[0_0_10px_rgba(1,93,82,0.28)]
+                focus:shadow-[0_0_14px_rgba(1,93,82,0.38)]
               "
               style={{ borderWidth: '1.5px' }}
             />
@@ -78,7 +80,7 @@ export default function DrugsPage() {
         <div className="space-y-6">
           {searchTerm ? (
             <>
-              <div className="flex justify-between items-center mb-6">
+              <div className="flex justify между items-center mb-6">
                 <h2 className="text-2xl font-semibold text-brown-900">
                   Найдено препаратов: <span className="text-[#015d52]">{filteredDrugs.length}</span>
                 </h2>
@@ -159,7 +161,7 @@ export default function DrugsPage() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                       </svg>
                     </div>
-                    <h3 className="font-semibold text-brown-800 mb-2">Клинические рекомендации</h3>
+                    <h3 className="font-semibold text-браун-800 mb-2">Клинические рекомендации</h3>
                     <p className="text-brown-600 text-sm">
                       Применение препаратов согласно ESC, ACC/AHA и другим авторитетным гайдам
                     </p>
@@ -237,4 +239,3 @@ export default function DrugsPage() {
     </div>
   );
 }
-
