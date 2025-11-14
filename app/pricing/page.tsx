@@ -47,7 +47,7 @@ export default function PricingPage() {
 
         {/* Переключатель Врач / Медсестрам */}
         <div className="flex justify-center mb-12">
-          <div className="inline-flex w-[320px] rounded-full bg-white p-1 border border-transparent hover:border-[#015D52] shadow-[inset_0_0_12px_rgba(0,0,0,0.22)] transition-colors">
+          <div className="inline-flex w-[320px] rounded-full bg-white p-1 border border-transparent hover:border-[#015D52] shadow-[inset_0_0_18px_rgba(0,0,0,0.35)] transition-colors">
             <button
               type="button"
               onClick={() => setAudience('doctors')}
