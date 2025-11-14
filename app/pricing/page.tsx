@@ -6,10 +6,10 @@ import { useState } from 'react';
 type Audience = 'doctors' | 'nurses';
 
 interface Plan {
-  label: string;       // "3 месяца"
+  label: string;
   months: number;
   pricePerMonth: number;
-  total: number;       // сумма в скобках
+  total: number;
 }
 
 const doctorPlans: Plan[] = [
@@ -24,7 +24,7 @@ const nursePlans: Plan[] = [
   { label: '12 месяцев', months: 12, pricePerMonth: 7, total: 84 },
 ];
 
-const discounts = ['-$18', '-$72']; // для 6 и 12 месяцев
+const discounts = ['-$18', '-$72'];
 
 export default function PricingPage() {
   const [audience, setAudience] = useState<Audience>('doctors');
@@ -47,11 +47,11 @@ export default function PricingPage() {
 
         {/* Переключатель Врач / Медсестрам */}
         <div className="flex justify-center mb-12">
-          <div className="inline-flex w-[260px] rounded-full bg-[#e5e7eb] p-1 overflow-hidden">
+          <div className="inline-flex rounded-full bg-[#e5e7eb] p-1">
             <button
               type="button"
               onClick={() => setAudience('doctors')}
-              className={`flex-1 px-4 py-2 text-sm md:text-base text-center transition ${
+              className={`px-6 md:px-8 py-2 text-sm md:text-base rounded-full transition ${
                 audience === 'doctors'
                   ? 'bg-[#003747] text-white'
                   : 'text-gray-700'
@@ -62,7 +62,7 @@ export default function PricingPage() {
             <button
               type="button"
               onClick={() => setAudience('nurses')}
-              className={`flex-1 px-4 py-2 text-sm md:text-base text-center transition ${
+              className={`px-6 md:px-8 py-2 text-sm md:text-base rounded-full transition ${
                 audience === 'nurses'
                   ? 'bg-[#003747] text-white'
                   : 'text-gray-700'
@@ -82,7 +82,9 @@ export default function PricingPage() {
             >
               {/* Верхняя строка: заголовок + скидка */}
               <div className="flex items-start justify-between mb-4">
-                <h2 className="text-lg font-semibold">{plan.label}</h2>
+                <h2 className="text-lg font-semibold text-[#5E3830]">
+                  {plan.label}
+                </h2>
 
                 {index > 0 && (
                   <div className="px-4 py-1 bg-[#015D52] text-white text-sm rounded-none rounded-tr-3xl">
@@ -98,13 +100,13 @@ export default function PricingPage() {
                   <span className="text-base font-normal ml-1 text-[#5E3830]">
                     /мес
                   </span>
-                  <span className="text-base text-gray-500 ml-1">
+                  <span className="text-base font-normal ml-1 text-[#5E3830]">
                     (${plan.total})
                   </span>
                 </p>
               </div>
 
-              {/* Описание — в точности по смыслу старой версии */}
+              {/* Описание */}
               <ul className="space-y-3 text-sm text-gray-700 flex-1">
                 <li className="flex gap-2">
                   <span className="mt-1">✓</span>
@@ -122,7 +124,7 @@ export default function PricingPage() {
                 </li>
               </ul>
 
-              {/* Кнопка оплатить — зелёная, с одним округлённым краем */}
+              {/* Кнопка оплатить */}
               <button
                 type="button"
                 className="mt-8 w-full bg-[#015D52] text-white py-3 font-semibold rounded-none rounded-bl-3xl hover:bg-[#01463d] transition-colors"
@@ -140,7 +142,7 @@ export default function PricingPage() {
           здравоохранения вашей страны.
         </p>
 
-        {/* Email поддержки — без лишних кнопок и цен */}
+        {/* Email поддержки */}
         <p className="mt-36 text-center text-sm text-[#4b3b2f]">
           support@medradix.info
         </p>
@@ -148,4 +150,5 @@ export default function PricingPage() {
     </main>
   );
 }
+
 
