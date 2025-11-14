@@ -2,15 +2,14 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 
 type Audience = 'doctors' | 'nurses';
 
 interface Plan {
   label: string;       // "3 месяца"
-  months: number;      // 3, 6, 12
+  months: number;
   pricePerMonth: number;
-  total: number;       // Сумма в скобках
+  total: number;       // сумма в скобках
 }
 
 const doctorPlans: Plan[] = [
@@ -25,7 +24,7 @@ const nursePlans: Plan[] = [
   { label: '12 месяцев', months: 12, pricePerMonth: 7, total: 84 },
 ];
 
-const discounts = ['-$18', '-$72']; // для 6 и 12 месяцев — как на старом макете
+const discounts = ['-$18', '-$72']; // для 6 и 12 месяцев
 
 export default function PricingPage() {
   const [audience, setAudience] = useState<Audience>('doctors');
@@ -48,11 +47,11 @@ export default function PricingPage() {
 
         {/* Переключатель Врач / Медсестрам */}
         <div className="flex justify-center mb-12">
-          <div className="inline-flex rounded-full bg-[#e5e7eb] p-1">
+          <div className="inline-flex w-[260px] rounded-full bg-[#e5e7eb] p-1 overflow-hidden">
             <button
               type="button"
               onClick={() => setAudience('doctors')}
-              className={`px-6 py-2 text-sm md:text-base rounded-full transition ${
+              className={`flex-1 px-4 py-2 text-sm md:text-base text-center transition ${
                 audience === 'doctors'
                   ? 'bg-[#003747] text-white'
                   : 'text-gray-700'
@@ -63,7 +62,7 @@ export default function PricingPage() {
             <button
               type="button"
               onClick={() => setAudience('nurses')}
-              className={`px-6 py-2 text-sm md:text-base rounded-full transition ${
+              className={`flex-1 px-4 py-2 text-sm md:text-base text-center transition ${
                 audience === 'nurses'
                   ? 'bg-[#003747] text-white'
                   : 'text-gray-700'
@@ -79,28 +78,33 @@ export default function PricingPage() {
           {plans.map((plan, index) => (
             <div
               key={plan.label}
-              className="relative bg-white rounded-3xl shadow-sm border border-gray-100 p-8 flex flex-col"
+              className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 flex flex-col"
             >
-              {/* Бейдж скидки для 6 и 12 месяцев */}
-              {index > 0 && (
-                <div className="absolute -top-4 right-6 px-3 py-1 rounded-full bg-gray-900 text-white text-sm">
-                  {discounts[index - 1]}
-                </div>
-              )}
+              {/* Верхняя строка: заголовок + скидка */}
+              <div className="flex items-start justify-between mb-4">
+                <h2 className="text-lg font-semibold">{plan.label}</h2>
+
+                {index > 0 && (
+                  <div className="px-4 py-1 bg-[#015D52] text-white text-sm rounded-none rounded-tr-3xl">
+                    {discounts[index - 1]}
+                  </div>
+                )}
+              </div>
 
               {/* Цена */}
               <div className="mb-6">
-                <h2 className="text-lg font-semibold mb-3">{plan.label}</h2>
-                <p className="text-3xl font-bold">
+                <p className="text-3xl font-bold text-[#5E3830]">
                   ${plan.pricePerMonth}
-                  <span className="text-base font-normal ml-1">/мес</span>
+                  <span className="text-base font-normal ml-1 text-[#5E3830]">
+                    /мес
+                  </span>
                   <span className="text-base text-gray-500 ml-1">
                     (${plan.total})
                   </span>
                 </p>
               </div>
 
-              {/* Описание — 1 в 1 по смыслу с Hostinger */}
+              {/* Описание — в точности по смыслу старой версии */}
               <ul className="space-y-3 text-sm text-gray-700 flex-1">
                 <li className="flex gap-2">
                   <span className="mt-1">✓</span>
@@ -118,10 +122,10 @@ export default function PricingPage() {
                 </li>
               </ul>
 
-              {/* Кнопка оплатить */}
+              {/* Кнопка оплатить — зелёная, с одним округлённым краем */}
               <button
                 type="button"
-                className="mt-8 w-full rounded-full bg-[#015D52] text-white py-3 font-semibold"
+                className="mt-8 w-full bg-[#015D52] text-white py-3 font-semibold rounded-none rounded-bl-3xl hover:bg-[#01463d] transition-colors"
               >
                 Оплатить
               </button>
@@ -136,19 +140,12 @@ export default function PricingPage() {
           здравоохранения вашей страны.
         </p>
 
-        {/* Нижний блок как на скрине */}
-        <div className="mt-12 text-center">
-          <Link
-            href="/pricing"
-            className="inline-flex px-10 py-3 rounded-full bg-[#015D52] text-white font-semibold"
-          >
-            Получить полный доступ к MedRadix
-          </Link>
-          <p className="mt-4 text-sm text-gray-600">
-            для врачей — от $12/мес, для медсестер — от $7/мес
-          </p>
-        </div>
+        {/* Email поддержки — без лишних кнопок и цен */}
+        <p className="mt-36 text-center text-sm text-[#4b3b2f]">
+          support@medradix.info
+        </p>
       </div>
     </main>
   );
 }
+
