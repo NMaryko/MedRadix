@@ -1,4 +1,4 @@
-// app/lib/search.ts - ИСПРАВЛЕННЫЙ КОД
+// app/lib/search.ts
 import { mockDrugsList } from '@/types/drug';
 
 export interface SearchResult {
@@ -17,13 +17,18 @@ export async function globalSearch(query: string): Promise<SearchResult[]> {
 
   if (!lowerQuery) return [];
 
-  // 🔍 УПРОЩЕННЫЙ поиск по препаратам (без specialties)
+  // 🔍 Поиск по препаратам (добавили описание)
   const drugResults = mockDrugsList
-    .filter(drug =>
-      drug.genericName.toLowerCase().includes(lowerQuery) ||
-      drug.tradeNames.some(name => name.toLowerCase().includes(lowerQuery)) ||
-      drug.therapeuticClass.toLowerCase().includes(lowerQuery)
-    )
+    .filter(drug => {
+      const description = (drug as any).description as string | undefined;
+
+      return (
+        drug.genericName.toLowerCase().includes(lowerQuery) ||
+        drug.tradeNames.some(name => name.toLowerCase().includes(lowerQuery)) ||
+        drug.therapeuticClass.toLowerCase().includes(lowerQuery) ||
+        (description && description.toLowerCase().includes(lowerQuery))
+      );
+    })
     .map(drug => ({
       id: drug.id,
       type: 'drug' as const,
@@ -31,7 +36,7 @@ export async function globalSearch(query: string): Promise<SearchResult[]> {
       description: `Торговые названия: ${drug.tradeNames.join(', ')} • ${drug.therapeuticClass}`,
       url: `/drugs/${drug.slug}`,
       category: 'Препараты',
-      relevance: calculateRelevance(drug.genericName, lowerQuery, 100)
+      relevance: calculateRelevance(drug.genericName, lowerQuery, 100),
     }));
 
   results.push(...drugResults);
@@ -45,19 +50,19 @@ export async function globalSearch(query: string): Promise<SearchResult[]> {
       description: 'Раздел курсов находится в разработке. Скоро появится!',
       url: '/courses',
       category: 'Курсы',
-      relevance: 50
+      relevance: 50,
     });
   }
 
   if (lowerQuery.includes('гайд') || lowerQuery.includes('рекомендация')) {
     results.push({
       id: 'guides-coming-soon',
-      type: 'guide', 
+      type: 'guide',
       title: 'Клинические рекомендации',
       description: 'База гайдов ESC, ACC/AHA и других организаций',
       url: '/guides',
       category: 'Гайды',
-      relevance: 50
+      relevance: 50,
     });
   }
 
@@ -67,9 +72,9 @@ export async function globalSearch(query: string): Promise<SearchResult[]> {
       type: 'disease',
       title: 'База заболеваний',
       description: 'Информация о заболеваниях и подходах к лечению',
-      url: '/diseases', 
+      url: '/diseases',
       category: 'Заболевания',
-      relevance: 50
+      relevance: 50,
     });
   }
 
