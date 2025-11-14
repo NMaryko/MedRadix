@@ -358,7 +358,7 @@ export default function HomePage() {
           </p>
          <section className="mt-16 border-t border-slate-200 pt-8 text-sm text-slate-700">
   <h2 className="text-base font-semibold text-slate-900 mb-2">
-    Scientia pro vita — знания во благо жизни
+    Scientia pro vita — Знания во благо жизни
   </h2>
   <p className="mb-2">
     MedRadix — международная образовательная медицинская платформа для врачей
