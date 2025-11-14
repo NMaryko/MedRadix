@@ -3,8 +3,21 @@ import './globals.css';
 import Header from './components/Header/Header';
 
 export const metadata: Metadata = {
-  title: 'MedRadix',
-  description: 'Международная образовательная медицинская платформа MedRadix',
+  title: 'MedRadix — международная медицинская платформа',
+  description:
+    'MedRadix — международная медицинская платформа для врачей и среднего медперсонала. Scientia pro vita — Знания во благо жизни: структурированные клинические гайдлайны EU и US, калькуляторы риска, база препаратов и подборка онлайн-курсов с баллами непрерывного медицинского образования.',
+  alternates: {
+    canonical: 'https://medradix.info/',
+  },
+  openGraph: {
+    title: 'MedRadix — международная медицинская платформа',
+    description:
+      'MedRadix — международная медицинская платформа для врачей и среднего медперсонала. Scientia pro vita — Знания во благо жизни: структурированные клинические гайдлайны EU и US, калькуляторы риска, база препаратов и подборка онлайн-курсов с баллами непрерывного медицинского образования.',
+    url: 'https://medradix.info/',
+    siteName: 'MedRadix',
+    locale: 'ru_RU',
+    type: 'website',
+  },
 };
 
 export default function RootLayout({
@@ -23,4 +36,5 @@ export default function RootLayout({
     </html>
   );
 }
+
 
