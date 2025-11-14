@@ -47,7 +47,7 @@ export default function PricingPage() {
 
         {/* Переключатель Врач / Медсестрам */}
         <div className="flex justify-center mb-12">
-          <div className="inline-flex w-[320px] rounded-full bg-white p-1 border border-transparent hover:border-[#015D52] transition-colors">
+          <div className="inline-flex w-[320px] rounded-full bg-white p-1 border border-transparent hover:border-[#015D52] shadow-[inset_0_0_8px_rgba(0,0,0,0.08)] transition-colors">
             <button
               type="button"
               onClick={() => setAudience('doctors')}
@@ -143,13 +143,14 @@ export default function PricingPage() {
         </p>
 
         {/* Email поддержки */}
-        <p className="mt-36 text-center text-base text-[#4b3b2f]">
+        <p className="mt-48 text-center text-base text-[#4b3b2f]">
           support@medradix.info
         </p>
       </div>
     </main>
   );
 }
+
 
 
 
