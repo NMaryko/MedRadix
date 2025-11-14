@@ -22,7 +22,8 @@ export async function globalSearch(query: string): Promise<SearchResult[]> {
     .filter(drug =>
       drug.genericName.toLowerCase().includes(lowerQuery) ||
       drug.tradeNames.some(name => name.toLowerCase().includes(lowerQuery)) ||
-      drug.therapeuticClass.toLowerCase().includes(lowerQuery)
+      drug.therapeuticClass.toLowerCase().includes(lowerQuery) ||
+      (drug.description && drug.description.toLowerCase().includes(lowerQuery)) // 👈 ДОБАВИЛИ ПОИСК ПО ОПИСАНИЮ
     )
     .map(drug => ({
       id: drug.id,
@@ -52,7 +53,7 @@ export async function globalSearch(query: string): Promise<SearchResult[]> {
   if (lowerQuery.includes('гайд') || lowerQuery.includes('рекомендация')) {
     results.push({
       id: 'guides-coming-soon',
-      type: 'guide', 
+      type: 'guide',
       title: 'Клинические рекомендации',
       description: 'База гайдов ESC, ACC/AHA и других организаций',
       url: '/guides',
@@ -67,7 +68,7 @@ export async function globalSearch(query: string): Promise<SearchResult[]> {
       type: 'disease',
       title: 'База заболеваний',
       description: 'Информация о заболеваниях и подходах к лечению',
-      url: '/diseases', 
+      url: '/diseases',
       category: 'Заболевания',
       relevance: 50
     });
@@ -83,3 +84,4 @@ function calculateRelevance(text: string, query: string, baseScore: number): num
   if (lowerText.includes(query)) return baseScore * 0.7;
   return baseScore * 0.3;
 }
+
