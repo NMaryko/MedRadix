@@ -608,7 +608,7 @@ export const mockDrugEnoxaparin: Drug = {
         guideCode: "ACC/AHA NSTE-ACS 2022",
         guideSection: "Anticoagulant Therapy in NSTE-ACS",
         indicationSummary: "Рекомендован как предпочтительный вариант антикоагуляции у пациентов с NSTE-ACS при отсутствии противопоказаний.",
-        link: "https://www.acc.org/guidelines/hubs/acute-coronary-syndrome",
+        link: "https://www.ahajournals.org/doi/10.1161/CIR.0000000000001309",
         recommendationClass: "I",
         evidenceLevel: "A"
       },
