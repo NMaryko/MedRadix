@@ -47,14 +47,14 @@ export default function PricingPage() {
 
         {/* Переключатель Врач / Медсестрам */}
         <div className="flex justify-center mb-12">
-          <div className="inline-flex w-[320px] rounded-full bg-[#e5e7eb] p-1 border border-transparent hover:border-[#015D52] transition-colors">
+          <div className="inline-flex w-[320px] rounded-full bg-white p-1 border border-transparent hover:border-[#015D52] transition-colors">
             <button
               type="button"
               onClick={() => setAudience('doctors')}
               className={`flex-1 px-4 py-3 text-sm md:text-base rounded-full transition ${
                 audience === 'doctors'
                   ? 'bg-[#015D52] text-white'
-                  : 'text-gray-700'
+                  : 'text-[#5E3830]'
               }`}
             >
               Врач
@@ -65,7 +65,7 @@ export default function PricingPage() {
               className={`flex-1 px-4 py-3 text-sm md:text-base rounded-full transition ${
                 audience === 'nurses'
                   ? 'bg-[#015D52] text-white'
-                  : 'text-gray-700'
+                  : 'text-[#5E3830]'
               }`}
             >
               Медсестрам
@@ -97,7 +97,7 @@ export default function PricingPage() {
               <div className="mb-6">
                 <p className="text-3xl font-bold text-[#5E3830]">
                   ${plan.pricePerMonth}
-                  <span className="text-base font-normal ml-1 text-[#5E3830]">
+                  <span className="text-base font-normal ml-1 text-[#5E3830]}>
                     /мес
                   </span>
                   <span className="text-base font-normal ml-1 text-[#5E3830]">
@@ -150,5 +150,6 @@ export default function PricingPage() {
     </main>
   );
 }
+
 
 
