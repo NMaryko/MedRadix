@@ -97,7 +97,7 @@ export default function PricingPage() {
               <div className="mb-6">
                 <p className="text-3xl font-bold text-[#5E3830]">
                   ${plan.pricePerMonth}
-                  <span className="text-base font-normal ml-1 text-[#5E3830]}>
+                  <span className="text-base font-normal ml-1 text-[#5E3830]">
                     /мес
                   </span>
                   <span className="text-base font-normal ml-1 text-[#5E3830]">
@@ -150,6 +150,7 @@ export default function PricingPage() {
     </main>
   );
 }
+
 
 
 
