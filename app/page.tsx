@@ -2,6 +2,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import {
   FileText,
   BookOpen,
@@ -346,9 +347,12 @@ export default function HomePage() {
       {/* CTA */}
       <section className="border-t border-gray-200">
         <div className="max-w-[1360px] mx-auto px-4 py-12 lg:py-16 text-center">
-          <button className="inline-flex items-center justify-center rounded-full bg-[#015d52] px-8 lg:px-10 py-3 text-base lg:text-lg font-semibold text-white shadow-md hover:bg-[#01463d] hover:shadow-lg transition-colors w-full lg:w-auto">
-            Получить полный доступ MedRadix
-          </button>
+         <Link
+  href="/pricing"
+  className="inline-flex items-center justify-center rounded-full bg-[#015d52] px-8 lg:px-10 py-3 text-base lg:text-lg font-semibold text-white shadow-md hover:bg-[#01463d] hover:shadow-lg transition-colors w-full lg:w-auto"
+>
+  Получить полный доступ  MedRadix
+</Link>
           <p className="mt-4 text-sm lg:text-base text-[#4b3b2f]">
             для врачей — от $12/мес, для медсестер — от $7/мес
           </p>
