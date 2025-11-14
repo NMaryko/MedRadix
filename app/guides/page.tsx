@@ -105,7 +105,7 @@ export default function ACSPage() {
     sources: {
       nsteacs: 'https://academic.oup.com/eurheartj/article/44/38/3720/7235365',
       stemi: 'https://academic.oup.com/eurheartj/advance-article/doi/10.1093/eurheartj/ehae170/7649113',
-      us: '#',
+      us: 'https://professional.heart.org/en/science-news/2025-guideline-for-the-management-of-patients-with-acute-coronary-syndromes',
       full: 'https://www.escardio.org/Guidelines/Clinical-Practice-Guidelines',
     },
 
