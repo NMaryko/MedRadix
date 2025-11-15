@@ -27,6 +27,7 @@ const SPECIALTIES: string[] = [
   'Урология',
   'Хирургия',
   'Эндокринология',
+  'Гериатрия',
 ];
 
 // конвертация мкмоль/л → мг/дл
@@ -34,7 +35,7 @@ function convertCreatinineToMgDL(creatinineMcmolL: number): number {
   return creatinineMcmolL / 88.4;
 }
 
-// категория риска по GRACE (грубо по порогам)
+// категория риска по GRACE (по порогам)
 function getGraceRiskCategory(score: number): 'низкий' | 'промежуточный' | 'высокий' {
   if (score < 100) return 'низкий';
   if (score < 140) return 'промежуточный';
@@ -50,7 +51,7 @@ function getGraceRiskDescription(
   const map: Record<typeof category, string> = {
     низкий: 'низкий риск',
     промежуточный: 'промежуточный риск',
-    высокий: 'высокий риск',
+    высокий: 'высokий риск',
   } as const;
 
   const categoryLabel = map[category];
@@ -58,6 +59,25 @@ function getGraceRiskDescription(
   const text = `Ориентировочная внутрибольничная летальность ≈ ${hospitalRisk}%, 6-месячная ≈ ${sixMonthRisk}% — ${categoryLabel}.`;
 
   return { categoryLabel, text };
+}
+
+// TIMI: категории риска по количеству баллов
+function getTimiRiskCategory(score: number): 'низкий' | 'промежуточный' | 'высокий' {
+  if (score <= 2) return 'низкий';
+  if (score <= 4) return 'промежуточный';
+  return 'высокий';
+}
+
+function getTimiRiskDescription(score: number, riskPercent: number): string {
+  const category = getTimiRiskCategory(score);
+  const label =
+    category === 'низкий'
+      ? 'низкий риск'
+      : category === 'промежуточный'
+      ? 'промежуточный риск'
+      : 'высokий риск';
+
+  return `Расчётный 14-дневный риск неблагоприятных ишемических событий ≈ ${riskPercent}% — ${label} по шкале TIMI.`;
 }
 
 export default function GraceTimiCalculatorPage() {
@@ -74,7 +94,7 @@ export default function GraceTimiCalculatorPage() {
     }
   };
 
-  // входные данные (все в европейских единицах)
+  // входные данные (европейские единицы)
   const [age, setAge] = useState<string>('');
   const [heartRate, setHeartRate] = useState<string>('');
   const [systolicBP, setSystolicBP] = useState<string>('');
@@ -94,6 +114,7 @@ export default function GraceTimiCalculatorPage() {
   // результаты TIMI
   const [timiScore, setTimiScore] = useState<number | null>(null);
   const [timiRisk, setTimiRisk] = useState<string>('-');
+  const [timiSummary, setTimiSummary] = useState<string>('');
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -106,7 +127,7 @@ export default function GraceTimiCalculatorPage() {
 
     setGraceError('');
 
-    // --- проверка обязательных полей для GRACE ---
+    // --- обязательные поля для GRACE ---
     const missingFields: string[] = [];
     if (!ageNum) missingFields.push('Возраст');
     if (!heartRateNum) missingFields.push('ЧСС');
@@ -129,6 +150,7 @@ export default function GraceTimiCalculatorPage() {
 
     setTimiScore(timi);
     setTimiRisk(`${timiRiskPercent}%`);
+    setTimiSummary(getTimiRiskDescription(timi, timiRiskPercent));
 
     // --- если не хватает полей для GRACE ---
     if (missingFields.length > 0) {
@@ -281,9 +303,9 @@ export default function GraceTimiCalculatorPage() {
           <div className="w-full md:w-80">
             <label
               htmlFor="specialty-select"
-              className="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-700"
+              className="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-700 text-center md:text-left"
             >
-              Специальность
+              СПЕЦИАЛЬНОСТЬ
             </label>
             <select
               id="specialty-select"
@@ -467,6 +489,13 @@ export default function GraceTimiCalculatorPage() {
               <p className="mt-2 text-xs text-gray-700">{graceSummary}</p>
             )}
 
+            <p className="mt-3 text-[11px] text-gray-600">
+              Диапазоны GRACE (ориентировочно):{' '}
+              <span className="font-semibold">0–99</span> баллов — низкий риск,{' '}
+              <span className="font-semibold">100–139</span> — промежуточный,{' '}
+              <span className="font-semibold">≥140</span> — высокий риск.
+            </p>
+
             {graceError && (
               <p className="mt-2 text-xs text-[#dc3545]">{graceError}</p>
             )}
@@ -481,8 +510,17 @@ export default function GraceTimiCalculatorPage() {
               </span>
             </p>
             <p>
-              14-дневный риск:{' '}
+              14-дневный риск неблагоприятных ишемических событий:{' '}
               <span className="font-semibold">{timiRisk}</span>
+            </p>
+            {timiSummary && (
+              <p className="mt-2 text-xs text-gray-700">{timiSummary}</p>
+            )}
+            <p className="mt-2 text-[11px] text-gray-600">
+              Диапазоны TIMI (UA/NSTEMI):{' '}
+              <span className="font-semibold">0–2</span> балла — низкий риск,{' '}
+              <span className="font-semibold">3–4</span> — промежуточный,{' '}
+              <span className="font-semibold">5–7</span> — высокий риск.
             </p>
             <p className="mt-1 text-[11px] italic text-gray-600">
               креатинин автоматически конвертирован в мг/дл для TIMI
@@ -490,9 +528,9 @@ export default function GraceTimiCalculatorPage() {
           </div>
         </div>
 
-        {/* support снизу по центру */}
-        <footer className="mt-[500px] pt-4 text-base text-[#5E3830] text-center">
-          <a href="mailto:support@medradix.info" className="font-semibold">
+        {/* единый support снизу по центру */}
+        <footer className="mt-48 pt-4 text-sm md:text-base text-[#5E3830] text-center">
+          <a href="mailto:support@medradix.info" className="font-medium">
             support@medradix.info
           </a>
         </footer>
