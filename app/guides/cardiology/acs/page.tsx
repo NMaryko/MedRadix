@@ -1,4 +1,3 @@
-// app/guides/cardiology/acs/page.tsx
 'use client';
 
 import { useState } from 'react';
@@ -115,7 +114,7 @@ export default function ACSPage() {
           step: 'Клиническая оценка',
           actions: [
             'Характер боли: давящая, жгучая, за грудиной',
-            'Иррадиация: левая рука, шея, челюсть, спина',
+            'Ирдиация: левая рука, шея, челюсть, спина',
             'Сопутствующие симптомы: одышка, тошнота, потливость',
             'Длительность: >20 минут',
           ],
@@ -675,7 +674,7 @@ export default function ACSPage() {
             {
               strategy: 'Ранняя деэскалация (1-3 мес)',
               criteria: [
-                'Высокий риск кровотечений (PRECISE-DAPT ≥25)',
+                'Высокий риск кровотечения (PRECISE-DAPT ≥25)',
                 'Пожилой возраст',
                 'Сопутствующая ОАТ',
               ],
@@ -1035,7 +1034,7 @@ export default function ACSPage() {
       ],
       interpretation:
         '≥4 баллов (HEART) → госпитализация и наблюдение; низкий риск по EDACS → возможна ранняя выписка',
-      link: '/calculators/heart-ed-risk',
+      link: '/calculators/cardiology/heart-ed-risk',
     },
     {
       name: 'TIMI для NSTE-ACS/US',
@@ -1065,6 +1064,7 @@ export default function ACSPage() {
                   <span className="text-[11px] uppercase tracking-[0.18em] text-[#9c978f] hidden lg:block">
                     Специальность
                   </span>
+                  {/* Фильтр М – используем готовый компонент с нашим дизайном */}
                   <FilterM
                     selected={selectedSpecialty}
                     onChange={(value: string) => setSelectedSpecialty(value)}
@@ -1079,12 +1079,14 @@ export default function ACSPage() {
                 </h1>
               </div>
 
-              {/* Нозология — тот же дизайн, что у FilterM, своё содержимое */}
+              {/* Нозология */}
               <div className="order-2 lg:order-1 lg:justify-self-start w-full lg:w-auto">
                 <div className="flex flex-col gap-1 w-full lg:w-auto">
                   <span className="text-[11px] uppercase tracking-[0.18em] text-[#9c978f] hidden lg:block">
                     Нозология
                   </span>
+
+                  {/* Обёртка как у фильтра М, одинаковая и для мобилки, и для десктопа */}
                   <div className="relative w-full lg:w-[320px]">
                     <select
                       value={selectedNosology}
@@ -1107,20 +1109,24 @@ export default function ACSPage() {
                         hover:shadow-[0_0_10px_#015D52]
                       "
                     >
-                      {Object.entries(groupedCardiologyNosologies).map(([groupName, items]) => (
-                        <optgroup key={groupName} label={groupName}>
-                          {items.map((nosology) => (
-                            <option
-                              key={nosology.id}
-                              value={nosology.label}
-                              className="text-center"
-                            >
-                              {nosology.label}
-                            </option>
-                          ))}
-                        </optgroup>
-                      ))}
+                      {Object.entries(groupedCardiologyNosologies).map(
+                        ([groupName, items]) => (
+                          <optgroup key={groupName} label={groupName}>
+                            {items.map((nosology) => (
+                              <option
+                                key={nosology.id}
+                                value={nosology.label}
+                                className="text-center"
+                              >
+                                {nosology.label}
+                              </option>
+                            ))}
+                          </optgroup>
+                        )
+                      )}
                     </select>
+
+                    {/* Стрелка, как в фильтре М */}
                     <ChevronDown
                       size={16}
                       className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#3b342d] opacity-70"
@@ -1533,15 +1539,15 @@ export default function ACSPage() {
                               <RecommendationBadge
                                 rec={{
                                   class: escGuideline.diagnosis.riskStratification.hematics.class,
-                                  level: escGuideline.diagnosis.riskStratification.hematics.level,
+                                  level: escGuideline.diagnosis.riskStratification.ematics.level,
                                   evidenceText:
-                                    escGuideline.diagnosis.riskStratification.hematics.evidenceText,
+                                    escGuideline.diagnosis.riskStratification.ematics.evidenceText,
                                 }}
                               />
                             </div>
                             <p className="font-medium mb-2">Параметры:</p>
                             <ul className="text-sm text-gray-700 space-y-1 mb-4">
-                              {escGuideline.diagnosis.riskStratification.hematics.parameters.map(
+                              {escGuideline.diagnosis.riskStratification.ematics.parameters.map(
                                 (param, idx) => (
                                   <li key={idx}>
                                     <Safe text={`• ${param}`} />
@@ -1551,7 +1557,7 @@ export default function ACSPage() {
                             </ul>
                             <p className="font-medium mb-2">Уровни риска:</p>
                             <ul className="text-sm text-gray-700 space-y-1">
-                              {escGuideline.diagnosis.riskStratification.hematics.scores.map(
+                              {escGuideline.diagnosis.riskStratification.ematics.scores.map(
                                 (score, idx) => (
                                   <li key={idx}>
                                     <Safe text={`• ${score}`} />
@@ -2414,6 +2420,7 @@ export default function ACSPage() {
                 представленной информации в клинической практике.
               </p>
 
+              {/* Визуальный зазор и email по центру экрана */}
               <div className="h-[150px] flex items-center justify-center w-full">
                 <p className="text-lg font-medium text-gray-900">support@medradix.info</p>
               </div>
@@ -2426,5 +2433,4 @@ export default function ACSPage() {
     </main>
   );
 }
-
 
