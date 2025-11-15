@@ -83,7 +83,7 @@ export default function CardiologyCalculatorsPage() {
           {/* 1. GRACE / TIMI */}
           <section
             className="group cursor-pointer rounded-3xl border border-[#015D52]/40 bg-white/80 p-5 shadow-sm transition hover:border-[#015D52] hover:shadow-lg hover:shadow-[#015D52]/15"
-            onClick={() => router.push('/calculators/cardiology/grace-timi')}
+            onClick={() => router.push('/calculators/cardiology')}
           >
             <h2 className="text-lg font-bold text-[#015D52] mb-3">
               GRACE / TIMI (2 в 1)
