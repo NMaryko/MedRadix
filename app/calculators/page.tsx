@@ -83,9 +83,15 @@ export default function CalculatorsPage() {
 
         {/* простой текст-заглушка, пока не выбрана конкретная спец. */}
         <section className="rounded-3xl border border-[#015D52]/20 bg-white/70 p-6 text-sm text-gray-700">
+          <p>
+            Выберите специальность в правом верхнем углу. Для{' '}
+            <span className="font-semibold text-[#015D52]">кардиологии</span> уже
+            доступны первые калькуляторы (GRACE / TIMI).
+          </p>
+        </section>
 
         {/* support снизу по центру */}
-        <footer className="mt-[400px] pt-4 text-base text-[#5E3830] text-center">
+        <footer className="mt-[500px] pt-4 text-base text-[#5E3830] text-center">
           <a href="mailto:support@medradix.info" className="font-semibold">
             support@medradix.info
           </a>
@@ -94,6 +100,4 @@ export default function CalculatorsPage() {
     </main>
   );
 }
-
-
 
