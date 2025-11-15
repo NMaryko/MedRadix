@@ -45,7 +45,7 @@ export default function PricingPage() {
           Опции тарифов
         </h1>
 
-        {/* Переключатель Врач / Медсестрам */}
+        {/* Переключатель Врач / Медсестра */}
         <div className="flex justify-center mb-12">
           <div className="inline-flex w-[320px] rounded-full bg-white p-1 border border-transparent hover:border-[#015D52] shadow-[inset_0_0_18px_rgba(0,0,0,0.35)] transition-colors">
             <button
