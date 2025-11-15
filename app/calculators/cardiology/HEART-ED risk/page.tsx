@@ -1,4 +1,4 @@
-// app/calculators/cardiology/heart-ed/page.tsx
+// app/calculators/cardiology/heart-ed-risk/page.tsx
 
 'use client';
 
@@ -23,7 +23,7 @@ type EdacsScore = {
   troponin: number;
 };
 
-export default function HeartEdCalculator() {
+export default function HeartEdRiskCalculator() {
   const [heartScore, setHeartScore] = useState<HeartScore>({
     history: 0,
     ecg: 0,
