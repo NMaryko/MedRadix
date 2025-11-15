@@ -25,7 +25,7 @@ export default async function DrugPage({ params }: { params: { slug: string } })
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
       />
-
+      
       <div className="container mx-auto px-4 py-8">
         <header className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">{drug.genericName}</h1>
@@ -35,14 +35,13 @@ export default async function DrugPage({ params }: { params: { slug: string } })
             </p>
           )}
           {drug.therapeuticClass && (
-            <p className="text-gray-500 mt-1">
-              Фармакологическая группа: {drug.therapeuticClass}
-            </p>
+            <p className="text-gray-500 mt-1">Фармакологическая группа: {drug.therapeuticClass}</p>
           )}
         </header>
 
         <section className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-8">
+            
             {drug.description && (
               <div className="bg-white rounded-lg p-6 border border-gray-200">
                 <h2 className="text-xl font-semibold mb-4">Описание</h2>
@@ -55,12 +54,9 @@ export default async function DrugPage({ params }: { params: { slug: string } })
               <div className="space-y-4">
                 {drug.indications.map((indication, index) => (
                   <div key={index} className="border-l-4 border-blue-500 pl-4 py-2">
-                    <h3 className="font-medium text-lg text-gray-900">
-                      {indication.title}
-                    </h3>
+                    <h3 className="font-medium text-lg text-gray-900">{indication.title}</h3>
                     <p className="text-gray-700 mt-2">{indication.description}</p>
-                    {(indication.classOfRecommendation ||
-                      indication.levelOfEvidence) && (
+                    {(indication.classOfRecommendation || indication.levelOfEvidence) && (
                       <div className="flex gap-4 mt-2 text-sm">
                         <span className="bg-green-100 text-green-800 px-2 py-1 rounded">
                           Класс рекомендаций: {indication.classOfRecommendation}
@@ -81,17 +77,9 @@ export default async function DrugPage({ params }: { params: { slug: string } })
                 {drug.dosage.adults.map((regimen, index) => (
                   <div key={index} className="bg-gray-50 p-4 rounded-lg">
                     <h4 className="font-medium text-gray-900">{regimen.indication}</h4>
-                    <p className="text-gray-700 mt-1">
-                      <strong>Режим:</strong> {regimen.regimen}
-                    </p>
-                    {regimen.duration && (
-                      <p className="text-gray-600">
-                        <strong>Длительность:</strong> {regimen.duration}
-                      </p>
-                    )}
-                    {regimen.notes && (
-                      <p className="text-sm text-gray-500 mt-2">{regimen.notes}</p>
-                    )}
+                    <p className="text-gray-700 mt-1"><strong>Режим:</strong> {regimen.regimen}</p>
+                    {regimen.duration && <p className="text-gray-600"><strong>Длительность:</strong> {regimen.duration}</p>}
+                    {regimen.notes && <p className="text-sm text-gray-500 mt-2">{regimen.notes}</p>}
                   </div>
                 ))}
               </div>
@@ -102,36 +90,20 @@ export default async function DrugPage({ params }: { params: { slug: string } })
                 <h2 className="text-xl font-semibold mb-4">Взаимодействия</h2>
                 <div className="space-y-4">
                   {drug.interactions.map((interaction, index) => (
-                    <div
-                      key={index}
-                      className="border-l-4 border-amber-500 pl-4 py-2"
-                    >
+                    <div key={index} className="border-l-4 border-amber-500 pl-4 py-2">
                       <div className="flex justify-between items-start">
-                        <h3 className="font-medium text-gray-900">
-                          {interaction.drug}
-                        </h3>
-                        <span
-                          className={`text-xs px-2 py-1 rounded ${
-                            interaction.severity === 'major'
-                              ? 'bg-red-100 text-red-800'
-                              : interaction.severity === 'moderate'
-                              ? 'bg-orange-100 text-orange-800'
-                              : 'bg-yellow-100 text-yellow-800'
-                          }`}
-                        >
-                          {interaction.severity === 'major'
-                            ? 'Высокий риск'
-                            : interaction.severity === 'moderate'
-                            ? 'Средний риск'
-                            : 'Низкий риск'}
+                        <h3 className="font-medium text-gray-900">{interaction.drug}</h3>
+                        <span className={`text-xs px-2 py-1 rounded ${
+                          interaction.severity === 'major' ? 'bg-red-100 text-red-800' :
+                          interaction.severity === 'moderate' ? 'bg-orange-100 text-orange-800' :
+                          'bg-yellow-100 text-yellow-800'
+                        }`}>
+                          {interaction.severity === 'major' ? 'Высокий риск' : 
+                           interaction.severity === 'moderate' ? 'Средний риск' : 'Низкий риск'}
                         </span>
                       </div>
-                      <p className="text-gray-700 mt-1">
-                        <strong>Эффект:</strong> {interaction.effect}
-                      </p>
-                      <p className="text-gray-700">
-                        <strong>Рекомендации:</strong> {interaction.action}
-                      </p>
+                      <p className="text-gray-700 mt-1"><strong>Эффект:</strong> {interaction.effect}</p>
+                      <p className="text-gray-700"><strong>Рекомендации:</strong> {interaction.action}</p>
                     </div>
                   ))}
                 </div>
@@ -152,9 +124,7 @@ export default async function DrugPage({ params }: { params: { slug: string } })
               )}
               {drug.adverseEffects.serious.length > 0 && (
                 <div>
-                  <h3 className="text-lg font-medium mb-3 text-gray-900 text-red-600">
-                    Серьезные
-                  </h3>
+                  <h3 className="text-lg font-medium mb-3 text-gray-900 text-red-600">Серьезные</h3>
                   <ul className="list-disc list-inside text-gray-700 space-y-1">
                     {drug.adverseEffects.serious.map((effect, index) => (
                       <li key={index}>{effect}</li>
@@ -168,28 +138,14 @@ export default async function DrugPage({ params }: { params: { slug: string } })
               <h2 className="text-xl font-semibold mb-4">Клинические рекомендации</h2>
               {drug.guidelineUsage.eu.length > 0 && (
                 <div className="mb-6">
-                  <h3 className="text-lg font-medium mb-3 text-gray-900">
-                    Европейские рекомендации
-                  </h3>
+                  <h3 className="text-lg font-medium mb-3 text-gray-900">Европейские рекомендации</h3>
                   <div className="space-y-3">
                     {drug.guidelineUsage.eu.map((guide, index) => (
-                      <div
-                        key={index}
-                        className="border-l-4 border-green-500 pl-4 py-2"
-                      >
-                        <h4 className="font-medium text-gray-900">
-                          {guide.guideCode}
-                        </h4>
+                      <div key={index} className="border-l-4 border-green-500 pl-4 py-2">
+                        <h4 className="font-medium text-gray-900">{guide.guideCode}</h4>
                         <p className="text-gray-600 text-sm">{guide.guideSection}</p>
-                        <p className="text-gray-700 mt-1">
-                          {guide.indicationSummary}
-                        </p>
-                        <a
-                          href={guide.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-600 hover:underline text-sm inline-block mt-2"
-                        >
+                        <p className="text-gray-700 mt-1">{guide.indicationSummary}</p>
+                        <a href={guide.link} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline text-sm inline-block mt-2">
                           📖 Открыть гайд
                         </a>
                       </div>
@@ -199,28 +155,14 @@ export default async function DrugPage({ params }: { params: { slug: string } })
               )}
               {drug.guidelineUsage.us.length > 0 && (
                 <div>
-                  <h3 className="text-lg font-medium mb-3 text-gray-900">
-                    Американские рекомендации
-                  </h3>
+                  <h3 className="text-lg font-medium mb-3 text-gray-900">Американские рекомендации</h3>
                   <div className="space-y-3">
                     {drug.guidelineUsage.us.map((guide, index) => (
-                      <div
-                        key={index}
-                        className="border-l-4 border-purple-500 pl-4 py-2"
-                      >
-                        <h4 className="font-medium text-gray-900">
-                          {guide.guideCode}
-                        </h4>
+                      <div key={index} className="border-l-4 border-purple-500 pl-4 py-2">
+                        <h4 className="font-medium text-gray-900">{guide.guideCode}</h4>
                         <p className="text-gray-600 text-sm">{guide.guideSection}</p>
-                        <p className="text-gray-700 mt-1">
-                          {guide.indicationSummary}
-                        </p>
-                        <a
-                          href={guide.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-600 hover:underline text-sm inline-block mt-2"
-                        >
+                        <p className="text-gray-700 mt-1">{guide.indicationSummary}</p>
+                        <a href={guide.link} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline text-sm inline-block mt-2">
                           📖 Открыть гайд
                         </a>
                       </div>
@@ -236,17 +178,10 @@ export default async function DrugPage({ params }: { params: { slug: string } })
               <h3 className="font-semibold mb-3">Формы выпуска</h3>
               <div className="space-y-3">
                 {drug.forms.map((form, index) => (
-                  <div
-                    key={index}
-                    className="text-sm border-b border-gray-100 pb-3 last:border-b-0"
-                  >
+                  <div key={index} className="text-sm border-b border-gray-100 pb-3 last:border-b-0">
                     <p className="font-medium text-gray-900">{form.form}</p>
-                    <p className="text-gray-600">
-                      {form.strength} • {form.route}
-                    </p>
-                    {form.note && (
-                      <p className="text-gray-500 text-xs mt-1">{form.note}</p>
-                    )}
+                    <p className="text-gray-600">{form.strength} • {form.route}</p>
+                    {form.note && <p className="text-gray-500 text-xs mt-1">{form.note}</p>}
                   </div>
                 ))}
               </div>
@@ -264,9 +199,7 @@ export default async function DrugPage({ params }: { params: { slug: string } })
                   </ul>
                 </div>
                 <div>
-                  <h4 className="font-medium text-orange-600 text-sm">
-                    Относительные:
-                  </h4>
+                  <h4 className="font-medium text-orange-600 text-sm">Относительные:</h4>
                   <ul className="text-sm text-gray-600 list-disc list-inside mt-1">
                     {drug.contraindications.relative.map((item, index) => (
                       <li key={index}>{item}</li>
@@ -304,19 +237,10 @@ export default async function DrugPage({ params }: { params: { slug: string } })
               <div className="bg-white border border-gray-200 rounded-lg p-4">
                 <h3 className="font-semibold mb-3">Беременность и лактация</h3>
                 <div className="space-y-2 text-sm">
-                  <p>
-                    <strong>Беременность:</strong>{' '}
-                    {drug.pregnancyLactation.pregnancy}
-                  </p>
-                  <p>
-                    <strong>Лактация:</strong>{' '}
-                    {drug.pregnancyLactation.lactation}
-                  </p>
+                  <p><strong>Беременность:</strong> {drug.pregnancyLactation.pregnancy}</p>
+                  <p><strong>Лактация:</strong> {drug.pregnancyLactation.lactation}</p>
                   {drug.pregnancyLactation.pregnancyCategory && (
-                    <p>
-                      <strong>Категория:</strong>{' '}
-                      {drug.pregnancyLactation.pregnancyCategory}
-                    </p>
+                    <p><strong>Категория:</strong> {drug.pregnancyLactation.pregnancyCategory}</p>
                   )}
                 </div>
               </div>
@@ -324,9 +248,7 @@ export default async function DrugPage({ params }: { params: { slug: string } })
 
             {drug.pearls.length > 0 && (
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <h3 className="font-semibold mb-3 text-blue-900">
-                  Полезные советы
-                </h3>
+                <h3 className="font-semibold mb-3 text-blue-900">Полезные советы</h3>
                 <ul className="text-sm text-blue-800 space-y-2">
                   {drug.pearls.map((pearl, index) => (
                     <li key={index} className="flex items-start">
@@ -340,20 +262,25 @@ export default async function DrugPage({ params }: { params: { slug: string } })
           </div>
         </section>
 
-        {/* Блок сохранения в Папки */}
-        <div className="mt-12 border-t border-gray-200 pt-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <p className="text-sm text-gray-600 max-w-2xl">
-            Личная библиотека MedRadix: сохраняйте избранные гайды, разделы и препараты,
-            а также сертификаты и файлы в личном кабинете с автоматическим подсчётом
-            баллов (CME/НМО).
-          </p>
+        {/* Кнопка сохранения — форма, как на странице гайдов */}
+        <div className="mt-10 flex justify-center">
           <button
             type="button"
-            className="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-[#015D52] text-white text-sm font-medium hover:bg-[#01433d] transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-2 rounded-full border border-gray-300 text-sm text-gray-700 hover:bg-gray-50"
           >
-            Сохранить этот препарат в Папки
+            <span className="inline-block w-2 h-2 rounded-full bg-gray-400" />
+            <span>Сохранить текущий препарат в «Папки»</span>
           </button>
         </div>
+
+        {/* Дисклеймер для раздела лекарств */}
+        <p className="mt-6 text-xs text-gray-500 text-center max-w-4xl mx-auto leading-relaxed">
+          Информация о лекарственных препаратах на сайте MedRadix.info представляет собой краткий обзор
+          официальных данных для медицинских специалистов и носит исключительно образовательный характер.
+          Она не заменяет официальную инструкцию по медицинскому применению производителя и
+          действующие клинические рекомендации. Авторы не несут ответственности за использование
+          представленной информации в клинической практике.
+        </p>
 
         {/* Контакт для поддержки */}
         <div className="mt-[150px] text-center text-xs text-gray-400">
@@ -363,3 +290,4 @@ export default async function DrugPage({ params }: { params: { slug: string } })
     </>
   );
 }
+
