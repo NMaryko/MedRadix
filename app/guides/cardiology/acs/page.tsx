@@ -67,7 +67,6 @@ export default function ACSPage() {
   const [selectedSpecialty, setSelectedSpecialty] = useState('Кардиология');
   const [selectedNosology, setSelectedNosology] = useState('Острый коронарный синдром (ОКС)');
   const [isIntroOpen, setIsIntroOpen] = useState(true);
-  const [isNosologyOpen, setIsNosologyOpen] = useState(false);
 
   const isCorrectContext =
     selectedSpecialty === 'Кардиология' &&
@@ -686,7 +685,7 @@ export default function ACSPage() {
             },
             {
               strategy: 'Стандартная продолжительность',
-              criteria: ['Стандартный риск', 'Нет факторов высокого риска кровотечения'],
+              criteria: ['Стандартный риск', 'Нет факторов высокого риска кровотечений'],
               regimen: '12 месяцев ДАТТ',
               class: 'I' as RecommendationClass,
               level: 'A' as EvidenceLevel,
@@ -1035,7 +1034,7 @@ export default function ACSPage() {
       ],
       interpretation:
         '≥4 баллов (HEART) → госпитализация и наблюдение; низкий риск по EDACS → возможна ранняя выписка',
-      link: '/calculators/heart-ed-risk',
+      link: '/calculators/cardiology/heart-ed-risk',
     },
     {
       name: 'TIMI для NSTE-ACS/US',
@@ -1047,7 +1046,7 @@ export default function ACSPage() {
         'Интеграция с PRECISE-DAPT для оценки кровотечений',
       ],
       interpretation: 'Комбинированная оценка ишемического и геморрагического риска для персонализации ДАТТ',
-      link: '/calculators/timi-nstemi-us',
+      link: '/calculators/cardiology/timi-nste-acs-us',
     },
   ];
 
@@ -1079,30 +1078,27 @@ export default function ACSPage() {
                 </h1>
               </div>
 
-              {/* Нозология — тот же визуальный стиль, что и у FilterM */}
+              {/* Нозология */}
               <div className="order-2 lg:order-1 lg:justify-self-start w-full lg:w-auto">
                 <div className="flex flex-col gap-1 w-full lg:w-auto">
                   <span className="text-[11px] uppercase tracking-[0.18em] text-[#9c978f] hidden lg:block">
                     Нозология
                   </span>
-
                   <div className="relative w-full lg:w-[320px]">
-                    <button
-                      type="button"
-                      onClick={() => setIsNosologyOpen((v) => !v)}
+                    <select
+                      value={selectedNosology}
+                      onChange={(e) => setSelectedNosology(e.target.value)}
                       className="
-                        w-full
+                        appearance-none
                         rounded-full border border-[#d3cec4]
                         bg-white
                         px-4 pr-10
                         h-12 min-h-[48px]
-                        lg:h-10 lg:min-h-0
-                        text-sm md:text-base
-                        text-[#3b342d]
-                        flex items-center justify-center
+                        text-base text-[#3b342d]
                         shadow-sm
+                        w-full
+                        lg:h-10 lg:min-h-0
                         text-center
-                        transition
                         focus:outline-none
                         focus:border-[#015d52]
                         focus:ring-1 focus:ring-[#015d52]
@@ -1110,58 +1106,26 @@ export default function ACSPage() {
                         hover:shadow-[0_0_10px_#015D52]
                       "
                     >
-                      <span className="truncate">{selectedNosology}</span>
-                      <ChevronDown
-                        size={16}
-                        className={`pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#3b342d] opacity-70 transition ${
-                          isNosologyOpen ? 'rotate-180' : ''
-                        }`}
-                      />
-                    </button>
-
-                    {isNosologyOpen && (
-                      <div
-                        className="
-                          absolute z-20 mt-2 w-full
-                          max-h-80 overflow-y-auto
-                          rounded-2xl
-                          bg-white
-                          border border-[#d3cec4]
-                          shadow-xl
-                        "
-                      >
-                        {Object.entries(groupedCardiologyNosologies).map(([groupName, items]) => (
-                          <div key={groupName} className="py-1">
-                            <div className="px-4 py-1 text-[11px] uppercase tracking-[0.14em] text-[#9c978f]">
-                              {groupName}
-                            </div>
-                            {items.map((nosology) => {
-                              const active = selectedNosology === nosology.label;
-                              return (
-                                <button
-                                  key={nosology.id}
-                                  type="button"
-                                  onClick={() => {
-                                    setSelectedNosology(nosology.label);
-                                    setIsNosologyOpen(false);
-                                  }}
-                                  className={`
-                                    w-full text-left px-4 py-2 text-sm
-                                    ${
-                                      active
-                                        ? 'bg-[#015d52] text-white'
-                                        : 'text-[#3b342d] hover:bg-[#f3f2ee]'
-                                    }
-                                  `}
-                                >
-                                  {nosology.label}
-                                </button>
-                              );
-                            })}
-                          </div>
-                        ))}
-                      </div>
-                    )}
+                      {Object.entries(groupedCardiologyNosologies).map(
+                        ([groupName, items]) => (
+                          <optgroup key={groupName} label={groupName}>
+                            {items.map((nosology) => (
+                              <option
+                                key={nosology.id}
+                                value={nosology.label}
+                                className="text-center"
+                              >
+                                {nosology.label}
+                              </option>
+                            ))}
+                          </optgroup>
+                        )
+                      )}
+                    </select>
+                    <ChevronDown
+                      size={16}
+                      className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#3b342d] opacity-70"
+                    />
                   </div>
                 </div>
               </div>
@@ -2464,5 +2428,6 @@ export default function ACSPage() {
     </main>
   );
 }
+
 
 
