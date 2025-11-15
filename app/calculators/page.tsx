@@ -31,39 +31,32 @@ const SPECIALTIES: string[] = [
 ];
 
 export default function CalculatorsPage() {
-  const [selectedSpecialty, setSelectedSpecialty] = useState<string>('Все');
   const router = useRouter();
+  const [selectedSpecialty, setSelectedSpecialty] = useState<string>('Все');
 
   const handleSpecialtyChange = (value: string) => {
     setSelectedSpecialty(value);
 
     if (value === 'Кардиология') {
-      router.push('/calculators/cardiology/acs-risk');
+      router.push('/calculators/cardiology');
     }
+    // Остальные специальности пока никуда не ведём
   };
-
-  const showDevMessage =
-    selectedSpecialty !== 'Все' && selectedSpecialty !== 'Кардиология';
 
   return (
     <main className="min-h-screen bg-[#fcfcee] py-10">
       <div className="max-w-6xl mx-auto px-4">
-        {/* Заголовок + фильтр */}
-        <header className="mb-10 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+        {/* заголовок + фильтр */}
+        <header className="mb-8 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-[#015D52] mb-3">
+            <h1 className="text-3xl font-bold text-[#015D52] mb-2">
               Калькуляторы MedRadix
             </h1>
-            <p className="text-sm text-gray-700 max-w-3xl mb-3">
-              Интерактивные клинические калькуляторы формата{' '}
-              <span className="font-semibold">«2 в 1»</span>, объединяющие
-              европейские и американские подходы в одном инструменте.
+            <p className="text-sm text-gray-700 max-w-3xl">
+              Калькуляторы риска и принятия решений, адаптированные под европейские
+              и американские рекомендации. Выберите специальность, чтобы перейти к
+              доступным инструментам.
             </p>
-            <ul className="text-sm text-gray-700 space-y-1">
-              <li>• Экономия времени при приёме и в стационаре.</li>
-              <li>• Прозрачная логика формирования риск-балла.</li>
-              <li>• Акцент на практические решения, а не теорию.</li>
-            </ul>
           </div>
 
           <div className="w-full md:w-80">
@@ -88,16 +81,17 @@ export default function CalculatorsPage() {
           </div>
         </header>
 
-        {showDevMessage && (
-          <div className="rounded-2xl border border-dashed border-[#015D52]/40 bg-white/70 p-6 text-sm text-gray-700">
-            Для специальности{' '}
-            <span className="font-semibold">{selectedSpecialty}</span>{' '}
-            калькуляторы ещё в разработке.
-          </div>
-        )}
+        {/* простой текст-заглушка, пока не выбрана конкретная спец. */}
+        <section className="rounded-3xl border border-[#015D52]/20 bg-white/70 p-6 text-sm text-gray-700">
+          <p>
+            Выберите специальность в правом верхнем углу. Для{' '}
+            <span className="font-semibold text-[#015D52]">кардиологии</span> уже
+            доступны первые калькуляторы (GRACE / TIMI).
+          </p>
+        </section>
 
-        {/* support — без линии, ниже и крупнее, коричневый */}
-        <footer className="mt-[500px] pt-4 text-base text-[#5E3830]">
+        {/* support снизу по центру */}
+        <footer className="mt-[400px] pt-4 text-base text-[#5E3830] text-center">
           <a href="mailto:support@medradix.info" className="font-semibold">
             support@medradix.info
           </a>
