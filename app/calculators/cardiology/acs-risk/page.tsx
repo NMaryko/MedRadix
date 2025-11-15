@@ -1,35 +1,92 @@
 // app/calculators/cardiology/acs-risk/page.tsx
-import Link from 'next/link';
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+
+const SPECIALTIES: string[] = [
+  'Все',
+  'Акушерство и гинекология',
+  'Аллергология и иммунология',
+  'Анестезиология и реаниматология',
+  'Гастроэнтерология',
+  'Гематология',
+  'Дерматология',
+  'Инфекционные болезни',
+  'Кардиология',
+  'Неврология',
+  'Нефрология',
+  'Онкология',
+  'Офтальмология',
+  'Педиатрия',
+  'Пульмонология',
+  'Психиатрия',
+  'Ревматология',
+  'Стоматология',
+  'Терапия',
+  'Травматология и ортопедия',
+  'Урология',
+  'Хирургия',
+  'Эндокринология',
+];
 
 export default function CardiologyAcsRiskPage() {
+  const [selectedSpecialty, setSelectedSpecialty] = useState<string>('Кардиология');
+  const router = useRouter();
+
+  const handleSpecialtyChange = (value: string) => {
+    setSelectedSpecialty(value);
+
+    if (value !== 'Кардиология') {
+      router.push('/calculators');
+    }
+  };
+
   return (
     <main className="min-h-screen bg-[#fcfcee] py-10">
       <div className="max-w-6xl mx-auto px-4">
-        <header className="mb-6 flex items-start justify-between gap-4">
+        {/* Заголовок + фильтр справа (как на главной) */}
+        <header className="mb-8 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            <h1 className="text-3xl font-bold text-[#015D52] mb-2">
               Калькуляторы риска 2 в 1
             </h1>
             <p className="text-sm text-gray-700 max-w-3xl">
-              Европейские и американские алгоритмы стратификации риска при
-              остром коронарном синдроме. В этой группе собраны калькуляторы
-              GRACE/TIMI-like EU, HEART/ED risk и TIMI для NSTE-ACS/US.
+              Кардиологические калькуляторы для пациентов с острым коронарным
+              синдромом: GRACE/TIMI-like EU, HEART/ED risk и TIMI для NSTE-ACS/US.
             </p>
           </div>
 
-          <Link
-            href="/calculators"
-            className="hidden text-xs font-semibold text-emerald-700 underline md:inline"
-          >
-            ← Ко всем калькуляторам
-          </Link>
+          <div className="w-full md:w-80">
+            <label
+              htmlFor="specialty-select"
+              className="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-700"
+            >
+              Специальность
+            </label>
+            <select
+              id="specialty-select"
+              className="w-full rounded-xl border border-[#015D52] bg-white/90 px-3 py-2 text-sm text-gray-900 text-center shadow-sm transition hover:border-[#015D52] hover:ring-2 hover:ring-[#015D52]/20 focus:border-[#015D52] focus:outline-none focus:ring-2 focus:ring-[#015D52]/30"
+              value={selectedSpecialty}
+              onChange={(e) => handleSpecialtyChange(e.target.value)}
+            >
+              {SPECIALTIES.map((spec) => (
+                <option key={spec} value={spec}>
+                  {spec}
+                </option>
+              ))}
+            </select>
+          </div>
         </header>
 
-        {/* Три карточки — как в гайдах */}
+        {/* Карточки-кнопки с фирменным контуром и подсветкой */}
         <div className="grid gap-6 md:grid-cols-3">
           {/* 1. GRACE/TIMI-like EU */}
-          <section className="rounded-3xl border border-sky-100 bg-white/80 p-5 shadow-sm">
-            <h2 className="text-lg font-bold text-gray-900 mb-3">
+          <section
+            className="group cursor-pointer rounded-3xl border border-[#015D52]/40 bg-white/80 p-5 shadow-sm transition hover:border-[#015D52] hover:shadow-lg hover:shadow-[#015D52]/15"
+            // onClick={() => {/* здесь потом запустим расчёт GRACE/TIMI */}}
+          >
+            <h2 className="text-lg font-bold text-[#015D52] mb-3">
               GRACE/TIMI-like EU
             </h2>
             <p className="text-sm text-gray-700 mb-4">
@@ -69,8 +126,11 @@ export default function CardiologyAcsRiskPage() {
           </section>
 
           {/* 2. HEART / ED risk */}
-          <section className="rounded-3xl border border-emerald-100 bg-white/80 p-5 shadow-sm">
-            <h2 className="text-lg font-bold text-gray-900 mb-3">
+          <section
+            className="group cursor-pointer rounded-3xl border border-[#015D52]/40 bg-white/80 p-5 shadow-sm transition hover:border-[#015D52] hover:shadow-lg hover:shadow-[#015D52]/15"
+            // onClick={() => {/* запуск HEART/ED */}}
+          >
+            <h2 className="text-lg font-bold text-[#015D52] mb-3">
               HEART/ED risk
             </h2>
             <p className="text-sm text-gray-700 mb-4">
@@ -108,8 +168,11 @@ export default function CardiologyAcsRiskPage() {
           </section>
 
           {/* 3. TIMI для NSTE-ACS / US */}
-          <section className="rounded-3xl border border-violet-100 bg-white/80 p-5 shadow-sm">
-            <h2 className="text-lg font-bold text-gray-900 mb-3">
+          <section
+            className="group cursor-pointer rounded-3xl border border-[#015D52]/40 bg-white/80 p-5 shadow-sm transition hover:border-[#015D52] hover:shadow-lg hover:shadow-[#015D52]/15"
+            // onClick={() => {/* запуск TIMI */}}
+          >
+            <h2 className="text-lg font-bold text-[#015D52] mb-3">
               TIMI для NSTE-ACS/US
             </h2>
             <p className="text-sm text-gray-700 mb-4">
@@ -145,13 +208,9 @@ export default function CardiologyAcsRiskPage() {
           </section>
         </div>
 
-        {/* Низ страницы */}
-        <footer className="mt-10 border-t border-emerald-100 pt-4 text-xs text-gray-600">
-          По вопросам работы калькуляторов:{" "}
-          <a
-            href="mailto:support@medradix.info"
-            className="font-semibold text-emerald-700"
-          >
+        {/* support — как на главной */}
+        <footer className="mt-[500px] pt-4 text-base text-[#5E3830]">
+          <a href="mailto:support@medradix.info" className="font-semibold">
             support@medradix.info
           </a>
         </footer>
@@ -159,3 +218,4 @@ export default function CardiologyAcsRiskPage() {
     </main>
   );
 }
+
