@@ -3,36 +3,13 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-
-const SPECIALTIES: string[] = [
-  'Все',
-  'Акушерство и гинекология',
-  'Аллергология и иммунология',
-  'Анестезиология и реаниматология',
-  'Гастроэнтерология',
-  'Гематология',
-  'Дерматология',
-  'Инфекционные болезни',
-  'Кардиология',
-  'Неврология',
-  'Нефрология',
-  'Онкология',
-  'Офтальмология',
-  'Педиатрия',
-  'Пульмонология',
-  'Психиатрия',
-  'Ревматология',
-  'Стоматология',
-  'Терапия',
-  'Травматология и ортопедия',
-  'Урология',
-  'Хирургия',
-  'Эндокринология',
-];
+import { SupportM } from '@/components/SupportM';
+import { FilterM } from '@/components/FilterM';
 
 export default function CardiologyCalculatorsPage() {
   const router = useRouter();
-  const [selectedSpecialty, setSelectedSpecialty] = useState<string>('Кардиология');
+  const [selectedSpecialty, setSelectedSpecialty] =
+    useState<string>('Кардиология');
 
   const handleSpecialtyChange = (value: string) => {
     setSelectedSpecialty(value);
@@ -44,85 +21,150 @@ export default function CardiologyCalculatorsPage() {
   return (
     <main className="min-h-screen bg-[#fcfcee] py-10">
       <div className="max-w-6xl mx-auto px-4">
-        {/* верх: заголовок + фильтр справа */}
+        {/* верх: заголовок + FilterM справа */}
         <header className="mb-8 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
           <div>
             <h1 className="text-3xl font-bold text-[#015D52] mb-2">
               Кардиологические калькуляторы
             </h1>
-            <p className="text-sm text-gray-700 max-w-3xl">
+            <p className="text-sm text-gray-700 max-w-xl">
               Выберите калькулятор для оценки риска и поддержки решений при
-              кардиологических пациентах.
+              кардиологических состояниях. Все расчёты основаны на
+              европейских и американских рекомендациях.
             </p>
           </div>
 
-          <div className="w-full md:w-80">
-            <label
-              htmlFor="specialty-select"
-              className="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-700"
-            >
-              Специальность
-            </label>
-            <select
-              id="specialty-select"
-              className="w-full rounded-xl border border-[#015D52] bg-white/90 px-3 py-2 text-sm text-gray-900 text-center shadow-sm transition hover:border-[#015D52] hover:ring-2 hover:ring-[#015D52]/20 focus:border-[#015D52] focus:outline-none focus:ring-2 focus:ring-[#015D52]/30"
-              value={selectedSpecialty}
-              onChange={(e) => handleSpecialtyChange(e.target.value)}
-            >
-              {SPECIALTIES.map((spec) => (
-                <option key={spec} value={spec}>
-                  {spec}
-                </option>
-              ))}
-            </select>
-          </div>
+          <FilterM
+            selected={selectedSpecialty}
+            onChange={handleSpecialtyChange}
+          />
         </header>
 
-        {/* карточки кардио-калькуляторов */}
-        <div className="grid gap-6 md:grid-cols-3">
-          {/* 1. GRACE / TIMI */}
-          <section
-            className="group cursor-pointer rounded-3xl border border-[#015D52]/40 bg-white/80 p-5 shadow-sm transition hover:border-[#015D52] hover:shadow-lg hover:shadow-[#015D52]/15"
+        {/* карточки калькуляторов — как в гайдах */}
+        <section className="grid gap-4 md:grid-cols-3">
+          {/* GRACE / TIMI (2 в 1) */}
+          <button
+            type="button"
             onClick={() => router.push('/calculators/cardiology/grace-timi')}
+            className="h-full rounded-3xl border border-[#015D52]/25 bg-white/80 px-4 py-4 text-left shadow-sm transition hover:border-[#015D52] hover:shadow-md"
           >
-            <h2 className="text-lg font-bold text-[#015D52] mb-3">
+            <h2 className="mb-1 text-sm font-extrabold tracking-tight text-[#015D52]">
               GRACE / TIMI (2 в 1)
             </h2>
-            <p className="text-sm text-gray-700 mb-3">
-              Оценка риска при ОКС: европейский GRACE и американский TIMI в одном
+            <p className="mb-3 text-xs text-gray-800">
+              Европейская и американская модификация оценки риска
+              внутрибольничной и 6-месячной смертности при ОКС в одном
               калькуляторе.
             </p>
-            <ul className="text-xs text-gray-700 space-y-1">
-              <li>• Ввод в европейских единицах</li>
-              <li>• Автоматическая конверсия для TIMI</li>
-              <li>• Раздельный вывод 🇪🇺 / 🇺🇸</li>
-            </ul>
-          </section>
 
-          {/* 2. Заглушка под HEART */}
-          <section className="rounded-3xl border border-[#015D52]/20 bg-white/60 p-5 text-sm text-gray-500">
-            <h2 className="text-lg font-bold text-[#015D52] mb-3">
+            <div className="mb-2 rounded-lg bg-[#e7f2ff] px-3 py-2">
+              <p className="mb-1 text-[11px] font-semibold text-[#134b84]">
+                🇪🇺 Европейский подход
+              </p>
+              <p className="text-[11px] text-gray-800">
+                GRACE 2.0: госпитальная и 6-месячная смертность. Параметры:
+                возраст, ЧСС, САД, креатинин, признаки СН, ЭКГ, тропонин.
+              </p>
+            </div>
+
+            <div className="mb-2 rounded-lg bg-[#ffe9ec] px-3 py-2">
+              <p className="mb-1 text-[11px] font-semibold text-[#a7233c]">
+                🇺🇸 Американский подход
+              </p>
+              <p className="text-[11px] text-gray-800">
+                TIMI Risk Score для NSTEMI: оценка 14-дневного риска смерти /
+                ИМ / срочной реваскуляризации.
+              </p>
+            </div>
+
+            <p className="mt-1 text-[11px] text-gray-700">
+              <span className="font-semibold">Интерпретация:</span> ≥140 баллов
+              по GRACE или ≥3 баллов по TIMI — высокий риск, показана ранняя
+              инвазивная тактика.
+            </p>
+          </button>
+
+          {/* HEART / ED risk */}
+          <div className="h-full rounded-3xl border border-[#015D52]/15 bg-white/80 px-4 py-4 text-left shadow-sm">
+            <h2 className="mb-1 text-sm font-extrabold tracking-tight text-[#015D52]">
               HEART / ED risk
             </h2>
-            <p>Будет добавлен отдельным калькулятором.</p>
-          </section>
+            <p className="mb-3 text-xs text-gray-800">
+              Быстрая оценка краткосрочного риска MACE в приёмном отделении,
+              включающая европейский HEART и международный EDACS.
+            </p>
 
-          {/* 3. Заглушка под TIMI NSTE-ACS */}
-          <section className="rounded-3xl border border-[#015D52]/20 bg-white/60 p-5 text-sm text-gray-500">
-            <h2 className="text-lg font-bold text-[#015D52] mb-3">
+            <div className="mb-2 rounded-lg bg-[#e7f2ff] px-3 py-2">
+              <p className="mb-1 text-[11px] font-semibold text-[#134b84]">
+                🇪🇺 Европейский подход
+              </p>
+              <p className="text-[11px] text-gray-800">
+                HEART Score: 0–10 баллов. Факторы риска, анамнез, ЭКГ, возраст,
+                биомаркеры (тропонин).
+              </p>
+            </div>
+
+            <div className="mb-2 rounded-lg bg-[#ffe9ec] px-3 py-2">
+              <p className="mb-1 text-[11px] font-semibold text-[#a7233c]">
+                🌍 EDACS / международный подход
+              </p>
+              <p className="text-[11px] text-gray-800">
+                EDACS (Emergency Department Assessment of Chest Pain Score) —
+                быстрая стратификация риска в течение первых 2 часов.
+              </p>
+            </div>
+
+            <p className="mt-1 text-[11px] text-gray-700">
+              <span className="font-semibold">Интерпретация:</span> низкие
+              значения HEART / EDACS соответствуют &lt;3% риску неблагоприятных
+              событий и позволяют рассмотреть раннюю выписку при отсутствии
+              других факторов риска.
+            </p>
+          </div>
+
+          {/* TIMI для NSTE-ACS / US */}
+          <div className="h-full rounded-3xl border border-[#015D52]/15 bg-white/80 px-4 py-4 text-left shadow-sm">
+            <h2 className="mb-1 text-sm font-extrabold tracking-tight text-[#015D52]">
               TIMI для NSTE-ACS / US
             </h2>
-            <p>Будет добавлен отдельным калькулятором.</p>
-          </section>
-        </div>
+            <p className="mb-3 text-xs text-gray-800">
+              Стратификация риска осложнений и отдалённого прогноза у
+              пациентов с NSTE-ACS с учётом европейских GRACE и американских
+              TIMI-подходов.
+            </p>
 
-        {/* support снизу по центру */}
-        <footer className="mt-[500px] pt-4 text-base text-[#5E3830] text-center">
-          <a href="mailto:support@medradix.info" className="font-semibold">
-            support@medradix.info
-          </a>
-        </footer>
+            <div className="mb-2 rounded-lg bg-[#e7f2ff] px-3 py-2">
+              <p className="mb-1 text-[11px] font-semibold text-[#134b84]">
+                🇪🇺 Европейский подход
+              </p>
+              <p className="text-[11px] text-gray-800">
+                ESC 2023: использование GRACE 2.0 для оценки долгосрочного
+                прогноза с фокусом на 6-месячной смертности.
+              </p>
+            </div>
+
+            <div className="mb-2 rounded-lg bg-[#ffe9ec] px-3 py-2">
+              <p className="mb-1 text-[11px] font-semibold text-[#a7233c]">
+                🇺🇸 Американский подход
+              </p>
+              <p className="text-[11px] text-gray-800">
+                ACC/AHA: TIMI Risk Score с дополнительными параметрами и
+                возможной интеграцией с PRECISE-DAPT для оценки риска
+                кровотечений.
+              </p>
+            </div>
+
+            <p className="mt-1 text-[11px] text-gray-700">
+              <span className="font-semibold">Интерпретация:</span> сочетание
+              шкал GRACE и TIMI позволяет одновременно оценить ишемический и
+              геморрагический риск и персонализировать интенсивность ДАТТ.
+            </p>
+          </div>
+        </section>
+
+        <SupportM />
       </div>
     </main>
   );
 }
+
