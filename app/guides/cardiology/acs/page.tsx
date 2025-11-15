@@ -12,12 +12,10 @@ import {
 import { FilterM } from '@/components/FilterM';
 import { SupportM } from '@/components/SupportM';
 
-// ===== Универсальный безопасный рендер текста с < и > =====
 const Safe = ({ text }: { text: string }) => (
   <>{text ? text.replaceAll('<', '\u003C').replaceAll('>', '\u003E') : ''}</>
 );
 
-// ===== Типы =====
 type EvidenceLevel = 'A' | 'B' | 'C';
 type RecommendationClass = 'I' | 'IIa' | 'IIb' | 'III';
 
@@ -59,7 +57,6 @@ const CARDIOLOGY_NOSOLOGIES: Nosology[] = [
   { id: 'pe', label: 'Тромбоэмболия легочной артерии (ТЭЛА)', group: 'Лёгочная гипертензия и ТЭЛА' },
 ];
 
-// ===== Страница =====
 export default function ACSPage() {
   const [selectedTab, setSelectedTab] = useState<
     'diagnosis' | 'treatment' | 'complications' | 'prevention' | 'comparison'
@@ -72,7 +69,6 @@ export default function ACSPage() {
     selectedSpecialty === 'Кардиология' &&
     selectedNosology === 'Острый коронарный синдром (ОКС)';
 
-  // Группировка нозологий
   const groupedCardiologyNosologies = CARDIOLOGY_NOSOLOGIES.reduce<Record<string, Nosology[]>>(
     (acc, item) => {
       if (!acc[item.group]) acc[item.group] = [];
@@ -82,7 +78,6 @@ export default function ACSPage() {
     {}
   );
 
-  // ====== ДАННЫЕ ГАЙДА ======
   const escGuideline = {
     title: 'Острый коронарный синдром',
     version: 'ESC 2023-2024',
@@ -93,7 +88,6 @@ export default function ACSPage() {
       full: 'https://www.escardio.org/Guidelines/Clinical-Practice-Guidelines',
     },
 
-    // ===== Диагностика =====
     diagnosis: {
       initialAssessment: [
         {
@@ -362,7 +356,6 @@ export default function ACSPage() {
       ],
     },
 
-    // ===== ЛЕЧЕНИЕ =====
     treatment: {
       generalMeasures: [
         {
@@ -685,7 +678,7 @@ export default function ACSPage() {
             },
             {
               strategy: 'Стандартная продолжительность',
-              criteria: ['Стандартный риск', 'Нет факторов высокого риска кровотечений'],
+              criteria: ['Стандартный риск', 'Нет факторов высокого риска кровотечения'],
               regimen: '12 месяцев ДАТТ',
               class: 'I' as RecommendationClass,
               level: 'A' as EvidenceLevel,
@@ -719,7 +712,6 @@ export default function ACSPage() {
       },
     },
 
-    // ===== Вторичная профилактика =====
     secondaryPrevention: {
       duration: 'Пожизненно после ОКС',
       medications: [
@@ -786,7 +778,6 @@ export default function ACSPage() {
       ],
     },
 
-    // ===== Сравнение =====
     comparison: {
       title: 'Сравнение Европейских (ESC 2023-2024) и Американских (ACC/AHA 2025) рекомендаций',
       keyDifferences: [
@@ -839,7 +830,6 @@ export default function ACSPage() {
       ],
     },
 
-    // ====== Осложнения ======
     complications: {
       title: 'Осложнения ОКС: диагностика и ведение',
       sections: [
@@ -944,7 +934,6 @@ export default function ACSPage() {
     },
   };
 
-  // ===== UI-компоненты =====
   const RecommendationBadge = ({ rec }: { rec: Recommendation }) => {
     const cls: RecommendationClass = rec.class ?? 'I';
     const lvl: EvidenceLevel = rec.level ?? 'A';
@@ -993,7 +982,6 @@ export default function ACSPage() {
   );
 
   const handleSaveSection = () => {
-    // Логика сохранения раздела
     console.log('Сохранение раздела:', selectedTab);
   };
 
@@ -1005,7 +993,6 @@ export default function ACSPage() {
     { id: 'comparison' as const, label: 'Сравнение' },
   ];
 
-  // ===== Калькуляторы 2 в 1 =====
   const calculators = [
     {
       name: 'GRACE/TIMI-like EU',
@@ -1034,7 +1021,7 @@ export default function ACSPage() {
       ],
       interpretation:
         '≥4 баллов (HEART) → госпитализация и наблюдение; низкий риск по EDACS → возможна ранняя выписка',
-      link: '/calculators/cardiology/heart-ed-risk',
+      link: '/calculators/heart-ed-risk',
     },
     {
       name: 'TIMI для NSTE-ACS/US',
@@ -1046,11 +1033,10 @@ export default function ACSPage() {
         'Интеграция с PRECISE-DAPT для оценки кровотечений',
       ],
       interpretation: 'Комбинированная оценка ишемического и геморрагического риска для персонализации ДАТТ',
-      link: '/calculators/cardiology/timi-nste-acs-us',
+      link: '/calculators/timi-nstemi-us',
     },
   ];
 
-  // ===== РЕНДЕР =====
   return (
     <main className="min-h-screen bg-[#fcfcee] py-8">
       <div className="max-w-[1800px] mx-auto px-4">
@@ -1061,9 +1047,7 @@ export default function ACSPage() {
               {/* Специальность */}
               <div className="order-1 lg:order-3 lg:justify-self-end w-full lg:w-auto">
                 <div className="flex flex-col items-start lg:items-end gap-1 w-full lg:w-auto">
-                  <span className="text-[11px] uppercase tracking-[0.18em] text-[#9c978f] hidden lg:block">
-                    Специальность
-                  </span>
+                  {/* FilterM сам рисует свой лейбл, поэтому дополнительный span не нужен */}
                   <FilterM
                     selected={selectedSpecialty}
                     onChange={(value: string) => setSelectedSpecialty(value)}
@@ -1090,20 +1074,21 @@ export default function ACSPage() {
                       onChange={(e) => setSelectedNosology(e.target.value)}
                       className="
                         appearance-none
-                        rounded-full border border-[#d3cec4]
+                        w-full
+                        rounded-full
+                        border border-[#d3cec4]
                         bg-white
                         px-4 pr-10
                         h-12 min-h-[48px]
-                        text-base text-[#3b342d]
+                        text-[15px] text-[#1f2933]
                         shadow-sm
-                        w-full
-                        lg:h-10 lg:min-h-0
                         text-center
                         focus:outline-none
                         focus:border-[#015d52]
                         focus:ring-1 focus:ring-[#015d52]
-                        hover:ring-1 hover:ring-[#015d52]
+                        hover:border-[#015d52]
                         hover:shadow-[0_0_10px_#015D52]
+                        transition
                       "
                     >
                       {Object.entries(groupedCardiologyNosologies).map(
@@ -1124,7 +1109,7 @@ export default function ACSPage() {
                     </select>
                     <ChevronDown
                       size={16}
-                      className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#3b342d] opacity-70"
+                      className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#6b635a] opacity-80"
                     />
                   </div>
                 </div>
@@ -2415,7 +2400,6 @@ export default function ACSPage() {
                 представленной информации в клинической практике.
               </p>
 
-              {/* Визуальный зазор и email по центру экрана */}
               <div className="h-[150px] flex items-center justify-center w-full">
                 <p className="text-lg font-medium text-gray-900">support@medradix.info</p>
               </div>
