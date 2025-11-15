@@ -83,11 +83,7 @@ export default function CalculatorsPage() {
 
         {/* простой текст-заглушка, пока не выбрана конкретная спец. */}
         <section className="rounded-3xl border border-[#015D52]/20 bg-white/70 p-6 text-sm text-gray-700">
-          <p>
-            Выберите специальность в правом верхнем углу. Для{' '}
-            <span className="font-semibold text-[#015D52]">кардиологии</span> уже
-            доступны первые калькуляторы (GRACE / TIMI).
-          </p>
+     
         </section>
 
         {/* support снизу по центру */}
