@@ -262,16 +262,16 @@ export default async function DrugPage({ params }: { params: { slug: string } })
           </div>
         </section>
 
-        {/* Кнопка сохранения — форма, как на странице гайдов */}
-        <div className="mt-10 flex justify-center">
-          <button
-            type="button"
-            className="inline-flex items-center gap-2 px-6 py-2 rounded-full border border-gray-300 text-sm text-gray-700 hover:bg-gray-50"
-          >
-            <span className="inline-block w-2 h-2 rounded-full bg-gray-400" />
-            <span>Сохранить текущий препарат в «Папки»</span>
-          </button>
-        </div>
+          {/* Кнопка сохранения */}
+            <section className="mt-4 mb-8 text-center">
+              <button
+                onClick={handleSaveSection}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#015d52] bg-white text-sm font-medium text-[#015d52] hover:ring-1 hover:ring-[#015d52] hover:shadow-[0_0_10px_#015D52] transition"
+              >
+                <FolderPlus size={16} />
+                <span>Сохранить текущий раздел в «Мои лекарства»</span>
+              </button>
+            </section>
 
         {/* Дисклеймер для раздела лекарств */}
         <p className="mt-6 text-xs text-gray-500 text-center max-w-4xl mx-auto leading-relaxed">
