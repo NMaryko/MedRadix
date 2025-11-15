@@ -2,6 +2,7 @@
 
 import { useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
+import { SupportM } from '@/components/SupportM';
 
 const SPECIALTIES: string[] = [
   'Все',
@@ -524,12 +525,7 @@ export default function GraceTimiCalculatorPage() {
           </div>
         </div>
 
-        {/* support снизу по центру, единый стиль */}
-        <footer className="mt-48 pt-4 text-sm md:text-base text-[#5E3830] text-center">
-          <a href="mailto:support@medradix.info" className="font-medium">
-            support@medradix.info
-          </a>
-        </footer>
+        <SupportM />
       </div>
     </main>
   );
