@@ -1,10 +1,8 @@
-// app/calculators/cardiology/grace-timi/page.tsx
 'use client';
 
 import { useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 
-// те же специальности, что и на других страницах
 const SPECIALTIES: string[] = [
   'Все',
   'Акушерство и гинекология',
@@ -36,16 +34,41 @@ function convertCreatinineToMgDL(creatinineMcmolL: number): number {
   return creatinineMcmolL / 88.4;
 }
 
+// категория риска по GRACE (грубо по порогам)
+function getGraceRiskCategory(score: number): 'низкий' | 'промежуточный' | 'высокий' {
+  if (score < 100) return 'низкий';
+  if (score < 140) return 'промежуточный';
+  return 'высокий';
+}
+
+function getGraceRiskDescription(
+  score: number,
+  hospitalRisk: number,
+  sixMonthRisk: number
+): { categoryLabel: string; text: string } {
+  const category = getGraceRiskCategory(score);
+  const map: Record<typeof category, string> = {
+    низкий: 'низкий риск',
+    промежуточный: 'промежуточный риск',
+    высокий: 'высокий риск',
+  } as const;
+
+  const categoryLabel = map[category];
+
+  const text = `Ориентировочная внутрибольничная летальность ≈ ${hospitalRisk}%, 6-месячная ≈ ${sixMonthRisk}% — ${categoryLabel}.`;
+
+  return { categoryLabel, text };
+}
+
 export default function GraceTimiCalculatorPage() {
   const router = useRouter();
 
-  // фильтр специальности (по умолчанию Кардиология)
+  // фильтр справа
   const [selectedSpecialty, setSelectedSpecialty] =
     useState<string>('Кардиология');
 
   const handleSpecialtyChange = (value: string) => {
     setSelectedSpecialty(value);
-    // как на других страницах: если выбрали НЕ кардиологию — уводим на общую
     if (value !== 'Кардиология') {
       router.push('/calculators');
     }
@@ -60,11 +83,15 @@ export default function GraceTimiCalculatorPage() {
   const [ecg, setEcg] = useState<string>('0');
   const [troponin, setTroponin] = useState<string>('0');
 
-  // результаты
+  // результаты GRACE
   const [graceHospital, setGraceHospital] = useState<string>('-');
-  const [grace6Month, setGrace6Month] = useState<string>('-');
+  const [graceSixMonth, setGraceSixMonth] = useState<string>('-');
   const [graceError, setGraceError] = useState<string>('');
+  const [graceScoreValue, setGraceScoreValue] = useState<number | null>(null);
+  const [graceRiskLabel, setGraceRiskLabel] = useState<string>('');
+  const [graceSummary, setGraceSummary] = useState<string>('');
 
+  // результаты TIMI
   const [timiScore, setTimiScore] = useState<number | null>(null);
   const [timiRisk, setTimiRisk] = useState<string>('-');
 
@@ -89,7 +116,7 @@ export default function GraceTimiCalculatorPage() {
       missingFields.push('Сердечная недостаточность');
     }
 
-    // --- TIMI считаем ВСЕГДА (используем mg/dL) ---
+    // --- TIMI считаем ВСЕГДА (mg/dL) ---
     const creatinineMgDL = convertCreatinineToMgDL(creatinineMcmolL);
     const timi = calculateTIMI(
       ageNum,
@@ -103,10 +130,13 @@ export default function GraceTimiCalculatorPage() {
     setTimiScore(timi);
     setTimiRisk(`${timiRiskPercent}%`);
 
-    // --- GRACE только если все обязательные поля заполнены ---
+    // --- если не хватает полей для GRACE ---
     if (missingFields.length > 0) {
       setGraceHospital('-');
-      setGrace6Month('-');
+      setGraceSixMonth('-');
+      setGraceScoreValue(null);
+      setGraceRiskLabel('');
+      setGraceSummary('');
       setGraceError(
         `Заполните обязательные поля: ${missingFields.join(', ')}`
       );
@@ -126,13 +156,22 @@ export default function GraceTimiCalculatorPage() {
       troponinVal
     );
     const graceHospitalRisk = calculateGraceHospitalRisk(graceScore);
-    const grace6MonthRisk = calculateGrace6MonthRisk(graceScore);
+    const graceSixMonthRisk = calculateGraceSixMonthRisk(graceScore);
 
+    const { categoryLabel, text } = getGraceRiskDescription(
+      graceScore,
+      graceHospitalRisk,
+      graceSixMonthRisk
+    );
+
+    setGraceScoreValue(graceScore);
     setGraceHospital(`${graceHospitalRisk}%`);
-    setGrace6Month(`${grace6MonthRisk}%`);
+    setGraceSixMonth(`${graceSixMonthRisk}%`);
+    setGraceRiskLabel(categoryLabel);
+    setGraceSummary(text);
   };
 
-  // ----------------- ЛОГИКА GRACE/TIMI (из DeepSeek) -----------------
+  // ---- ЛОГИКА GRACE / TIMI (упрощённая) ----
 
   function calculateGRACE(
     age: number,
@@ -186,7 +225,7 @@ export default function GraceTimiCalculatorPage() {
     return 8;
   }
 
-  function calculateGrace6MonthRisk(score: number): number {
+  function calculateGraceSixMonthRisk(score: number): number {
     if (score < 100) return 3;
     if (score < 140) return 8;
     return 25;
@@ -215,12 +254,12 @@ export default function GraceTimiCalculatorPage() {
     return risks[score] ?? 50;
   }
 
-  // ----------------- РЕНДЕР -----------------
+  // ---- РЕНДЕР ----
 
   return (
     <main className="min-h-screen bg-[#fcfcee] py-10">
       <div className="max-w-5xl mx-auto px-4">
-        {/* верх: заголовок слева + фильтр справа */}
+        {/* верх: заголовок + фильтр справа */}
         <header className="mb-6 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
           <div>
             <h1 className="text-3xl font-bold text-[#015D52] mb-2">
@@ -267,7 +306,7 @@ export default function GraceTimiCalculatorPage() {
           </div>
         )}
 
-        {/* форма калькулятора */}
+        {/* форма */}
         <form
           onSubmit={handleSubmit}
           className="rounded-3xl border border-[#015D52]/40 bg-white/80 p-5 shadow-sm"
@@ -348,7 +387,7 @@ export default function GraceTimiCalculatorPage() {
               </div>
             </div>
 
-            {/* правая колонка — доп. поля GRACE + пояснение TIMI */}
+            {/* правая колонка — доп. поля + пояснение */}
             <div className="space-y-3 text-sm text-gray-800">
               <div className="flex items-center gap-2">
                 <label className="w-44 text-xs font-semibold text-gray-700">
@@ -399,14 +438,35 @@ export default function GraceTimiCalculatorPage() {
         <div className="mt-6 grid gap-4 md:grid-cols-2">
           <div className="rounded-2xl bg-[#f0f8ff] px-4 py-3 text-sm text-gray-800 border-2 border-[#007bff]">
             <h2 className="mb-2 text-base font-bold">🇪🇺 GRACE 2.0</h2>
+
+            {graceScoreValue !== null && (
+              <p className="text-xs text-gray-700 mb-1">
+                Результат:{' '}
+                <span className="font-semibold">
+                  {graceScoreValue} баллов
+                </span>
+                {graceRiskLabel && (
+                  <>
+                    {' '}
+                    (<span className="font-semibold">{graceRiskLabel}</span>)
+                  </>
+                )}
+              </p>
+            )}
+
             <p>
               Госпитальная смертность:{' '}
               <span className="font-semibold">{graceHospital}</span>
             </p>
             <p>
               6-месячная смертность:{' '}
-              <span className="font-semibold">{grace6Month}</span>
+              <span className="font-semibold">{graceSixMonth}</span>
             </p>
+
+            {graceSummary && (
+              <p className="mt-2 text-xs text-gray-700">{graceSummary}</p>
+            )}
+
             {graceError && (
               <p className="mt-2 text-xs text-[#dc3545]">{graceError}</p>
             )}
@@ -430,7 +490,7 @@ export default function GraceTimiCalculatorPage() {
           </div>
         </div>
 
-        {/* support — по центру снизу */}
+        {/* support снизу по центру */}
         <footer className="mt-[500px] pt-4 text-base text-[#5E3830] text-center">
           <a href="mailto:support@medradix.info" className="font-semibold">
             support@medradix.info
