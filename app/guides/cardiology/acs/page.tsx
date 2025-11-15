@@ -1547,7 +1547,7 @@ export default function ACSPage() {
                             </div>
                             <p className="font-medium mb-2">Параметры:</p>
                             <ul className="text-sm text-gray-700 space-y-1 mb-4">
-                              {escGuideline.diagnosis.riskStratification.ematics.parameters.map(
+                              {escGuideline.diagnosis.riskStratification.hematics.parameters.map(
                                 (param, idx) => (
                                   <li key={idx}>
                                     <Safe text={`• ${param}`} />
