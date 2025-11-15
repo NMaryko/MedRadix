@@ -40,26 +40,14 @@ const CARDS: CardConfig[] = [
     interpretation:
       'Интерпретация: ≥140 баллов по GRACE или ≥3 баллов по TIMI — высокий риск, показана ранняя инвазивная тактика.',
   },
- // В файле app/calculators/cardiology/page.tsx обновите карточку HEART/ED:
-{
-  id: 'heart-ed',
-  title: 'HEART / ED risk',
-  subtitle:
-    'Быстрая оценка краткосрочного риска MACE в приёмном отделении, включающая европейский HEART и международный EDACS.',
-  href: '/calculators/cardiology/heart-ed-risk', // ← исправленный путь
-  euTitle: 'eu Европейский подход',
-  euItems: [
-    'HEART Score: 0–10 баллов',
-    'Компоненты: анамнез, ЭКГ, возраст, факторы риска, тропонин',
-  ],
-  usTitle: 'us Американский подход',
-  usItems: [
-    'EDACS (Emergency Department Assessment of Chest Pain Score)',
-    'Быстрая стратификация в течение 2 часов',
-  ],
-  interpretation:
-    'Интерпретация: низкий риск по HEART / EDACS соответствует безопасной госпитализации в наблюдение; низкий риск по EDACS — возможна ранняя выписка.',
-},
+  {
+    id: 'heart-ed',
+    title: 'HEART / ED risk',
+    subtitle:
+      'Быстрая оценка краткосрочного риска MACE в приёмном отделении, включающая европейский HEART и международный EDACS.',
+    href: '/calculators/cardiology/heart-ed-risk',
+    euTitle: 'eu Европейский подход',
+    euItems: [
       'HEART Score: 0–10 баллов',
       'Компоненты: анамнез, ЭКГ, возраст, факторы риска, тропонин',
     ],
@@ -192,5 +180,3 @@ export default function CardiologyCalculatorsPage() {
     </main>
   );
 }
-
-
