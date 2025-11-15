@@ -78,12 +78,12 @@ export default function CardiologyCalculatorsPage() {
           </div>
         </header>
 
-        {/* карточки калькуляторов кардиологии */}
+        {/* карточки кардио-калькуляторов */}
         <div className="grid gap-6 md:grid-cols-3">
           {/* 1. GRACE / TIMI */}
           <section
             className="group cursor-pointer rounded-3xl border border-[#015D52]/40 bg-white/80 p-5 shadow-sm transition hover:border-[#015D52] hover:shadow-lg hover:shadow-[#015D52]/15"
-            onClick={() => router.push('/calculators/cardiology')}
+            onClick={() => router.push('/calculators/cardiology/grace-timi')}
           >
             <h2 className="text-lg font-bold text-[#015D52] mb-3">
               GRACE / TIMI (2 в 1)
@@ -99,7 +99,7 @@ export default function CardiologyCalculatorsPage() {
             </ul>
           </section>
 
-          {/* 2. Заглушка под будущий калькулятор */}
+          {/* 2. Заглушка под HEART */}
           <section className="rounded-3xl border border-[#015D52]/20 bg-white/60 p-5 text-sm text-gray-500">
             <h2 className="text-lg font-bold text-[#015D52] mb-3">
               HEART / ED risk
@@ -107,7 +107,7 @@ export default function CardiologyCalculatorsPage() {
             <p>Будет добавлен отдельным калькулятором.</p>
           </section>
 
-          {/* 3. Заглушка под будущий калькулятор */}
+          {/* 3. Заглушка под TIMI NSTE-ACS */}
           <section className="rounded-3xl border border-[#015D52]/20 bg-white/60 p-5 text-sm text-gray-500">
             <h2 className="text-lg font-bold text-[#015D52] mb-3">
               TIMI для NSTE-ACS / US
