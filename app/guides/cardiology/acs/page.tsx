@@ -1,3 +1,4 @@
+// app/guides/cardiology/acs/page.tsx
 'use client';
 
 import { useState } from 'react';
@@ -674,7 +675,7 @@ export default function ACSPage() {
             {
               strategy: 'Ранняя деэскалация (1-3 мес)',
               criteria: [
-                'Высокий риск кровотечения (PRECISE-DAPT ≥25)',
+                'Высокий риск кровотечений (PRECISE-DAPT ≥25)',
                 'Пожилой возраст',
                 'Сопутствующая ОАТ',
               ],
@@ -1064,7 +1065,6 @@ export default function ACSPage() {
                   <span className="text-[11px] uppercase tracking-[0.18em] text-[#9c978f] hidden lg:block">
                     Специальность
                   </span>
-                  {/* Фильтр М – используем готовый компонент с нашим дизайном */}
                   <FilterM
                     selected={selectedSpecialty}
                     onChange={(value: string) => setSelectedSpecialty(value)}
@@ -1078,62 +1078,57 @@ export default function ACSPage() {
                   <Safe text={escGuideline.title} />
                 </h1>
               </div>
-{/* Нозология */}
-<div className="order-2 lg:order-1 lg:justify-self-start w-full lg:w-auto">
-  <div className="flex flex-col gap-1 w-full lg:w-auto">
-    <span className="text-[11px] uppercase tracking-[0.18em] text-[#9c978f] hidden lg:block">
-      Нозология
-    </span>
 
-    {/* Обёртка как у фильтра М, одинаковая и для мобилки, и для десктопа */}
-    <div className="relative w-full lg:w-[320px]">
-      <select
-        value={selectedNosology}
-        onChange={(e) => setSelectedNosology(e.target.value)}
-        className="
-          appearance-none
-          rounded-full border border-[#d3cec4]
-          bg-white
-          px-4 pr-10
-          h-12 min-h-[48px]
-          text-base text-[#3b342d]
-          shadow-sm
-          w-full
-          lg:h-10 lg:min-h-0
-          text-center
-          focus:outline-none
-          focus:border-[#015d52]
-          focus:ring-1 focus:ring-[#015d52]
-          hover:ring-1 hover:ring-[#015d52]
-          hover:shadow-[0_0_10px_#015D52]
-        "
-      >
-        {Object.entries(groupedCardiologyNosologies).map(
-          ([groupName, items]) => (
-            <optgroup key={groupName} label={groupName}>
-              {items.map((nosology) => (
-                <option
-                  key={nosology.id}
-                  value={nosology.label}
-                  className="text-center"
-                >
-                  {nosology.label}
-                </option>
-              ))}
-            </optgroup>
-          )
-        )}
-      </select>
-
-      {/* Стрелка, как в фильтре М */}
-      <ChevronDown
-        size={16}
-        className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#3b342d] opacity-70"
-      />
-    </div>
-  </div>
-</div>
-
+              {/* Нозология — тот же дизайн, что у FilterM, своё содержимое */}
+              <div className="order-2 lg:order-1 lg:justify-self-start w-full lg:w-auto">
+                <div className="flex flex-col gap-1 w-full lg:w-auto">
+                  <span className="text-[11px] uppercase tracking-[0.18em] text-[#9c978f] hidden lg:block">
+                    Нозология
+                  </span>
+                  <div className="relative w-full lg:w-[320px]">
+                    <select
+                      value={selectedNosology}
+                      onChange={(e) => setSelectedNosology(e.target.value)}
+                      className="
+                        appearance-none
+                        rounded-full border border-[#d3cec4]
+                        bg-white
+                        px-4 pr-10
+                        h-12 min-h-[48px]
+                        text-base text-[#3b342d]
+                        shadow-sm
+                        w-full
+                        lg:h-10 lg:min-h-0
+                        text-center
+                        focus:outline-none
+                        focus:border-[#015d52]
+                        focus:ring-1 focus:ring-[#015d52]
+                        hover:ring-1 hover:ring-[#015d52]
+                        hover:shadow-[0_0_10px_#015D52]
+                      "
+                    >
+                      {Object.entries(groupedCardiologyNosologies).map(([groupName, items]) => (
+                        <optgroup key={groupName} label={groupName}>
+                          {items.map((nosology) => (
+                            <option
+                              key={nosology.id}
+                              value={nosology.label}
+                              className="text-center"
+                            >
+                              {nosology.label}
+                            </option>
+                          ))}
+                        </optgroup>
+                      ))}
+                    </select>
+                    <ChevronDown
+                      size={16}
+                      className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#3b342d] opacity-70"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
 
             {/* Ссылки и предупреждение */}
             <div className="text-center mt-6 space-y-3">
@@ -2419,7 +2414,6 @@ export default function ACSPage() {
                 представленной информации в клинической практике.
               </p>
 
-              {/* Визуальный зазор и email по центру экрана */}
               <div className="h-[150px] flex items-center justify-center w-full">
                 <p className="text-lg font-medium text-gray-900">support@medradix.info</p>
               </div>
