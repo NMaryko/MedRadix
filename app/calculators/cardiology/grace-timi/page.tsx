@@ -10,6 +10,7 @@ const SPECIALTIES: string[] = [
   'Анестезиология и реаниматология',
   'Гастроэнтерология',
   'Гематология',
+  'Гериатрия',
   'Дерматология',
   'Инфекционные болезни',
   'Кардиология',
@@ -27,7 +28,6 @@ const SPECIALTIES: string[] = [
   'Урология',
   'Хирургия',
   'Эндокринология',
-  'Гериатрия',
 ];
 
 // конвертация мкмоль/л → мг/дл
@@ -35,7 +35,7 @@ function convertCreatinineToMgDL(creatinineMcmolL: number): number {
   return creatinineMcmolL / 88.4;
 }
 
-// категория риска по GRACE (по порогам)
+// категория риска по GRACE
 function getGraceRiskCategory(score: number): 'низкий' | 'промежуточный' | 'высокий' {
   if (score < 100) return 'низкий';
   if (score < 140) return 'промежуточный';
@@ -48,13 +48,10 @@ function getGraceRiskDescription(
   sixMonthRisk: number
 ): { categoryLabel: string; text: string } {
   const category = getGraceRiskCategory(score);
-  const map: Record<typeof category, string> = {
-    низкий: 'низкий риск',
-    промежуточный: 'промежуточный риск',
-    высокий: 'высokий риск',
-  } as const;
-
-  const categoryLabel = map[category];
+  let categoryLabel = '';
+  if (category === 'низкий') categoryLabel = 'низкий риск';
+  else if (category === 'промежуточный') categoryLabel = 'промежуточный риск';
+  else categoryLabel = 'высокий риск';
 
   const text = `Ориентировочная внутрибольничная летальность ≈ ${hospitalRisk}%, 6-месячная ≈ ${sixMonthRisk}% — ${categoryLabel}.`;
 
@@ -70,12 +67,10 @@ function getTimiRiskCategory(score: number): 'низкий' | 'промежут�
 
 function getTimiRiskDescription(score: number, riskPercent: number): string {
   const category = getTimiRiskCategory(score);
-  const label =
-    category === 'низкий'
-      ? 'низкий риск'
-      : category === 'промежуточный'
-      ? 'промежуточный риск'
-      : 'высokий риск';
+  let label = '';
+  if (category === 'низкий') label = 'низкий риск';
+  else if (category === 'промежуточный') label = 'промежуточный риск';
+  else label = 'высокий риск';
 
   return `Расчётный 14-дневный риск неблагоприятных ишемических событий ≈ ${riskPercent}% — ${label} по шкале TIMI.`;
 }
@@ -127,7 +122,7 @@ export default function GraceTimiCalculatorPage() {
 
     setGraceError('');
 
-    // --- обязательные поля для GRACE ---
+    // обязательные поля для GRACE
     const missingFields: string[] = [];
     if (!ageNum) missingFields.push('Возраст');
     if (!heartRateNum) missingFields.push('ЧСС');
@@ -137,7 +132,7 @@ export default function GraceTimiCalculatorPage() {
       missingFields.push('Сердечная недостаточность');
     }
 
-    // --- TIMI считаем ВСЕГДА (mg/dL) ---
+    // TIMI считаем всегда (mg/dL)
     const creatinineMgDL = convertCreatinineToMgDL(creatinineMcmolL);
     const timi = calculateTIMI(
       ageNum,
@@ -152,7 +147,7 @@ export default function GraceTimiCalculatorPage() {
     setTimiRisk(`${timiRiskPercent}%`);
     setTimiSummary(getTimiRiskDescription(timi, timiRiskPercent));
 
-    // --- если не хватает полей для GRACE ---
+    // если для GRACE не хватает полей
     if (missingFields.length > 0) {
       setGraceHospital('-');
       setGraceSixMonth('-');
@@ -300,16 +295,16 @@ export default function GraceTimiCalculatorPage() {
             </div>
           </div>
 
-          <div className="w-full md:w-80">
+          <div className="w-full md:w-72">
             <label
               htmlFor="specialty-select"
-              className="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-700 text-center md:text-left"
+              className="mb-1 block text-[11px] font-semibold tracking-[0.18em] text-gray-500 uppercase text-center md:text-right"
             >
               СПЕЦИАЛЬНОСТЬ
             </label>
             <select
               id="specialty-select"
-              className="w-full rounded-xl border border-[#015D52] bg-white/90 px-3 py-2 text-sm text-gray-900 text-center shadow-sm transition hover:border-[#015D52] hover:ring-2 hover:ring-[#015D52]/20 focus:border-[#015D52] focus:outline-none focus:ring-2 focus:ring-[#015D52]/30"
+              className="w-full rounded-full border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 text-center shadow-sm transition hover:border-[#015D52] hover:ring-1 hover:ring-[#015D52]/40 focus:border-[#015D52] focus:outline-none focus:ring-2 focus:ring-[#015D52]/40"
               value={selectedSpecialty}
               onChange={(e) => handleSpecialtyChange(e.target.value)}
             >
@@ -335,51 +330,51 @@ export default function GraceTimiCalculatorPage() {
         >
           <div className="grid gap-4 md:grid-cols-2">
             {/* левая колонка — обязательные поля (*) */}
-            <div className="space-y-3 text-sm text-gray-800">
-              <div className="flex items-center gap-2">
-                <label className="w-44 text-xs font-semibold text-gray-700">
+            <div className="space-y-4 text-sm text-gray-800">
+              <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-2">
+                <label className="sm:w-44 text-xs font-semibold text-gray-700">
                   Возраст (лет)<span className="text-rose-600"> *</span>
                 </label>
                 <input
                   type="number"
                   min={0}
-                  className="flex-1 rounded-xl border border-gray-300 px-3 py-2 text-sm"
+                  className="w-full sm:flex-1 rounded-xl border border-gray-300 px-3 py-2 text-sm"
                   value={age}
                   onChange={(e) => setAge(e.target.value)}
                 />
               </div>
 
-              <div className="flex items-center gap-2">
-                <label className="w-44 text-xs font-semibold text-gray-700">
+              <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-2">
+                <label className="sm:w-44 text-xs font-semibold text-gray-700">
                   ЧСС (уд/мин)<span className="text-rose-600"> *</span>
                 </label>
                 <input
                   type="number"
                   min={0}
-                  className="flex-1 rounded-xl border border-gray-300 px-3 py-2 text-sm"
+                  className="w-full sm:flex-1 rounded-xl border border-gray-300 px-3 py-2 text-sm"
                   value={heartRate}
                   onChange={(e) => setHeartRate(e.target.value)}
                 />
               </div>
 
-              <div className="flex items-center gap-2">
-                <label className="w-44 text-xs font-semibold text-gray-700">
+              <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-2">
+                <label className="sm:w-44 text-xs font-semibold text-gray-700">
                   САД (мм рт.ст.)<span className="text-rose-600"> *</span>
                 </label>
                 <input
                   type="number"
                   min={0}
-                  className="flex-1 rounded-xl border border-gray-300 px-3 py-2 text-sm"
+                  className="w-full sm:flex-1 rounded-xl border border-gray-300 px-3 py-2 text-sm"
                   value={systolicBP}
                   onChange={(e) => setSystolicBP(e.target.value)}
                 />
               </div>
 
-              <div className="flex items-center gap-2">
-                <label className="w-44 text-xs font-semibold text-gray-700">
+              <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-2">
+                <label className="sm:w-44 text-xs font-semibold text-gray-700">
                   Креатинин (мкмоль/л)<span className="text-rose-600"> *</span>
                 </label>
-                <div className="flex-1">
+                <div className="w-full sm:flex-1">
                   <input
                     type="number"
                     min={0}
@@ -393,12 +388,12 @@ export default function GraceTimiCalculatorPage() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-2">
-                <label className="w-44 text-xs font-semibold text-gray-700">
+              <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-2">
+                <label className="sm:w-44 text-xs font-semibold text-gray-700">
                   Сердечная недостаточность<span className="text-rose-600"> *</span>
                 </label>
                 <select
-                  className="flex-1 rounded-xl border border-gray-300 px-3 py-2 text-sm"
+                  className="w-full sm:flex-1 rounded-xl border border-gray-300 px-3 py-2 text-sm"
                   value={heartFailure}
                   onChange={(e) => setHeartFailure(e.target.value)}
                 >
@@ -410,13 +405,13 @@ export default function GraceTimiCalculatorPage() {
             </div>
 
             {/* правая колонка — доп. поля + пояснение */}
-            <div className="space-y-3 text-sm text-gray-800">
-              <div className="flex items-center gap-2">
-                <label className="w-44 text-xs font-semibold text-gray-700">
+            <div className="space-y-4 text-sm text-gray-800">
+              <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-2">
+                <label className="sm:w-44 text-xs font-semibold text-gray-700">
                   ЭКГ (подъём ST)
                 </label>
                 <select
-                  className="flex-1 rounded-xl border border-gray-300 px-3 py-2 text-sm"
+                  className="w-full sm:flex-1 rounded-xl border border-gray-300 px-3 py-2 text-sm"
                   value={ecg}
                   onChange={(e) => setEcg(e.target.value)}
                 >
@@ -425,12 +420,12 @@ export default function GraceTimiCalculatorPage() {
                 </select>
               </div>
 
-              <div className="flex items-center gap-2">
-                <label className="w-44 text-xs font-semibold text-gray-700">
+              <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-2">
+                <label className="sm:w-44 text-xs font-semibold text-gray-700">
                   Тропонин
                 </label>
                 <select
-                  className="flex-1 rounded-xl border border-gray-300 px-3 py-2 text-sm"
+                  className="w-full sm:flex-1 rounded-xl border border-gray-300 px-3 py-2 text-sm"
                   value={troponin}
                   onChange={(e) => setTroponin(e.target.value)}
                 >
@@ -439,7 +434,7 @@ export default function GraceTimiCalculatorPage() {
                 </select>
               </div>
 
-              <p className="mt-4 text-[11px] text-gray-600">
+              <p className="mt-2 text-[11px] text-gray-600">
                 TIMI (🇺🇸) рассчитывается всегда на основе введённых значений (с учётом
                 конвертации креатинина). GRACE (🇪🇺) рассчитывается только при
                 заполнении всех полей, отмеченных
@@ -528,7 +523,7 @@ export default function GraceTimiCalculatorPage() {
           </div>
         </div>
 
-        {/* единый support снизу по центру */}
+        {/* support снизу по центру, единый стиль */}
         <footer className="mt-48 pt-4 text-sm md:text-base text-[#5E3830] text-center">
           <a href="mailto:support@medradix.info" className="font-medium">
             support@medradix.info
@@ -538,3 +533,4 @@ export default function GraceTimiCalculatorPage() {
     </main>
   );
 }
+
