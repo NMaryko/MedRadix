@@ -1539,9 +1539,9 @@ export default function ACSPage() {
                               <RecommendationBadge
                                 rec={{
                                   class: escGuideline.diagnosis.riskStratification.hematics.class,
-                                  level: escGuideline.diagnosis.riskStratification.ematics.level,
+                                  level: escGuideline.diagnosis.riskStratification.hematics.level,
                                   evidenceText:
-                                    escGuideline.diagnosis.riskStratification.ematics.evidenceText,
+                                    escGuideline.diagnosis.riskStratification.hematics.evidenceText,
                                 }}
                               />
                             </div>
@@ -1557,7 +1557,7 @@ export default function ACSPage() {
                             </ul>
                             <p className="font-medium mb-2">Уровни риска:</p>
                             <ul className="text-sm text-gray-700 space-y-1">
-                              {escGuideline.diagnosis.riskStratification.ematics.scores.map(
+                              {escGuideline.diagnosis.riskStratification.hematics.scores.map(
                                 (score, idx) => (
                                   <li key={idx}>
                                     <Safe text={`• ${score}`} />
