@@ -11,7 +11,6 @@ const SPECIALTIES: string[] = [
   'Анестезиология и реаниматология',
   'Гастроэнтерология',
   'Гематология',
-  'Гаериатрия',
   'Дерматология',
   'Инфекционные болезни',
   'Кардиология',
@@ -38,7 +37,7 @@ export default function CalculatorsPage() {
   const handleSpecialtyChange = (value: string) => {
     setSelectedSpecialty(value);
 
-    // Если выбрали кардиологию — сразу ведём на страницу с калькуляторами ОКС
+    // При выборе кардиологии сразу ведём на страницу с калькуляторами ОКС
     if (value === 'Кардиология') {
       router.push('/calculators/cardiology/acs-risk');
     }
@@ -53,14 +52,15 @@ export default function CalculatorsPage() {
         {/* Заголовок + фильтр (фильтр справа сверху) */}
         <header className="mb-10 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-3">
+            <h1 className="text-3xl font-bold text-[#015D52] mb-3">
               Калькуляторы MedRadix
             </h1>
             <p className="text-sm text-gray-700 max-w-3xl mb-3">
-              Интерактивные клинические калькуляторы формата&nbsp;
+              Интерактивные клинические калькуляторы формата{' '}
               <span className="font-semibold">«2 в 1»</span>, объединяющие
               европейские и американские подходы в одном инструменте. Врач
-              видит сразу оба алгоритма и может быстро сопоставить рекомендации.
+              видит сразу оба алгоритма и может быстро сопоставить
+              рекомендации.
             </p>
             <ul className="text-sm text-gray-700 space-y-1">
               <li>• Экономия времени при приёме и в стационаре.</li>
@@ -78,7 +78,7 @@ export default function CalculatorsPage() {
             </label>
             <select
               id="specialty-select"
-              className="w-full rounded-xl border border-emerald-200 bg-white/90 px-3 py-2 text-sm text-gray-900 shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
+              className="w-full rounded-xl border border-[#015D52] bg-white/90 px-3 py-2 text-sm text-gray-900 shadow-sm focus:border-[#015D52] focus:outline-none focus:ring-2 focus:ring-[#015D52]/30"
               value={selectedSpecialty}
               onChange={(e) => handleSpecialtyChange(e.target.value)}
             >
@@ -91,33 +91,22 @@ export default function CalculatorsPage() {
           </div>
         </header>
 
-        {/* Почти пустая главная: только сообщение +, при желании, статус разработки */}
+        {/* Почти пустая главная: только сообщение о разработке при выборе других спец. */}
         {showDevMessage && (
-          <div className="rounded-2xl border border-dashed border-emerald-200 bg-white/70 p-6 text-sm text-gray-700">
-            Для специальности <span className="font-semibold">{selectedSpecialty}</span>{' '}
-            калькуляторы ещё в разработке. Если вам важно ускорить появление
-            конкретного инструмента, напишите нам на{' '}
-            <a
-              href="mailto:support@medradix.info"
-              className="font-semibold text-emerald-700 underline"
-            >
-              support@medradix.info
-            </a>
-            .
+          <div className="rounded-2xl border border-dashed border-[#015D52]/40 bg-white/70 p-6 text-sm text-gray-700">
+            Для специальности{' '}
+            <span className="font-semibold">{selectedSpecialty}</span> калькуляторы
+            ещё в разработке.
           </div>
         )}
 
-        <footer className="mt-10 border-t border-emerald-100 pt-4 text-xs text-gray-600">
-          По вопросам работы калькуляторов:{' '}
-          <a
-            href="mailto:support@medradix.info"
-            className="font-semibold text-emerald-700"
-          >
-            support@medradix.info
-          </a>
+        {/* Низ страницы: только email без текста */}
+        <footer className="mt-10 border-t border-emerald-100 pt-4 text-xs text-[#015D52]">
+          <a href="mailto:support@medradix.info">support@medradix.info</a>
         </footer>
       </div>
     </main>
   );
 }
+
 
