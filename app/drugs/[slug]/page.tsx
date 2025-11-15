@@ -1,6 +1,7 @@
 // app/drugs/[slug]/page.tsx - ИДЕАЛЬНАЯ СТРАНИЦА
 import { generateDrugSchema, type Drug } from '@/types/drug';
 import { mockDrugEnoxaparin } from '@/types/drug';
+import { FolderPlus } from 'lucide-react';
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
   const drug = await getDrugData(params.slug);
@@ -262,24 +263,23 @@ export default async function DrugPage({ params }: { params: { slug: string } })
           </div>
         </section>
 
-          {/* Кнопка сохранения */}
-            <section className="mt-4 mb-8 text-center">
-              <button
-                onClick={handleSaveSection}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#015d52] bg-white text-sm font-medium text-[#015d52] hover:ring-1 hover:ring-[#015d52] hover:shadow-[0_0_10px_#015D52] transition"
-              >
-                <FolderPlus size={16} />
-                <span>Сохранить текущий раздел в «Мои лекарства»</span>
-              </button>
-            </section>
+        {/* Кнопка сохранения */}
+        <section className="mt-4 mb-8 text-center">
+          <button
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#015d52] bg-white text-sm font-medium text-[#015d52] hover:ring-1 hover:ring-[#015d52] hover:shadow-[0_0_10px_#015D52] transition"
+          >
+            <FolderPlus size={16} />
+            <span>Сохранить текущий раздел в «Мои лекарства»</span>
+          </button>
+        </section>
 
         {/* Дисклеймер для раздела лекарств */}
         <p className="mt-6 text-xs text-gray-500 text-center max-w-4xl mx-auto leading-relaxed">
           Информация о лекарственных препаратах на сайте MedRadix.info представляет собой краткий обзор
           официальных данных для медицинских специалистов и носит исключительно образовательный характер.
-          Она не заменяет официальную инструкцию по медицинскому применению производителя и
-          действующие клинические рекомендации. Авторы не несут ответственности за использование
-          представленной информации в клинической практике.
+          Она не заменяет официальную инструкцию по медицинскому применению производителя и действующие
+          клинические рекомендации. Авторы не несут ответственности за использование представленной
+          информации в клинической практике.
         </p>
 
         {/* Контакт для поддержки */}
@@ -290,4 +290,5 @@ export default async function DrugPage({ params }: { params: { slug: string } })
     </>
   );
 }
+
 
