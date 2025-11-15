@@ -67,6 +67,7 @@ export default function ACSPage() {
   const [selectedSpecialty, setSelectedSpecialty] = useState('Кардиология');
   const [selectedNosology, setSelectedNosology] = useState('Острый коронарный синдром (ОКС)');
   const [isIntroOpen, setIsIntroOpen] = useState(true);
+  const [isNosologyOpen, setIsNosologyOpen] = useState(false);
 
   const isCorrectContext =
     selectedSpecialty === 'Кардиология' &&
@@ -114,7 +115,7 @@ export default function ACSPage() {
           step: 'Клиническая оценка',
           actions: [
             'Характер боли: давящая, жгучая, за грудиной',
-            'Ирдиация: левая рука, шея, челюсть, спина',
+            'Иррадиация: левая рука, шея, челюсть, спина',
             'Сопутствующие симптомы: одышка, тошнота, потливость',
             'Длительность: >20 минут',
           ],
@@ -1034,7 +1035,7 @@ export default function ACSPage() {
       ],
       interpretation:
         '≥4 баллов (HEART) → госпитализация и наблюдение; низкий риск по EDACS → возможна ранняя выписка',
-      link: '/calculators/cardiology/heart-ed-risk',
+      link: '/calculators/heart-ed-risk',
     },
     {
       name: 'TIMI для NSTE-ACS/US',
@@ -1064,7 +1065,6 @@ export default function ACSPage() {
                   <span className="text-[11px] uppercase tracking-[0.18em] text-[#9c978f] hidden lg:block">
                     Специальность
                   </span>
-                  {/* Фильтр М – используем готовый компонент с нашим дизайном */}
                   <FilterM
                     selected={selectedSpecialty}
                     onChange={(value: string) => setSelectedSpecialty(value)}
@@ -1079,29 +1079,30 @@ export default function ACSPage() {
                 </h1>
               </div>
 
-              {/* Нозология */}
+              {/* Нозология — тот же визуальный стиль, что и у FilterM */}
               <div className="order-2 lg:order-1 lg:justify-self-start w-full lg:w-auto">
                 <div className="flex flex-col gap-1 w-full lg:w-auto">
                   <span className="text-[11px] uppercase tracking-[0.18em] text-[#9c978f] hidden lg:block">
                     Нозология
                   </span>
 
-                  {/* Обёртка как у фильтра М, одинаковая и для мобилки, и для десктопа */}
                   <div className="relative w-full lg:w-[320px]">
-                    <select
-                      value={selectedNosology}
-                      onChange={(e) => setSelectedNosology(e.target.value)}
+                    <button
+                      type="button"
+                      onClick={() => setIsNosologyOpen((v) => !v)}
                       className="
-                        appearance-none
+                        w-full
                         rounded-full border border-[#d3cec4]
                         bg-white
                         px-4 pr-10
                         h-12 min-h-[48px]
-                        text-base text-[#3b342d]
-                        shadow-sm
-                        w-full
                         lg:h-10 lg:min-h-0
+                        text-sm md:text-base
+                        text-[#3b342d]
+                        flex items-center justify-center
+                        shadow-sm
                         text-center
+                        transition
                         focus:outline-none
                         focus:border-[#015d52]
                         focus:ring-1 focus:ring-[#015d52]
@@ -1109,28 +1110,58 @@ export default function ACSPage() {
                         hover:shadow-[0_0_10px_#015D52]
                       "
                     >
-                      {Object.entries(groupedCardiologyNosologies).map(
-                        ([groupName, items]) => (
-                          <optgroup key={groupName} label={groupName}>
-                            {items.map((nosology) => (
-                              <option
-                                key={nosology.id}
-                                value={nosology.label}
-                                className="text-center"
-                              >
-                                {nosology.label}
-                              </option>
-                            ))}
-                          </optgroup>
-                        )
-                      )}
-                    </select>
+                      <span className="truncate">{selectedNosology}</span>
+                      <ChevronDown
+                        size={16}
+                        className={`pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#3b342d] opacity-70 transition ${
+                          isNosologyOpen ? 'rotate-180' : ''
+                        }`}
+                      />
+                    </button>
 
-                    {/* Стрелка, как в фильтре М */}
-                    <ChevronDown
-                      size={16}
-                      className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#3b342d] opacity-70"
-                    />
+                    {isNosologyOpen && (
+                      <div
+                        className="
+                          absolute z-20 mt-2 w-full
+                          max-h-80 overflow-y-auto
+                          rounded-2xl
+                          bg-white
+                          border border-[#d3cec4]
+                          shadow-xl
+                        "
+                      >
+                        {Object.entries(groupedCardiologyNosologies).map(([groupName, items]) => (
+                          <div key={groupName} className="py-1">
+                            <div className="px-4 py-1 text-[11px] uppercase tracking-[0.14em] text-[#9c978f]">
+                              {groupName}
+                            </div>
+                            {items.map((nosology) => {
+                              const active = selectedNosology === nosology.label;
+                              return (
+                                <button
+                                  key={nosology.id}
+                                  type="button"
+                                  onClick={() => {
+                                    setSelectedNosology(nosology.label);
+                                    setIsNosologyOpen(false);
+                                  }}
+                                  className={`
+                                    w-full text-left px-4 py-2 text-sm
+                                    ${
+                                      active
+                                        ? 'bg-[#015d52] text-white'
+                                        : 'text-[#3b342d] hover:bg-[#f3f2ee]'
+                                    }
+                                  `}
+                                >
+                                  {nosology.label}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -2433,4 +2464,5 @@ export default function ACSPage() {
     </main>
   );
 }
+
 
