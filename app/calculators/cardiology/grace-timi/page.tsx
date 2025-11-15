@@ -304,7 +304,8 @@ export default function GraceTimiCalculatorPage() {
             </label>
             <select
               id="specialty-select"
-              className="w-full rounded-full border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 text-center shadow-sm transition hover:border-[#015D52] hover:ring-1 hover:ring-[#015D52]/40 focus:border-[#015D52] focus:outline-none focus:ring-2 focus:ring-[#015D52]/40"
+              className="w-full rounded-full border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 text-center shadow-sm transition hover:border-[#015D52] hover:ring-1 hover:ring-[#015D52]/20 focus:border-[#015D52] focus:outline-none focus:ring-2 focus:ring-[#015D52]/25"
+              style={{ textAlignLast: 'center' }}
               value={selectedSpecialty}
               onChange={(e) => handleSpecialtyChange(e.target.value)}
             >
@@ -533,4 +534,5 @@ export default function GraceTimiCalculatorPage() {
     </main>
   );
 }
+
 
