@@ -83,8 +83,6 @@ export default function CalculatorsPage() {
 
         {/* простой текст-заглушка, пока не выбрана конкретная спец. */}
         <section className="rounded-3xl border border-[#015D52]/20 bg-white/70 p-6 text-sm text-gray-700">
-     
-        </section>
 
         {/* support снизу по центру */}
         <footer className="mt-[400px] pt-4 text-base text-[#5E3830] text-center">
