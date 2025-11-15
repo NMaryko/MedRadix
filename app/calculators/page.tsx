@@ -37,7 +37,6 @@ export default function CalculatorsPage() {
   const handleSpecialtyChange = (value: string) => {
     setSelectedSpecialty(value);
 
-    // При выборе кардиологии сразу ведём на страницу с калькуляторами ОКС
     if (value === 'Кардиология') {
       router.push('/calculators/cardiology/acs-risk');
     }
@@ -49,7 +48,7 @@ export default function CalculatorsPage() {
   return (
     <main className="min-h-screen bg-[#fcfcee] py-10">
       <div className="max-w-6xl mx-auto px-4">
-        {/* Заголовок + фильтр (фильтр справа сверху) */}
+        {/* Заголовок + фильтр */}
         <header className="mb-10 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
           <div>
             <h1 className="text-3xl font-bold text-[#015D52] mb-3">
@@ -58,13 +57,11 @@ export default function CalculatorsPage() {
             <p className="text-sm text-gray-700 max-w-3xl mb-3">
               Интерактивные клинические калькуляторы формата{' '}
               <span className="font-semibold">«2 в 1»</span>, объединяющие
-              европейские и американские подходы в одном инструменте. Врач
-              видит сразу оба алгоритма и может быстро сопоставить
-              рекомендации.
+              европейские и американские подходы в одном инструменте.
             </p>
             <ul className="text-sm text-gray-700 space-y-1">
               <li>• Экономия времени при приёме и в стационаре.</li>
-              <li>• Прозрачная логика: видно, как формируется риск-балл.</li>
+              <li>• Прозрачная логика формирования риск-балла.</li>
               <li>• Акцент на практические решения, а не теорию.</li>
             </ul>
           </div>
@@ -78,7 +75,7 @@ export default function CalculatorsPage() {
             </label>
             <select
               id="specialty-select"
-              className="w-full rounded-xl border border-[#015D52] bg-white/90 px-3 py-2 text-sm text-gray-900 shadow-sm focus:border-[#015D52] focus:outline-none focus:ring-2 focus:ring-[#015D52]/30"
+              className="w-full rounded-xl border border-[#015D52] bg-white/90 px-3 py-2 text-sm text-gray-900 text-center shadow-sm transition hover:border-[#015D52] hover:ring-2 hover:ring-[#015D52]/20 focus:border-[#015D52] focus:outline-none focus:ring-2 focus:ring-[#015D52]/30"
               value={selectedSpecialty}
               onChange={(e) => handleSpecialtyChange(e.target.value)}
             >
@@ -91,22 +88,24 @@ export default function CalculatorsPage() {
           </div>
         </header>
 
-        {/* Почти пустая главная: только сообщение о разработке при выборе других спец. */}
         {showDevMessage && (
           <div className="rounded-2xl border border-dashed border-[#015D52]/40 bg-white/70 p-6 text-sm text-gray-700">
             Для специальности{' '}
-            <span className="font-semibold">{selectedSpecialty}</span> калькуляторы
-            ещё в разработке.
+            <span className="font-semibold">{selectedSpecialty}</span>{' '}
+            калькуляторы ещё в разработке.
           </div>
         )}
 
-        {/* Низ страницы: только email без текста */}
-        <footer className="mt-10 border-t border-emerald-100 pt-4 text-xs text-[#015D52]">
-          <a href="mailto:support@medradix.info">support@medradix.info</a>
+        {/* support — без линии, ниже и крупнее, коричневый */}
+        <footer className="mt-[500px] pt-4 text-base text-[#5E3830]">
+          <a href="mailto:support@medradix.info" className="font-semibold">
+            support@medradix.info
+          </a>
         </footer>
       </div>
     </main>
   );
 }
+
 
 
