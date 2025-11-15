@@ -30,11 +30,11 @@ export const SPECIALTIES: string[] = [
 ];
 
 interface FilterMProps {
-  value: string;
-  onChange: (value: string) => void;
+  selected: string;                 // текущая выбранная спец-ть
+  onChange: (value: string) => void; // что делать при смене
 }
 
-export function FilterM({ value, onChange }: FilterMProps) {
+export function FilterM({ selected, onChange }: FilterMProps) {
   return (
     <div className="w-full md:w-72">
       <label
@@ -47,7 +47,7 @@ export function FilterM({ value, onChange }: FilterMProps) {
         id="specialty-select"
         className="w-full rounded-full border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 text-center shadow-sm transition hover:border-[#015D52] hover:ring-1 hover:ring-[#015D52]/20 focus:border-[#015D52] focus:outline-none focus:ring-2 focus:ring-[#015D52]/25"
         style={{ textAlignLast: 'center' }}
-        value={value}
+        value={selected}
         onChange={(e) => onChange(e.target.value)}
       >
         {SPECIALTIES.map((spec) => (
@@ -59,3 +59,4 @@ export function FilterM({ value, onChange }: FilterMProps) {
     </div>
   );
 }
+
